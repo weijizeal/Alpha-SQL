@@ -1,7 +1,7 @@
 #! /bin/bash
 
 DB_ROOT_DIR="data/bird/dev/dev_databases"
-PROCESS_NUM=32
+PROCESS_NUM=24
 
 RESULTS_DIR="results/Qwen2.5-Coder-32B-Instruct/bird/dev"
 OUTPUT_PATH="./pred_sqls.json"
