@@ -55,6 +55,9 @@ class RaphraseQuestionAction(MCTSAction):
             child_node.children = []
             child_node.path_nodes = node.path_nodes + [child_node]
             child_node.rephrased_question = response
+            child_node.prompt = prompt
+            child_node.response = response
+
             nodes.append(child_node)
         return nodes
 
@@ -87,6 +90,9 @@ class SchemaSelectionAction(MCTSAction):
         all_schema_selection_dicts = []
         while len(nodes) < llm_kwargs["n"]:
             new_llm_kwargs = copy.deepcopy(llm_kwargs)
+            new_llm_kwargs.update({
+                "cost_recorder": llm_kwargs["cost_recorder"]  # 保持记录器引用
+            })
             new_llm_kwargs["n"] = llm_kwargs["n"] - len(nodes)
             responses = call_openai(prompt, **new_llm_kwargs)
             for response in responses:
@@ -97,6 +103,8 @@ class SchemaSelectionAction(MCTSAction):
                 child_node.depth = node.depth + 1
                 child_node.children = []
                 child_node.path_nodes = node.path_nodes + [child_node]
+                child_node.prompt = prompt
+                child_node.response = response
                 new_table_schema_dict, schema_selection_dict = self.select_schema(child_node.table_schema_dict, response)
                 if new_table_schema_dict:
                     child_node.selected_schema_dict = new_table_schema_dict
@@ -209,6 +217,8 @@ class IdentifyColumnValuesAction(MCTSAction):
             child_node.children = []
             child_node.path_nodes = node.path_nodes + [child_node]
             child_node.identified_column_values = response
+            child_node.prompt = prompt
+            child_node.response = response
             nodes.append(child_node)
         return nodes
 
@@ -248,6 +258,8 @@ class IdentifyColumnFunctionsAction(MCTSAction):
             child_node.children = []
             child_node.path_nodes = node.path_nodes + [child_node]
             child_node.identified_column_functions = response
+            child_node.prompt = prompt
+            child_node.response = response
             nodes.append(child_node)
         return nodes
 
@@ -281,6 +293,9 @@ class SQLGenerationAction(MCTSAction):
         valid_sql_query_tries = 0
         while len(nodes) < llm_kwargs["n"]:
             new_llm_kwargs = copy.deepcopy(llm_kwargs)
+            new_llm_kwargs.update({
+                "cost_recorder": llm_kwargs["cost_recorder"]  # 保持记录器引用
+            })
             new_llm_kwargs["n"] = llm_kwargs["n"] - len(nodes)
             responses = call_openai(prompt, **new_llm_kwargs)
             for response in responses:
@@ -291,6 +306,8 @@ class SQLGenerationAction(MCTSAction):
                 child_node.depth = node.depth + 1
                 child_node.children = []
                 child_node.path_nodes = node.path_nodes + [child_node]
+                child_node.prompt = prompt
+                child_node.response = response
                 sql_query = self.extract_sql_query_answer(response)
                 
                 if sql_query:
@@ -331,6 +348,8 @@ class SQLGenerationAction(MCTSAction):
         while not sql_query:
             sql_query, consistency_score, is_valid_sql_query = self.generate_most_consistent_sql_query(prompt, llm_kwargs, db_path)
         child_node.sql_query = sql_query
+        child_node.prompt = prompt
+        child_node.response = f"<sql>{sql_query}</sql>"
         child_node.consistency_score = consistency_score
         child_node.is_valid_sql_query = is_valid_sql_query
         return [child_node]
@@ -347,6 +366,9 @@ class SQLGenerationAction(MCTSAction):
             if valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES and len(all_sql_queries) > 0:
                 break
             new_llm_kwargs = copy.deepcopy(llm_kwargs)
+            new_llm_kwargs.update({
+                "cost_recorder": llm_kwargs["cost_recorder"]  # 保持记录器引用
+            })
             new_llm_kwargs["n"] = SQL_GENERATION_LLM_KWARGS_N - len(all_sql_queries)
             new_llm_kwargs["temperature"] = SQL_GENERATION_LLM_KWARGS_TEMPERATURE
             responses = call_openai(prompt, **new_llm_kwargs)
@@ -382,6 +404,15 @@ class SQLGenerationAction(MCTSAction):
     #         return None
     
     def extract_sql_query_answer(self, sql_generation_response: str) -> str:
+        try:
+            sql_query = re.search(r"<sql>(.*)</sql>", sql_generation_response, flags=re.DOTALL).group(1).strip()
+            return normalize_sql(sql_query)
+        except Exception as e:
+            print(f"Error parsing sql generation response: {e}")
+            return None
+    
+    @classmethod
+    def class_extra_sql_query_answer(sql_generation_response: str) -> str:
         try:
             sql_query = re.search(r"<sql>(.*)</sql>", sql_generation_response, flags=re.DOTALL).group(1).strip()
             return normalize_sql(sql_query)
@@ -424,6 +455,9 @@ class SQLRevisionAction(MCTSAction):
         valid_sql_query_tries = 0
         while len(nodes) < llm_kwargs["n"]:
             new_llm_kwargs = copy.deepcopy(llm_kwargs)
+            new_llm_kwargs.update({
+                "cost_recorder": llm_kwargs["cost_recorder"]  # 保持记录器引用
+            })
             new_llm_kwargs["n"] = llm_kwargs["n"] - len(nodes)
             responses = call_openai(prompt, **new_llm_kwargs)
             for response in responses:
@@ -434,6 +468,8 @@ class SQLRevisionAction(MCTSAction):
                 child_node.depth = node.depth + 1
                 child_node.children = []
                 child_node.path_nodes = node.path_nodes + [child_node]
+                child_node.prompt = prompt
+                child_node.response = response
                 revised_sql_query = self.extract_sql_query_answer(response)
                 if revised_sql_query:
                     db_path = Path(node.db_root_dir) / node.db_id / f"{node.db_id}.sqlite"
@@ -479,6 +515,8 @@ class SQLRevisionAction(MCTSAction):
         db_path = Path(node.db_root_dir) / node.db_id / f"{node.db_id}.sqlite"
         while not sql_query:
             sql_query, consistency_score, is_valid_sql_query = self.generate_most_consistent_sql_query(prompt, llm_kwargs, db_path)
+        child_node.prompt = prompt
+        child_node.response = f"<sql>{sql_query}</sql>"
         child_node.revised_sql_query = sql_query
         child_node.consistency_score = consistency_score
         child_node.is_valid_sql_query = is_valid_sql_query
@@ -496,6 +534,9 @@ class SQLRevisionAction(MCTSAction):
             if valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES and len(all_sql_queries) > 0:
                 break
             new_llm_kwargs = copy.deepcopy(llm_kwargs)
+            new_llm_kwargs.update({
+                "cost_recorder": llm_kwargs["cost_recorder"]  # 保持记录器引用
+            })
             new_llm_kwargs["n"] = SQL_REVISION_LLM_KWARGS_N - len(all_sql_queries)
             new_llm_kwargs["temperature"] = SQL_REVISION_LLM_KWARGS_TEMPERATURE
             responses = call_openai(prompt, **new_llm_kwargs)
@@ -531,6 +572,15 @@ class SQLRevisionAction(MCTSAction):
     #         return None
 
     def extract_sql_query_answer(self, sql_revision_response: str) -> str:
+        try:
+            sql_query = re.search(r"<sql>(.*)</sql>", sql_revision_response, flags=re.DOTALL).group(1).strip()
+            return normalize_sql(sql_query)
+        except Exception as e:
+            print(f"Error parsing sql revision response: {e}")
+            return None
+    
+    @classmethod
+    def class_extra_sql_query_answer(sql_revision_response: str) -> str:
         try:
             sql_query = re.search(r"<sql>(.*)</sql>", sql_revision_response, flags=re.DOTALL).group(1).strip()
             return normalize_sql(sql_query)

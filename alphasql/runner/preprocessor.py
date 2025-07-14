@@ -1,6 +1,11 @@
 import json
 from loguru import logger
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Optional, Tuple, Any
+import os, sys
+current_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir = os.path.dirname(current_path)
+root_dir = os.path.dirname(parent_dir)
+sys.path.append(root_dir)
 from alphasql.runner.task import Task
 from alphasql.database.database_manager import DatabaseManager
 from alphasql.database.utils import build_table_ddl_statement
@@ -21,11 +26,55 @@ from collections import defaultdict
 from copy import deepcopy
 
 load_dotenv(override=True)
+from openai import OpenAI
+import numpy as np
 
-EMBEDDING_MODEL_CALLABLE = OpenAIEmbeddings(model="text-embedding-3-large")
+client = OpenAI(        
+    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+    api_key="sk-33c92c76842f4c4f83716a2339b7d17f"
+)
+from typing import List, Dict
+import numpy as np
 
-COST_RECORDER = CostRecorder(model="gpt-3.5-turbo")
-MODEL_NAME = "gpt-4o-mini"
+def direct_embed(texts: List[str], batch_size: int = 25) -> Dict[str, np.ndarray]:
+    """
+    批量处理文本嵌入请求，自动分批调用OpenAI API
+    
+    Args:
+        texts: 要计算嵌入的文本列表
+        batch_size: 每批处理的文本数量(OpenAI API限制最大为25)
+        
+    Returns:
+        字典{文本: 嵌入向量}
+    """
+    embeddings = {}
+    
+    # 分批处理
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i + batch_size]
+        
+        try:
+            # 调用API
+            response = client.embeddings.create(
+                model="text-embedding-v2",
+                input=batch,
+                encoding_format="float"
+            )
+            
+            # 处理响应
+            for text, data in zip(batch, response.data):
+                embeddings[text] = np.array(data.embedding, dtype=np.float32)
+                
+        except Exception as e:
+            print(f"处理批次 {i//batch_size + 1} 时出错: {str(e)}")
+            # 可以选择重试或跳过该批次
+    
+    return embeddings
+
+EMBEDDING_MODEL_CALLABLE = OpenAIEmbeddings(model="text-embedding-v2", api_key="sk-33c92c76842f4c4f83716a2339b7d17f", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1", encoding_format="float")
+
+COST_RECORDER = CostRecorder(model="deepseek-chat")
+MODEL_NAME = "deepseek-chat"
 TEMPERATURE = 0.0
 
 class Preprocessor:
@@ -105,7 +154,7 @@ class Preprocessor:
         """
         Preprocess the LSH index for all databases.
         """
-        with ThreadPoolExecutor(max_workers=self.n_parallel_processes) as executor:
+        with ThreadPoolExecutor(max_workers=1) as executor:
             executor.map(self.preprocess_lsh_index_for_one_db, self.all_db_ids)
         logger.info(f"Preprocessed LSH index for {len(self.all_db_ids)} databases")
     
@@ -204,8 +253,12 @@ class Preprocessor:
         to_embeded_list = [candidate_value["value"] for candidate_value in candidate_values]
         to_embeded_list += [candidate_value["query"] for candidate_value in candidate_values]
         to_embeded_list = list(set(to_embeded_list))
-        embeddings = EMBEDDING_MODEL_CALLABLE.embed_documents(to_embeded_list)
-        embeddings = {to_embeded_list[i]: embeddings[i] for i in range(len(to_embeded_list))}
+        # print("to_embeded_list", to_embeded_list)
+
+        # to_embeded_list = [x.replace("\'", "").replace("+", "") for x in to_embeded_list if x.strip()]
+        
+        embeddings = direct_embed(to_embeded_list)
+        # embeddings = {to_embeded_list[i]: embeddings[i] for i in range(len(to_embeded_list))}
         
         filtered_candidate_values = []
         for candidate_value in candidate_values:
@@ -240,8 +293,9 @@ class Preprocessor:
             A dictionary with tuple of (table name, column name) as key, and a list of relevant values as value.
         """
         keywords = self.get_keywords_for_task(task)
-        print(keywords)
+        # print(keywords)
         # Step 1: Use keywords to query the LSH index to get the candidate values.
+        # print("Step 1: Use keywords to query the LSH index to get the candidate values.")
         lsh_candidate_values = []
         for keyword in keywords:
             results = LSHIndex.query_lsh_index(
@@ -252,10 +306,12 @@ class Preprocessor:
                 n_gram=self.lsh_n_gram
             )
             lsh_candidate_values.extend(results)
-        print(lsh_candidate_values)
+        # print(lsh_candidate_values)
         # Step 2: Use edit distance to filter the candidate values.
+        # print("Step 2: Use edit distance to filter the candidate values.")
         edit_similarity_candidate_values = self.filter_candidate_values_by_edit_similarity(lsh_candidate_values, self.edit_similarity_threshold)
         # Step 3: Use embedding similarity to filter the candidate values.
+        # print("Step 3: Use embedding similarity to filter the candidate values.")
         embedding_similarity_candidate_values = self.filter_candidate_values_by_embedding_similarity(edit_similarity_candidate_values, self.embedding_similarity_threshold)
         
         final_candidate_values = defaultdict(list)
@@ -263,6 +319,7 @@ class Preprocessor:
             final_candidate_values[(value["table_name"], value["column_name"])].append(value)
         
         # Step 4: Filter the candidate values with lower than COEFFICIENT * max_similarity_score
+        # print("Step 4: Filter the candidate values with lower than COEFFICIENT * max_similarity_score")
         # COEFFICIENT = 0.0 means no filtering
         COEFFICIENT = 0.0
         for table_name, column_name in final_candidate_values:
@@ -279,27 +336,91 @@ class Preprocessor:
         
         return final_candidate_values
     
-    def get_relevant_values_for_all_tasks(self) -> List[Dict[Tuple[str, str], List[str]]]:
-        """
-        Get the relevant values for all tasks.
+    def get_relevant_values_for_all_tasks(self, batch_size=20) -> Optional[List[Dict[Tuple[str, str], List[str]]]]:
+        final_file = self.save_dir.joinpath("relevant_values_for_all_tasks.pkl")
+        temp_dir = self.save_dir.joinpath("relevant_values_temp")
+        temp_dir.mkdir(exist_ok=True)
+
+        # 1. 加载已有进度
+        processed_indices = set()
+        if final_file.exists():
+            return pickle.load(open(final_file, "rb"))
         
-        Returns:
-            The relevant values for all tasks.
-            A dictionary with tuple of (table name, column name) as key, and a list of relevant values as value.
-        """
-        if self.save_dir.joinpath("relevant_values_for_all_tasks.pkl").exists():
-            with open(self.save_dir.joinpath("relevant_values_for_all_tasks.pkl"), "rb") as f:
-                relevant_values_for_all_tasks = pickle.load(f)
+        temp_files = list(temp_dir.glob("task_*.pkl"))
+        if temp_files:
+            processed_indices = {int(f.stem.split('_')[1]) for f in temp_files}
+
+        # 2. 计算批次信息
+        all_indices = list(range(len(self.tasks)))
+        remaining_indices = [i for i in all_indices if i not in processed_indices]
+        batches = [remaining_indices[i:i + batch_size] for i in range(0, len(remaining_indices), batch_size)]
+        total_batches = len(batches)
+
+        if not batches:
+            return pickle.load(open(final_file, "rb")) if final_file.exists() else []
+
+        # 3. 显示批次信息
+        current_batch_num = (len(all_indices) - len(remaining_indices)) // batch_size + 1
+        print(f"\n▶ Batch {current_batch_num}/{total_batches} (Tasks {batches[0][0]}-{batches[0][-1]})")
+
+        # 4. 处理当前批次（带进度条）
+        current_batch = batches[0]
+        batch_progress = tqdm(
+            current_batch, 
+            desc=f"Processing batch {current_batch_num}/{total_batches}",
+            bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [tasks]"
+        )
+        
+        for i in batch_progress:
+            try:
+                result = self.get_relevant_values_for_task(self.tasks[i])
+                with open(temp_dir / f"task_{i}.pkl", "wb") as f:
+                    pickle.dump(result, f)
+            except Exception as e:
+                print(f"\nError in task {i}: {str(e)}")
+                batch_progress.set_postfix_str(f"Failed: {i}", refresh=True)
+
+        # 5. 最终处理
+        is_final_batch = (len(batches) == 1)
+        
+        if is_final_batch:
+            self._merge_temp_results(temp_dir, final_file)
+            # self._cleanup_temp_files(temp_dir)
+            print("\n✅ All batches completed!")
+            return pickle.load(open(final_file, "rb"))
         else:
-            with ThreadPoolExecutor(max_workers=self.n_parallel_processes) as executor:
-                relevant_values_for_all_tasks = list(
-                tqdm(executor.map(self.get_relevant_values_for_task, self.tasks), 
-                     total=len(self.tasks), 
-                     desc="Getting relevant values for all tasks")
-                )
-            with open(self.save_dir.joinpath("relevant_values_for_all_tasks.pkl"), "wb") as f:
-                pickle.dump(relevant_values_for_all_tasks, f)
-        return relevant_values_for_all_tasks
+            print(f"\n⏳ Batch {current_batch_num}/{total_batches} completed. Ready for next batch.")
+            sys.exit(0)
+
+    def _merge_temp_results(self, temp_dir: Path, final_file: Path):
+        """Merge all temp files into final result file."""
+        temp_files = sorted(temp_dir.glob("task_*.pkl"), 
+                        key=lambda f: int(f.stem.split('_')[1]))
+        
+        results = []
+        for temp_file in temp_files:
+            try:
+                with open(temp_file, "rb") as f:
+                    results.append(pickle.load(f))
+            except Exception as e:
+                print(f"Error loading temp file {temp_file}: {str(e)}")
+                continue
+        
+        # Write final merged result
+        with open(final_file, "wb") as f:
+            pickle.dump(results, f)
+
+    def _cleanup_temp_files(self, temp_dir: Path):
+        """Remove all temporary files after successful merge."""
+        for temp_file in temp_dir.glob("task_*.pkl"):
+            try:
+                temp_file.unlink()
+            except Exception as e:
+                print(f"Error deleting temp file {temp_file}: {str(e)}")
+        try:
+            temp_dir.rmdir()
+        except Exception as e:
+            print(f"Error removing temp directory {temp_dir}: {str(e)}")
     
     def get_gold_relevant_values_for_all_tasks(self) -> List[Dict[Tuple[str, str], List[str]]]:
         """
@@ -461,7 +582,7 @@ if __name__ == "__main__":
     parser.add_argument("--database_root_dir", type=str, required=True)
     parser.add_argument("--save_root_dir", type=str, required=True)
     parser.add_argument("--lsh_threshold", type=float, required=True, default=0.5)
-    parser.add_argument("--lsh_signature_size", type=int, required=True, default=128)
+    parser.add_argument("--lsh_signature_size", type=int, required=True, default=64)
     parser.add_argument("--lsh_n_gram", type=int, required=True, default=3)
     parser.add_argument("--lsh_top_k", type=int, required=True, default=20)
     parser.add_argument("--edit_similarity_threshold", type=float, required=True, default=0.3)

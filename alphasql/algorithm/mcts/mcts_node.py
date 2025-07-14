@@ -61,6 +61,11 @@ class MCTSNode:
 
         self.Q = 0
         self.N = 0
+
+        self.prompt = ""
+        self.response = ""
+        self.id = ""
+        self.call_llm_num = 0
     
     def create_children(self):
         if self.children:

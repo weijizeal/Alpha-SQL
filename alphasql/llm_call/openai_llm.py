@@ -48,6 +48,7 @@ def call_openai(prompt: str,
                 if cost_recorder is not None:
                     cost_recorder.update_cost(response.usage.prompt_tokens, response.usage.completion_tokens)
                 contents = [choice.message.content for choice in response.choices]
+                cost_recorder.record_n_content(len(contents))
                 break
             elif n > 1 and n_strategy == N_CALLING_STRATEGY_MULTIPLE:
                 contents = []
@@ -65,6 +66,7 @@ def call_openai(prompt: str,
                     if cost_recorder is not None:
                         cost_recorder.update_cost(response.usage.prompt_tokens, response.usage.completion_tokens)
                     contents.append(response.choices[0].message.content)
+                cost_recorder.record_n_content(len(contents))
                 break
             else:
                 raise ValueError(f"Invalid n_strategy: {n_strategy} for n: {n}")
@@ -73,6 +75,7 @@ def call_openai(prompt: str,
             print(f"Error calling OpenAI: {e}")
             print(f"Start retrying {retrying + 1} times")
             print("-" * 100)
+            cost_recorder.record_failure()
             retrying += 1
             if retrying == MAX_RETRYING_TIMES:
                 raise e

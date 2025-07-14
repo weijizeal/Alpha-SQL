@@ -15,6 +15,10 @@ class CostRecorder:
         self.total_completion_tokens = 0
         self.total_tokens = 0
         self.total_cost = 0
+        self.call_count = 0
+        self.n_content_count = 0
+        self.failed_count = 0
+
         if self.model in MODEL_PRICE_PER_1M_TOKENS:
             self.total_cost_per_1m_tokens = MODEL_PRICE_PER_1M_TOKENS[self.model]
         else:
@@ -27,6 +31,13 @@ class CostRecorder:
         self.total_completion_tokens += completion_tokens
         self.total_tokens += prompt_tokens + completion_tokens
         self.total_cost += (prompt_tokens / 1e6 * self.total_cost_per_1m_tokens["prompt"]) + (completion_tokens / 1e6 * self.total_cost_per_1m_tokens["completion"])
+        self.call_count += 1
+
+    def record_n_content(self, count: int):
+        self.n_content_count += count
+
+    def record_failure(self):
+        self.failed_count += 1
 
     def get_total_prompt_tokens(self):
         return self.total_prompt_tokens
@@ -47,3 +58,15 @@ class CostRecorder:
         print(f"Total tokens: {self.total_tokens}")
         print(f"Total cost: {self.total_cost}")
         print("-" * 100)
+    
+    def to_dict(self):
+        return {
+            "model": self.model,
+            "total_prompt_tokens": self.total_prompt_tokens,
+            "total_completion_tokens": self.total_completion_tokens,
+            "total_tokens": self.total_tokens,
+            "total_cost": self.total_cost,
+            "call_count": self.call_count,
+            "n_content_count": self.n_content_count,
+            "failed_count": self.failed_count
+        }
