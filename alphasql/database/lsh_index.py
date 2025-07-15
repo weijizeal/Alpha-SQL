@@ -1,4 +1,8 @@
+from functools import partial
+import multiprocessing
 import pickle
+import sqlite3
+import sys
 from datasketch import MinHash, MinHashLSH
 from pathlib import Path
 from typing import Dict, List
@@ -7,6 +11,7 @@ from nltk.util import ngrams
 from tqdm import tqdm
 from typing import Tuple, Any
 import shutil
+from functools import lru_cache
 
 from alphasql.database.schema import DatabaseSchema
 from alphasql.database.sql_execution import execute_sql_without_timeout
@@ -52,13 +57,13 @@ class LSHIndex:
         return unique_values
         
     @classmethod
-    def create_minhash(cls, string: str, signature_size: int = 128, n_gram: int = 3) -> MinHash:
+    def create_minhash(cls, string: str, signature_size: int = 64, n_gram: int = 3) -> MinHash:
         """
         Create a MinHash for a string.
         
         Args:
             string (str): The string to create a MinHash for.
-            signature_size (int): The size of the signature, defaults to 128.
+            signature_size (int): The size of the signature, defaults to 64.
             n_gram (int): The size of the n-gram, defaults to 5.
         Returns:
             MinHash: A MinHash for the string.
@@ -69,81 +74,183 @@ class LSHIndex:
         return minhash
     
     @classmethod
-    def create_lsh_index(cls, database_schema: DatabaseSchema, threshold: float = 0.5, signature_size: int = 128, n_gram: int = 3) -> None:
+    def create_lsh_index(cls, database_schema: DatabaseSchema, threshold: float = 0.5, 
+                        signature_size: int = 64, n_gram: int = 3, 
+                        batch_size: int = 1500, num_workers: int = None) -> None:
         """
-        Create a LSH index for the database schema.
-        
-        Args:
-            database_schema (DatabaseSchema): The database schema to create the LSH index for.
-            threshold (float): The threshold for the LSH index, defaults to 0.5.
-            signature_size (int): The size of the signature, defaults to 128.
-            n_gram (int): The size of the n-gram, defaults to 3.
+        创建LSH索引并将MinHash数据存储在SQLite数据库中
         """
+        # 获取数据库中的唯一值
         unique_values = cls.get_unique_database_values(database_schema)
-        print(unique_values)
-        lsh_index = MinHashLSH(threshold=threshold, num_perm=signature_size)
-        minhashes = {}
-        total_unique_values_count = sum(len(column_values) for table_values in unique_values.values() for column_values in table_values.values())
-        pbar = tqdm(total=total_unique_values_count, desc=f"Creating LSH index for database: {database_schema.db_id}")
-        for table_name, table_values in unique_values.items():
-            for column_name, column_values in table_values.items():
-                for value_idx, value in enumerate(column_values):
-                    minhash = cls.create_minhash(value, signature_size, n_gram)
-                    minhash_key = f"{table_name}_{column_name}_{value_idx}"
-                    minhashes[minhash_key] = (minhash, table_name, column_name, value)
-                    lsh_index.insert(minhash_key, minhash)
-                    pbar.update(1)
-        pbar.close()
         
+        # 创建LSH索引
+        lsh_index = MinHashLSH(threshold=threshold, num_perm=signature_size)
+        
+        # 准备SQLite数据库存储MinHash数据
         lsh_index_dir_path = Path(database_schema.db_directory) / "lsh_index"
         if lsh_index_dir_path.exists():
             shutil.rmtree(lsh_index_dir_path)
         lsh_index_dir_path.mkdir(parents=True)
         
-        lsh_index_path = lsh_index_dir_path / f"lsh_index.pkl"
-        minhashes_path = lsh_index_dir_path / f"minhashes.pkl"
+        # 创建SQLite数据库
+        db_path = lsh_index_dir_path / "minhashes.db"
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        # 创建表结构
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS minhashes (
+            id TEXT PRIMARY KEY,
+            table_name TEXT NOT NULL,
+            column_name TEXT NOT NULL,
+            value TEXT NOT NULL,
+            minhash BLOB NOT NULL
+        )
+        ''')
+        
+        # 准备要处理的项目
+        items_to_process = []
+        for table_name, table_values in unique_values.items():
+            for column_name, column_values in table_values.items():
+                for value_idx, value in enumerate(column_values):
+                    items_to_process.append((table_name, column_name, value_idx, value))
+        
+        total_unique_values_count = len(items_to_process)
+        
+        # 设置多进程
+        num_workers = num_workers or multiprocessing.cpu_count()
+        pool = multiprocessing.Pool(processes=num_workers)
+        
+        # 处理批次
+        process_batch_fn = partial(
+            cls._process_batch,
+            signature_size=signature_size,
+            n_gram=n_gram
+        )
+        
+        with tqdm(total=total_unique_values_count, 
+                desc=f"Creating LSH index for database: {database_schema.db_id}") as pbar:
+            
+            # 分批处理
+            for batch_idx in range(0, total_unique_values_count, batch_size):
+                batch = items_to_process[batch_idx:batch_idx + batch_size]
+                
+                # 并行处理批次
+                batch_results = pool.map(process_batch_fn, batch)
+                
+                # 更新索引和数据库
+                for result in batch_results:
+                    minhash_key, minhash, table_name, column_name, value = result
+                    
+                    # 将MinHash序列化
+                    minhash_bytes = pickle.dumps(minhash)
+                    
+                    # 插入数据库
+                    cursor.execute('''
+                    INSERT INTO minhashes (id, table_name, column_name, value, minhash)
+                    VALUES (?, ?, ?, ?, ?)
+                    ''', (minhash_key, table_name, column_name, value, minhash_bytes))
+                    
+                    # 添加到LSH索引
+                    lsh_index.insert(minhash_key, minhash)
+                    pbar.update(1)
+                
+                # 提交当前批次
+                conn.commit()
+        
+        pool.close()
+        pool.join()
+        conn.close()
+        
+        # 保存LSH索引
+        lsh_index_path = lsh_index_dir_path / "lsh_index.pkl"
         with open(lsh_index_path, "wb") as f:
             pickle.dump(lsh_index, f)
-        with open(minhashes_path, "wb") as f:
-            pickle.dump(minhashes, f)
 
     @classmethod
-    def query_lsh_index(cls, database_schema: DatabaseSchema, query: str, top_k: int = 10, signature_size: int = 128, n_gram: int = 3) -> List[Tuple[float, Dict[str, Any]]]:
+    def _process_batch(cls, item, signature_size: int, n_gram: int) -> tuple:
         """
-        Query the LSH index for the database schema.
+        Helper method to process a single item in a batch.
         
         Args:
-            database_schema (DatabaseSchema): The database schema to query.
-            query (str): The query to search for.
-            top_k (int): The number of results to return, defaults to 10.
-            signature_size (int): The size of the signature, defaults to 128.
-            n_gram (int): The size of the n-gram, defaults to 3.
+            item: Tuple of (table_name, column_name, value_idx, value)
+            signature_size: Size of the MinHash signature
+            n_gram: Size of n-grams to use
+            
         Returns:
-            A list of tuples containing the score and the metadata.
+            Tuple containing (minhash_key, minhash, table_name, column_name, value)
         """
-        lsh_index_dir_path = Path(database_schema.db_directory) / "lsh_index"
-        lsh_index_path = lsh_index_dir_path / f"lsh_index.pkl"
-        minhashes_path = lsh_index_dir_path / f"minhashes.pkl"
-        if database_schema.db_id not in cls.CACHED_LSH_INDEX:
-            with open(lsh_index_path, "rb") as f:
-                lsh_index = pickle.load(f)
-            with open(minhashes_path, "rb") as f:
-                minhashes = pickle.load(f)
-            cls.CACHED_LSH_INDEX[database_schema.db_id] = (lsh_index, minhashes)
-        lsh_index, minhashes = cls.CACHED_LSH_INDEX[database_schema.db_id]
+        table_name, column_name, value_idx, value = item
+        minhash = cls.create_minhash(value, signature_size, n_gram)
+        minhash_key = f"{table_name}_{column_name}_{value_idx}"
+        return (minhash_key, minhash, table_name, column_name, value)
+    
+    @classmethod
+    @lru_cache(maxsize=1)
+    def _get_cached_lsh_index(cls, db_directory: str):
+        """从SQLite数据库加载缓存的LSH索引"""
+        lsh_index_dir_path = Path(db_directory) / "lsh_index"
+        lsh_index_path = lsh_index_dir_path / "lsh_index.pkl"
         
+        # 加载LSH索引
+        with open(lsh_index_path, "rb") as f:
+            lsh_index = pickle.load(f)
+            
+        # 不再需要加载所有minhashes到内存
+        # 我们将在query_lsh_index中按需从SQLite加载
+        
+        return lsh_index, str(lsh_index_dir_path / "minhashes.db")  # 返回数据库路径
+    
+    @classmethod
+    def query_lsh_index(cls, database_schema: DatabaseSchema, query: str, top_k: int = 10, 
+                       signature_size: int = 64, n_gram: int = 3) -> List[Dict[str, Any]]:
+        """
+        查询LSH索引，从SQLite数据库按需加载MinHash数据
+        """
+        # 获取缓存中的LSH索引和数据库路径
+        lsh_index, db_path = cls._get_cached_lsh_index(str(database_schema.db_directory))
+        # print(f"LSH索引大小: {sys.getsizeof(lsh_index)} bytes")
+
+        # 创建查询的minhash
         query_minhash = cls.create_minhash(query, signature_size, n_gram)
-        results = lsh_index.query(query_minhash)
-        similar_items = [(result_key, minhashes[result_key][0].jaccard(query_minhash)) for result_key in results]
+        # print(f"MinHash对象大小: {sys.getsizeof(query_minhash)} bytes")
+
+        # 查询LSH索引获取匹配的键
+        result_keys = lsh_index.query(query_minhash)
+        
+        # 连接到SQLite数据库
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        similar_items = []
+        for result_key in result_keys:
+            # 从数据库加载minhash
+            cursor.execute('''
+            SELECT table_name, column_name, value, minhash 
+            FROM minhashes 
+            WHERE id = ?
+            ''', (result_key,))
+            
+            row = cursor.fetchone()
+            if row:
+                table_name, column_name, value, minhash_bytes = row
+                minhash = pickle.loads(minhash_bytes)
+                score = minhash.jaccard(query_minhash)
+                similar_items.append((result_key, score, table_name, column_name, value))
+        
+        conn.close()
+        
+        # 排序并返回top_k结果
         similar_items = sorted(similar_items, key=lambda x: x[1], reverse=True)[:top_k]
+        # print(f"结果键数量: {len(result_keys)}")
         return [
             {
                 "query": query,
                 "lsh_score": score,
-                "table_name": minhashes[result_key][1],
-                "column_name": minhashes[result_key][2],
-                "value": minhashes[result_key][3]
+                "table_name": table_name,
+                "column_name": column_name,
+                "value": value
             }
-            for result_key, score in similar_items
+            for _, score, table_name, column_name, value in similar_items
         ]
         
