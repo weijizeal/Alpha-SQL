@@ -15,7 +15,6 @@ from dotenv import load_dotenv
 import os
 import traceback
 import numpy as np
-import multiprocessing
 
 load_dotenv(override=True)
 
@@ -49,10 +48,6 @@ class MCTSRunner:
 
         self.all_task_results = []  # 新增：存储所有任务结果
         self.stats_file = Path(self.config.save_root_dir) / "task_rpompt_stats.json"
-
-        # 用于跨进程同步的Manager和Lock
-        self.manager = multiprocessing.Manager()
-        self.result_lock = self.manager.Lock()
         
     def run_one_task(self, task: Task) -> None:
         task_recorder = CostRecorder(model=self.config.mcts_model_kwargs.get("model", "gpt-3.5-turbo"))
@@ -114,32 +109,32 @@ class MCTSRunner:
             list(tqdm(executor.map(self.run_one_task, tasks), total=len(tasks), desc="Solving tasks"))
 
     def _append_task_result(self, task_stats: dict):
-            """带锁追加单个任务结果到文件"""
-            with self.result_lock:
-                # 使用临时文件避免写入冲突
-                temp_path = self.stats_file.with_suffix('.tmp')
-                try:
-                    # 读取现有数据
-                    if self.stats_file.exists():
-                        with open(self.stats_file, 'r') as f:
-                            existing_data = json.load(f)
-                    else:
-                        existing_data = []
-                    
-                    # 追加新结果
-                    existing_data.append(task_stats)
-                    
-                    # 写入临时文件
-                    with open(temp_path, 'w') as f:
-                        json.dump(existing_data, f, ensure_ascii=False, indent=4)
-                    
-                    # 原子替换原文件
-                    os.replace(temp_path, self.stats_file)
-                    
-                except Exception as e:
-                    if temp_path.exists():
-                        temp_path.unlink()
-                    raise e
+        """追加单个任务结果到文件"""
+        # 使用临时文件避免写入冲突
+        temp_path = self.stats_file.with_suffix('.tmp')
+        
+        try:
+            # 读取现有数据
+            if self.stats_file.exists():
+                with open(self.stats_file, 'r') as f:
+                    existing_data = json.load(f)
+            else:
+                existing_data = []
+            
+            # 追加新结果
+            existing_data.append(task_stats)
+            
+            # 写入临时文件
+            with open(temp_path, 'w') as f:
+                json.dump(existing_data, f, ensure_ascii=False, indent=4)
+            
+            # 原子替换原文件
+            os.replace(temp_path, self.stats_file)
+            
+        except Exception as e:
+            if temp_path.exists():
+                temp_path.unlink()
+            print(f"Error appending task result: {e}")
 
 if __name__ == "__main__":
     import sys

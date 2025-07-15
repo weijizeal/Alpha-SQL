@@ -66,6 +66,8 @@ class MCTSNode:
         self.response = ""
         self.id = ""
         self.call_llm_num = 0
+        self._is_initialized = False
+        self._is_pruned = False # 剪枝
     
     def create_children(self):
         if self.children:
@@ -77,5 +79,16 @@ class MCTSNode:
             
     def is_terminal(self):
         return self.node_type == MCTSNodeType.END
+    
+    def extend_from_parent(self):
+        self.rephrased_question = self.parent_node.rephrased_question
+        self.selected_schema_dict = self.parent_node.selected_schema_dict
+        self.selected_schema_context = self.parent_node.selected_schema_context
+        self.identified_column_values = self.parent_node.identified_column_values
+        self.identified_column_functions = self.parent_node.identified_column_functions
+        self.sql_query = self.parent_node.sql_query
+        self.revised_sql_query = self.parent_node.revised_sql_query
+        self.final_sql_query = self.parent_node.final_sql_query
+        
 
 

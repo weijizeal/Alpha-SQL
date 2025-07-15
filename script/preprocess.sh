@@ -3,7 +3,7 @@
 python -m alphasql.runner.preprocessor \
     --data_file_path "data/bird/dev/dev.json" \
     --database_root_dir "data/bird/dev/dev_databases" \
-    --save_root_dir "data/preprocessed/bird/dev" \
+    --save_root_dir "data/preprocessed/bird/dev_temp" \
     --lsh_threshold 0.5 \
     --lsh_signature_size 128 \
     --lsh_n_gram 3 \

@@ -68,7 +68,21 @@ class MCTSSolver:
         current = node
         while not current.is_terminal():
             self.expand(current)
-            current = random.choice(current.children)
+
+            while len(current.children) > 0:
+                current = random.choice(current.children)
+
+                if not current._is_initialized:
+                    action_class = type(current.parent_action)
+                    action_class.initialize_node(current, self.llm_kwargs)
+                    current._is_initialized = True
+                    
+                if current._is_pruned:
+                    current.parent_node.children.remove(current)
+                    continue
+                else:
+                    break
+                
         return current
 
     def backpropagate(self, node: MCTSNode):
@@ -158,7 +172,24 @@ class MCTSSolver:
 
             # 选择阶段计时
             select_start = time.time()
-            leaf_node = self.select(root_node)
+            
+            if rollout_step == 0:
+                leaf_node = self.select(root_node)
+            else:
+                while len(leaf_node.parent_node.children) > 0:
+                    leaf_node = self.select(root_node)
+
+                    if not leaf_node._is_initialized:
+                        action_class = type(leaf_node.parent_action)
+                        action_class.initialize_node(leaf_node, self.llm_kwargs)
+                        leaf_node._is_initialized = True
+
+                    if leaf_node._is_pruned:
+                        leaf_node.parent_node.children.remove(leaf_node)
+                        continue
+                    else:
+                        break
+            
             phase_times['select_time'] = time.time() - select_start
 
             # 记录选择后的树状态
@@ -181,7 +212,19 @@ class MCTSSolver:
                 # 记录扩展后的树状态
                 self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="expand",num=3,step_dir=step_dir)
 
-                leaf_node = random.choice(leaf_node.children)
+                while len(leaf_node.children) > 0:
+                    leaf_node = random.choice(leaf_node.children)
+
+                    if not leaf_node._is_initialized:
+                        action_class = type(leaf_node.parent_action)
+                        action_class.initialize_node(leaf_node, self.llm_kwargs)
+                        leaf_node._is_initialized = True
+                        
+                    if leaf_node._is_pruned:
+                        leaf_node.parent_node.children.remove(leaf_node)
+                        continue
+                    else:
+                        break
 
                 # 模拟阶段计时
                 simulate_start = time.time()

@@ -21,6 +21,7 @@ while true; do
         rm "$TEMP_LOG"
         sleep 1
     else
+        echo "❌ 发生错误！"
         tail -n 10 "$TEMP_LOG"
         rm "$TEMP_LOG"
         exit 1

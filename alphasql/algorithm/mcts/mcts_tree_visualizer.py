@@ -194,7 +194,7 @@ class MCTSTreeVisualizer:
                 "selected_schema": node.selected_schema_context,
                 "identified_values": node.identified_column_values,
                 "identified_functions": node.identified_column_functions,
-                "generated_sql": node.sql_query,
+                "sql_query": node.sql_query,
                 "revised_sql": node.revised_sql_query,
                 "final_sql": node.final_sql_query,
                 "is_valid": node.is_valid_sql_query,
