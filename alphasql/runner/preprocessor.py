@@ -24,6 +24,7 @@ from pathlib import Path
 import pickle
 from collections import defaultdict
 from copy import deepcopy
+import re
 
 load_dotenv(override=True)
 from openai import OpenAI
@@ -168,30 +169,50 @@ class Preprocessor:
         Returns:
             The keywords list for the task.
         """
-        raw_keywords_str = call_openai(
-            get_prompt("keywords_extraction", {"QUESTION": task.question, "HINT": task.evidence}),
-            MODEL_NAME,
-            TEMPERATURE,
-            cost_recorder=COST_RECORDER
-        )[0]
-        raw_keywords_str: str
-        left_bracket_index = raw_keywords_str.find("[")
-        right_bracket_index = raw_keywords_str.rfind("]")
-        raw_keywords_str = raw_keywords_str[left_bracket_index:right_bracket_index+1]
-        raw_keywords = eval(raw_keywords_str)
-        keywords = []
-        for keyword in raw_keywords:
-            keyword: str
-            keywords.append(keyword.strip())
-            # for date type, e.g. 1999/06/22
-            keywords.append(keyword.replace("/", "-").strip("\"").strip("'"))
-            # split keyword
-            keywords.extend(keyword.replace("=", " ").replace("(", " ").replace(")", " ").replace("_", " ").split(" "))
-            keywords.extend(keyword.strip("'").replace("=", " ").replace("(", " ").replace(")", " ").replace("_", " ").split(" "))
-            keywords.extend(keyword.strip("\"").replace("=", " ").replace("(", " ").replace(")", " ").replace("_", " ").split(" "))
-        # remove duplicate keywords
-        keywords = list(set(keyword.strip() for keyword in keywords))
-        return keywords
+        max_retries = 10
+        retry_count = 0
+        
+        while retry_count < max_retries:
+            try:
+                raw_keywords_str = call_openai(
+                    get_prompt("keywords_extraction", {"QUESTION": task.question, "HINT": task.evidence}),
+                    MODEL_NAME,
+                    TEMPERATURE,
+                    cost_recorder=COST_RECORDER
+                )[0]
+                
+                # Use regex to extract content between ```python ``` tags
+                pattern = r"```python\s*\[(.*?)\]\s*```"
+                match = re.search(pattern, raw_keywords_str, re.DOTALL)
+                
+                if match:
+                    raw_keywords_str = f"[{match.group(1)}]"
+                    raw_keywords = eval(raw_keywords_str)
+                    keywords = []
+                    for keyword in raw_keywords:
+                        keyword: str
+                        keywords.append(keyword.strip())
+                        # for date type, e.g. 1999/06/22
+                        keywords.append(keyword.replace("/", "-").strip("\"").strip("'"))
+                        # split keyword
+                        keywords.extend(keyword.replace("=", " ").replace("(", " ").replace(")", " ").replace("_", " ").split(" "))
+                        keywords.extend(keyword.strip("'").replace("=", " ").replace("(", " ").replace(")", " ").replace("_", " ").split(" "))
+                        keywords.extend(keyword.strip("\"").replace("=", " ").replace("(", " ").replace(")", " ").replace("_", " ").split(" "))
+                    # remove duplicate keywords
+                    keywords = list(set(keyword.strip() for keyword in keywords))
+                    return keywords
+                else:
+                    logger.warning(f"Failed to extract Python list from response, attempt {retry_count + 1}/{max_retries}")
+                    retry_count += 1
+                    continue
+                    
+            except Exception as e:
+                logger.warning(f"Error processing keywords, attempt {retry_count + 1}/{max_retries}: {str(e)}")
+                retry_count += 1
+                continue
+        
+        # If all retries failed, return empty list
+        raise Exception("Failed to extract keywords")
         
     def get_gold_relevant_values_for_task(self, task: Task) -> Dict[Tuple[str, str], List[str]]:
         """
@@ -609,4 +630,3 @@ if __name__ == "__main__":
     predicted_relevant_values_for_all_tasks = preprocessor.get_relevant_values_for_all_tasks()
     # relevant_values_retrieval_performance = preprocessor.evaluate_relevant_values_retrieval_performance_for_all_tasks(predicted_relevant_values_for_all_tasks, gold_relevant_values_for_all_tasks)
     tasks_with_schema_context = preprocessor.preprocess_schema_context_for_all_tasks()
-    

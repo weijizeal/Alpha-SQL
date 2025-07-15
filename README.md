@@ -5,6 +5,7 @@
 [![Homepage](https://img.shields.io/badge/🏠-Homepage-blue)](https://alpha-sql-hkust.github.io/)
 [![ICML 2025](https://img.shields.io/badge/ICML-2025-FF6B6B.svg)](https://icml.cc/Conferences/2025)
 [![arXiv](https://img.shields.io/badge/arXiv-2502.17248-b31b1b.svg)](https://arxiv.org/abs/2502.17248)
+[![Slides](https://img.shields.io/badge/📊-Slides-red)](https://liboyan.vip/presentations/Alpha-SQL.pdf)
 [![Python](https://img.shields.io/badge/Python-3.11.11-3776AB.svg?style=flat)](https://www.python.org/downloads/release/python-31111/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
