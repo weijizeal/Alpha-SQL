@@ -3,7 +3,6 @@ import json
 import argparse
 import sqlite3
 import multiprocessing as mp
-from func_timeout import func_timeout, FunctionTimedOut
 import os
 import statistics
 from typing import List, Dict, Tuple, Any
@@ -30,9 +29,9 @@ def save_json(data: Any, file_path: str) -> None:
     with open(file_path, 'w') as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
-def execute_sql(sql: str, db_path: str) -> List[Tuple]:
-    """执行SQL查询并返回结果"""
-    conn = sqlite3.connect(db_path)
+def execute_sql(sql: str, db_path: str, timeout: float = 5.0) -> List[Tuple]:
+    """执行SQL查询并返回结果，使用短超时避免卡住"""
+    conn = sqlite3.connect(db_path, timeout=timeout)
     cursor = conn.cursor()
     cursor.execute(sql)
     return cursor.fetchall()
@@ -46,29 +45,40 @@ def compare_sql_results(predicted_sql: str, ground_truth_sql: str, db_path: str)
     except Exception:
         return 0
 
-def execute_model(predicted_sql: str, ground_truth_sql: str, db_path: str, idx: int, 
-                  timeout: float = 30.0) -> Dict[str, Any]:
-    """带超时的SQL执行模型"""
+def execute_model(predicted_sql: str, ground_truth_sql: str, db_path: str, idx: int,
+                  timeout: float = 5.0) -> Dict[str, Any]:
+    """带超时的SQL执行模型（简化版，减少资源占用）"""
     try:
-        res = func_timeout(timeout, compare_sql_results, 
-                          args=(predicted_sql, ground_truth_sql, db_path))
-    except (FunctionTimedOut, KeyboardInterrupt):
+        # 直接执行，不用 func_timeout，减少进程开销
+        res = compare_sql_results(predicted_sql, ground_truth_sql, db_path)
+    except Exception:
         res = 0
-    except Exception as e:
-        res = 0
-    
+
     return {'sql_idx': idx, 'res': res}
 
 def result_callback(result: Dict[str, Any]) -> None:
     """多进程回调函数"""
     exec_result.append(result)
 
-def run_sqls_parallel(sql_pairs: List[Tuple[str, str]], db_paths: List[str], 
-                     num_cpus: int = 1, timeout: float = 30.0) -> None:
+def run_sqls_serial(sql_pairs: List[Tuple[str, str]], db_paths: List[str],
+                    timeout: float = 5.0) -> None:
+    """串行执行SQL查询（减少资源占用）"""
+    global exec_result
+    for i, (pred_sql, gt_sql) in enumerate(sql_pairs):
+        result = execute_model(pred_sql, gt_sql, db_paths[i], i, timeout)
+        exec_result.append(result)
+
+def run_sqls_parallel(sql_pairs: List[Tuple[str, str]], db_paths: List[str],
+                     num_cpus: int = 1, timeout: float = 5.0) -> None:
     """并行执行SQL查询"""
+    if num_cpus <= 1:
+        # 使用串行执行减少资源占用
+        run_sqls_serial(sql_pairs, db_paths, timeout)
+        return
+
     pool = mp.Pool(processes=num_cpus)
     for i, (pred_sql, gt_sql) in enumerate(sql_pairs):
-        pool.apply_async(execute_model, 
+        pool.apply_async(execute_model,
                         args=(pred_sql, gt_sql, db_paths[i], i, timeout),
                         callback=result_callback)
     pool.close()
@@ -244,7 +254,7 @@ def save_path_node_info(save_path_node_path, path_node_pkl, action_paths_dict):
         save_json(save_path_node_dict, save_path_node_file_path)
 
 def evaluate(pred_sql_path: str, gt_data_path: str, db_root_path: str, action_path_json_path: str,
-        path_node_pkl_path: str, save_path_node_path: str, num_cpus: int = 1, timeout: float = 30.0) -> None:
+        path_node_pkl_path: str, save_path_node_path: str, num_cpus: int = 1, timeout: float = 5.0) -> None:
     """主评估函数"""
     global exec_result
     exec_result = []
@@ -291,11 +301,16 @@ def evaluate(pred_sql_path: str, gt_data_path: str, db_root_path: str, action_pa
         'individual_results': exec_result
     }
     save_json(detailed_results, 'evaluation_results.json')
-    action_paths_dict = load_json(action_path_json_path)
-    count_for_path(action_paths_dict, gt_data)
-    
-    path_node_pkl = load_pickle(path_node_pkl_path)
-    save_path_node_info(save_path_node_path, path_node_pkl, action_paths_dict)
+
+    # 如果 action_paths.json 存在，则加载并统计路径信息
+    if os.path.exists(action_path_json_path):
+        action_paths_dict = load_json(action_path_json_path)
+        count_for_path(action_paths_dict, gt_data)
+
+        path_node_pkl = load_pickle(path_node_pkl_path)
+        save_path_node_info(save_path_node_path, path_node_pkl, action_paths_dict)
+    else:
+        print(f"Warning: {action_path_json_path} not found, skipping path analysis")
 
 
 
@@ -307,12 +322,12 @@ def evaluate(pred_sql_path: str, gt_data_path: str, db_root_path: str, action_pa
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='SQL Evaluation Script')
-    pred_sql_path = "/home/weiji/Git-projects/Alpha-SQL/pred_sqls.json"
-    gt_data_path = "/home/weiji/Git-projects/Alpha-SQL/data/bird/dev/dev_100.json"
-    db_root_path = "/home/weiji/Git-projects/Alpha-SQL/data/bird/dev/dev_databases"
-    action_path_json_path = "/home/weiji/Git-projects/Alpha-SQL/action_paths.json"
-    path_node_pkl_path = "/home/weiji/Git-projects/Alpha-SQL/paths_node.pkl"
-    save_path_node_path = "/home/weiji/Git-projects/Alpha-SQL/path_node_info"
+    pred_sql_path = "/home/weiji/git_proj/Alpha-SQL/pred_dev1_sqls.json"
+    gt_data_path = "/home/weiji/git_proj/Alpha-SQL/data/bird/dev/dev1.json"
+    db_root_path = "/home/weiji/git_proj/Alpha-SQL/data/bird/dev/dev_databases"
+    action_path_json_path = "/home/weiji/git_proj/Alpha-SQL/action_paths.json"
+    path_node_pkl_path = "/home/weiji/git_proj/Alpha-SQL/paths_node.pkl"
+    save_path_node_path = "/home/weiji/git_proj/Alpha-SQL/path_node_info"
     parser.add_argument('--save_path_node_path', type=str, default=save_path_node_path, required=False,
                        help='Path to save path node info')
     parser.add_argument('--action_path_json_path', type=str, default=action_path_json_path, required=False,
@@ -327,7 +342,7 @@ if __name__ == '__main__':
                        help='Root path to database directories')
     parser.add_argument('--num_cpus', type=int, default=1, 
                        help='Number of CPUs for parallel processing')
-    parser.add_argument('--timeout', type=float, default=30.0, 
+    parser.add_argument('--timeout', type=float, default=5.0,
                        help='Timeout for SQL execution in seconds')
     
     args = parser.parse_args()    

@@ -83,6 +83,12 @@ class MCTSSolver:
                 else:
                     break
                 
+        # 确保 END 节点已初始化
+        if current.is_terminal() and not current._is_initialized:
+            action_class = type(current.parent_action)
+            action_class.initialize_node(current, self.llm_kwargs)
+            current._is_initialized = True
+
         return current
 
     def backpropagate(self, node: MCTSNode):
@@ -196,6 +202,12 @@ class MCTSSolver:
             self.visualizer.visualize_tree(root_node=root_node, rollout_step=rollout_step + 1, phase="select", num=2, step_dir=step_dir)
 
             if leaf_node.is_terminal():
+                # 确保 END 节点已初始化
+                if not leaf_node._is_initialized:
+                    action_class = type(leaf_node.parent_action)
+                    action_class.initialize_node(leaf_node, self.llm_kwargs)
+                    leaf_node._is_initialized = True
+
                 # 回传阶段计时
                 backprop_start = time.time()
                 self.backpropagate(leaf_node)

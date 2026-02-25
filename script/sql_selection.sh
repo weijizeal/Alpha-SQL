@@ -1,10 +1,10 @@
 #! /bin/bash
 
 DB_ROOT_DIR="data/bird/dev/dev_databases"
-PROCESS_NUM=24
+PROCESS_NUM=8
 
-RESULTS_DIR="results/Qwen2.5-Coder-32B-Instruct/bird/dev"
-OUTPUT_PATH="./pred_sqls.json"
+RESULTS_DIR="results/Qwen2.5-Coder-32B-Instruct-temp/bird/dev"
+OUTPUT_PATH="./pred_dev1_sqls.json"
 
 echo "Selecting SQLs..."
 python -m alphasql.runner.sql_selection \

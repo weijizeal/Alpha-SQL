@@ -15,3 +15,5 @@ evaluation_results.json
 paths_node.pkl
 dev.json
 pred_sqls.json
+*/__pycache__/*
+*.sqlite

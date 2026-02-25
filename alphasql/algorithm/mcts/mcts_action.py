@@ -602,7 +602,8 @@ class EndAction(MCTSAction):
         if getattr(node, "_is_initialized", True):
             return  # 避免重复初始化
         node.extend_from_parent()
-        node.final_sql_query = node.sql_query if node.node_type == MCTSNodeType.SQL_GENERATION else node.revised_sql_query
+        # 使用父节点的类型来判断，因为当前节点是 END 类型
+        node.final_sql_query = node.sql_query if node.parent_node.node_type == MCTSNodeType.SQL_GENERATION else node.revised_sql_query
 
 class MCTSNodeType(Enum):
     ROOT = "root"

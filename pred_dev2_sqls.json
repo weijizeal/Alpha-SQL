@@ -1,0 +1,4 @@
+{
+    "1": "SELECT COUNT(*) FROM card INNER JOIN disp ON card.disp_id = disp.disp_id WHERE card.type = 'classic' AND disp.type = 'OWNER'",
+    "0": "SELECT schools.edopsname FROM satscores INNER JOIN schools ON satscores.cds = schools.cdscode ORDER BY satscores.avgscrmath DESC LIMIT 1"
+}

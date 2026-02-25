@@ -40,36 +40,44 @@ import numpy as np
 def direct_embed(texts: List[str], batch_size: int = 25) -> Dict[str, np.ndarray]:
     """
     批量处理文本嵌入请求，自动分批调用OpenAI API
-    
+
     Args:
         texts: 要计算嵌入的文本列表
         batch_size: 每批处理的文本数量(OpenAI API限制最大为25)
-        
+
     Returns:
         字典{文本: 嵌入向量}
     """
+    import time
     embeddings = {}
-    
+
     # 分批处理
     for i in range(0, len(texts), batch_size):
         batch = texts[i:i + batch_size]
-        
-        try:
-            # 调用API
-            response = client.embeddings.create(
-                model="text-embedding-v2",
-                input=batch,
-                encoding_format="float"
-            )
-            
-            # 处理响应
-            for text, data in zip(batch, response.data):
-                embeddings[text] = np.array(data.embedding, dtype=np.float32)
-                
-        except Exception as e:
-            print(f"处理批次 {i//batch_size + 1} 时出错: {str(e)}")
-            # 可以选择重试或跳过该批次
-    
+
+        max_retries = 3
+        for retry in range(max_retries):
+            try:
+                # 调用API
+                response = client.embeddings.create(
+                    model="text-embedding-v2",
+                    input=batch,
+                    encoding_format="float"
+                )
+
+                # 处理响应
+                for text, data in zip(batch, response.data):
+                    embeddings[text] = np.array(data.embedding, dtype=np.float32)
+                break  # 成功则退出重试循环
+
+            except Exception as e:
+                print(f"处理批次 {i//batch_size + 1} 时出错 (重试 {retry+1}/{max_retries}): {str(e)}")
+                if retry < max_retries - 1:
+                    time.sleep(2)  # 重试前等待 2 秒
+                else:
+                    # 所有重试都失败，返回已获取的 embeddings
+                    pass
+
     return embeddings
 
 EMBEDDING_MODEL_CALLABLE = OpenAIEmbeddings(model="text-embedding-v2", api_key="sk-33c92c76842f4c4f83716a2339b7d17f", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1", encoding_format="float")
@@ -357,7 +365,7 @@ class Preprocessor:
         
         return final_candidate_values
     
-    def get_relevant_values_for_all_tasks(self, batch_size=20) -> Optional[List[Dict[Tuple[str, str], List[str]]]]:
+    def get_relevant_values_for_all_tasks(self, batch_size=5) -> Optional[List[Dict[Tuple[str, str], List[str]]]]:
         final_file = self.save_dir.joinpath("relevant_values_for_all_tasks.pkl")
         temp_dir = self.save_dir.joinpath("relevant_values_temp")
         temp_dir.mkdir(exist_ok=True)
@@ -387,18 +395,25 @@ class Preprocessor:
         # 4. 处理当前批次（带进度条）
         current_batch = batches[0]
         batch_progress = tqdm(
-            current_batch, 
+            current_batch,
             desc=f"Processing batch {current_batch_num}/{total_batches}",
             bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [tasks]"
         )
-        
+
+        import time
         for i in batch_progress:
             try:
                 result = self.get_relevant_values_for_task(self.tasks[i])
+                # 保存结果（即使是空字典也要保存，避免下次重复处理）
                 with open(temp_dir / f"task_{i}.pkl", "wb") as f:
                     pickle.dump(result, f)
+                # 任务之间添加小延迟，避免 API 速率限制
+                time.sleep(0.5)
             except Exception as e:
                 print(f"\nError in task {i}: {str(e)}")
+                # 保存空字典标记任务失败，避免无限重试
+                with open(temp_dir / f"task_{i}.pkl", "wb") as f:
+                    pickle.dump({}, f)
                 batch_progress.set_postfix_str(f"Failed: {i}", refresh=True)
 
         # 5. 最终处理
