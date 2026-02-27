@@ -25,7 +25,8 @@ class MCTSSolver:
                  save_root_dir: str,
                  llm_kwargs: Dict[str, Any],
                  reward_model: RewardModel,
-                 show_total_time_statistics: bool = False):
+                 show_total_time_statistics: bool = False,
+                 show_process_view: bool = False):
         self.llm_kwargs = llm_kwargs
         self.reward_model = reward_model
         self.task = task
@@ -34,7 +35,7 @@ class MCTSSolver:
         self.max_depth = max_depth
         self.exploration_constant = exploration_constant
         self.save_root_dir = save_root_dir
-        self.visualizer = MCTSTreeVisualizer(task, show_total_time_statistics)
+        self.visualizer = MCTSTreeVisualizer(task, show_total_time_statistics, show_process_view)
     
     def select(self, node: MCTSNode) -> MCTSNode:
         current = node

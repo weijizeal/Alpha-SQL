@@ -9,6 +9,9 @@ from typing import List, Dict, Tuple, Any
 import pickle
 from collections import defaultdict
 
+# 数据库类型
+DB_TYPE = os.getenv("ALPHASQL_DB_TYPE", "sqlite")
+
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_path)
@@ -31,30 +34,50 @@ def save_json(data: Any, file_path: str) -> None:
 
 def execute_sql(sql: str, db_path: str, timeout: float = 5.0) -> List[Tuple]:
     """执行SQL查询并返回结果，使用短超时避免卡住"""
+    if DB_TYPE == "clickhouse":
+        # 使用ClickHouse执行查询
+        from alphasql.database import clickhouse_db
+        result = clickhouse_db.execute_sql_with_timeout(db_path, sql, timeout)
+        if result.result_type.value == "success":
+            return result.result if result.result else []
+        else:
+            raise Exception(result.error_message or "ClickHouse query execution failed")
+
+    # 使用SQLite执行查询
     conn = sqlite3.connect(db_path, timeout=timeout)
     cursor = conn.cursor()
     cursor.execute(sql)
     return cursor.fetchall()
 
-def compare_sql_results(predicted_sql: str, ground_truth_sql: str, db_path: str) -> int:
-    """比较预测SQL和真实SQL的执行结果"""
+def compare_sql_results(predicted_sql: str, ground_truth_sql: str, db_path: str) -> Tuple[int, int, int]:
+    """
+    比较预测SQL和真实SQL的执行结果
+    返回: (is_equal, pred_count, gt_count)
+    """
     try:
         pred_res = execute_sql(predicted_sql, db_path)
         gt_res = execute_sql(ground_truth_sql, db_path)
-        return 1 if set(pred_res) == set(gt_res) else 0
-    except Exception:
-        return 0
+        pred_count = len(pred_res)
+        gt_count = len(gt_res)
+
+        # 将每行转换为tuple（因为ClickHouse返回list，需要可哈希才能用set比较）
+        pred_res_set = set(tuple(row) for row in pred_res)
+        gt_res_set = set(tuple(row) for row in gt_res)
+
+        return 1 if pred_res_set == gt_res_set else 0, pred_count, gt_count
+    except Exception as e:
+        return 0, -1, -1
 
 def execute_model(predicted_sql: str, ground_truth_sql: str, db_path: str, idx: int,
                   timeout: float = 5.0) -> Dict[str, Any]:
     """带超时的SQL执行模型（简化版，减少资源占用）"""
     try:
         # 直接执行，不用 func_timeout，减少进程开销
-        res = compare_sql_results(predicted_sql, ground_truth_sql, db_path)
+        res, pred_count, gt_count = compare_sql_results(predicted_sql, ground_truth_sql, db_path)
     except Exception:
-        res = 0
+        res, pred_count, gt_count = 0, -1, -1
 
-    return {'sql_idx': idx, 'res': res}
+    return {'sql_idx': idx, 'res': res, 'pred_count': pred_count, 'gt_count': gt_count}
 
 def result_callback(result: Dict[str, Any]) -> None:
     """多进程回调函数"""
@@ -84,26 +107,52 @@ def run_sqls_parallel(sql_pairs: List[Tuple[str, str]], db_paths: List[str],
     pool.close()
     pool.join()
 
-def compute_accuracy(exec_results: List[Dict[str, Any]], 
-                    difficulty_data: List[Dict[str, Any]]) -> Tuple[List[float], List[int], List[Dict[str, Any]]]:
+def compute_accuracy(exec_results: List[Dict[str, Any]],
+                    difficulty_data: List[Dict[str, Any]]) -> Tuple[List[float], List[int], List[Dict[str, Any]], Dict[str, Any]]:
     """计算不同难度级别的准确率"""
     difficulty_map = {'simple': [], 'moderate': [], 'challenging': []}
-    
+
+    # 收集条数统计信息
+    pred_counts = []
+    gt_counts = []
+    pred_gt_match_counts = []  # pred和gt条数相等的情况
+
     for i, res in enumerate(exec_results):
         difficulty = difficulty_data[i]['difficulty']
         difficulty_map[difficulty].append(res['res'])
-    
+
+        # 收集条数信息
+        pred_count = res.get('pred_count', -1)
+        gt_count = res.get('gt_count', -1)
+        if pred_count >= 0 and gt_count >= 0:
+            pred_counts.append(pred_count)
+            gt_counts.append(gt_count)
+            if pred_count == gt_count:
+                pred_gt_match_counts.append(1)
+            else:
+                pred_gt_match_counts.append(0)
+
     simple_acc = sum(difficulty_map['simple']) / len(difficulty_map['simple']) * 100 if difficulty_map['simple'] else 0
     moderate_acc = sum(difficulty_map['moderate']) / len(difficulty_map['moderate']) * 100 if difficulty_map['moderate'] else 0
     challenging_acc = sum(difficulty_map['challenging']) / len(difficulty_map['challenging']) * 100 if difficulty_map['challenging'] else 0
     total_acc = sum(res['res'] for res in exec_results) / len(exec_results) * 100
-    
+
     counts = [
         len(difficulty_map['simple']),
         len(difficulty_map['moderate']),
         len(difficulty_map['challenging']),
         len(exec_results)
     ]
+
+    # 条数统计
+    count_stats = {
+        'pred_counts': pred_counts,
+        'gt_counts': gt_counts,
+        'pred_gt_match': pred_gt_match_counts,
+        'pred_avg': sum(pred_counts) / len(pred_counts) if pred_counts else 0,
+        'gt_avg': sum(gt_counts) / len(gt_counts) if gt_counts else 0,
+        'match_ratio': sum(pred_gt_match_counts) / len(pred_gt_match_counts) * 100 if pred_gt_match_counts else 0
+    }
 
     difficulty_idx_map = { 'simple': [], 'moderate': [], 'challenging': [] }
     for i, res in enumerate(exec_results):
@@ -112,21 +161,30 @@ def compute_accuracy(exec_results: List[Dict[str, Any]],
             'sql_idx': i,
             'is_right': res['res'],
         })
-    
-    return [simple_acc, moderate_acc, challenging_acc, total_acc], counts, difficulty_idx_map
 
-def print_results(accuracies: List[float], counts: List[int], time_stats: Dict[str, float]) -> None:
+    return [simple_acc, moderate_acc, challenging_acc, total_acc], counts, difficulty_idx_map, count_stats
+
+def print_results(accuracies: List[float], counts: List[int], time_stats: Dict[str, float],
+                 count_stats: Dict[str, Any] = None) -> None:
     """打印评估结果"""
     levels = ['Simple', 'Moderate', 'Challenging', 'Total']
     print("\n{:<15} {:<15} {:<15} {:<15} {:<15}".format("", *levels))
     print("{:<15} {:<15} {:<15} {:<15} {:<15}".format('Count', *counts))
-    
+
     print('\n' + '='*30 + ' ACCURACY ' + '='*30)
     print("{:<15} {:<15.2f}% {:<15.2f}% {:<15.2f}% {:<15.2f}%".format('Accuracy', *accuracies))
-    
+
     print('\n' + '='*30 + ' TIME STATS ' + '='*30)
     print("Max: {:.2f}s, Min: {:.2f}s, Avg: {:.2f}s, Median: {:.2f}s".format(
         time_stats['max'], time_stats['min'], time_stats['avg'], time_stats['median']))
+
+    # 打印条数统计信息
+    if count_stats:
+        print('\n' + '='*30 + ' ROW COUNT STATS ' + '='*30)
+        print(f"Pred avg rows: {count_stats['pred_avg']:.2f}")
+        print(f"Ground Truth avg rows: {count_stats['gt_avg']:.2f}")
+        print(f"Pred/GT row count match ratio: {count_stats['match_ratio']:.2f}%")
+        print(f"Total samples with valid counts: {len(count_stats['pred_counts'])}")
 
 def get_action_choose_count(action_paths_dict: Dict[str, List[str]]):
     action_path_count = defaultdict(int)
@@ -272,7 +330,13 @@ def evaluate(pred_sql_path: str, gt_data_path: str, db_root_path: str, action_pa
         question_id = str(item['question_id'])
         if question_id in pred_sqls:
             sql_pairs.append((pred_sqls[question_id], item['SQL']))
-            db_paths.append(os.path.join(db_root_path, item['db_id'], item['db_id'] + '.sqlite'))
+
+            if DB_TYPE == "clickhouse":
+                # ClickHouse 使用 db_id 作为标识符
+                db_paths.append(item['db_id'])
+            else:
+                db_paths.append(os.path.join(db_root_path, item['db_id'], item['db_id'] + '.sqlite'))
+
             if 'time_span' in item:
                 time_spans.append(item['time_span'])
     
@@ -281,8 +345,8 @@ def evaluate(pred_sql_path: str, gt_data_path: str, db_root_path: str, action_pa
     exec_result = sorted(exec_result, key=lambda x: x['sql_idx'])
     
     # 计算准确率和时间统计
-    accuracies, counts, difficulty_idx_map = compute_accuracy(exec_result, gt_data)
-    
+    accuracies, counts, difficulty_idx_map, count_stats = compute_accuracy(exec_result, gt_data)
+
     time_stats = {
         'max': max(time_spans) if time_spans else 0,
         'min': min(time_spans) if time_spans else 0,
@@ -291,13 +355,14 @@ def evaluate(pred_sql_path: str, gt_data_path: str, db_root_path: str, action_pa
     }
     
     # 打印结果
-    print_results(accuracies, counts, time_stats)
-    
+    print_results(accuracies, counts, time_stats, count_stats)
+
     # 保存详细结果
     detailed_results = {
         'accuracy': accuracies,
         'counts': counts,
         'time_stats': time_stats,
+        'count_stats': count_stats,
         'individual_results': exec_result
     }
     save_json(detailed_results, 'evaluation_results.json')

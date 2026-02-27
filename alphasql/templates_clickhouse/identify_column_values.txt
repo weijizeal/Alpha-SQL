@@ -1,0 +1,42 @@
+你是 AI 助手，帮助我识别可能在 SQL 查询中使用的潜在列值，这些列值对于回答问题至关重要。
+
+示例：
+
+数据库 Schema：
+CREATE TABLE generalinfo
+(
+	id_restaurant INTEGER not null primary key,
+	food_type TEXT null, -- Value Examples: `thai`| Column Description: 食物类型
+	city TEXT null, -- Column Description: 餐厅所在城市
+);
+
+CREATE TABLE location
+(
+	id_restaurant INTEGER not null primary key,
+	street_name TEXT null, -- Value Examples: `ave`, `san pablo ave`, `pablo ave`| Column Description: 餐厅街道名称
+	city TEXT null, -- Column Description: 餐厅所在城市
+	foreign key (id_restaurant) references generalinfo (id_restaurant) on update cascade on delete cascade,
+);
+
+问题：
+在 San Pablo Ave, Albany 有多少家泰国餐厅？
+
+提示：
+泰国餐厅对应 food_type = 'thai'; San Pablo Ave Albany 对应 street_name = 'san pablo ave' AND T1.city = 'albany'
+
+答案：
+根据提示信息，餐厅位于 Albany，我需要使用 `location`.`street_name` = 'san pablo ave' 和 `generalinfo`.`city` = 'albany' 来筛选。
+
+**************************
+现在，请回答实际问题，你需要遵循上述示例的答案风格（用两句话回答）。
+
+数据库 Schema：
+{SCHEMA_CONTEXT}
+
+问题：
+{QUESTION}
+
+提示：
+{HINT}
+
+答案：

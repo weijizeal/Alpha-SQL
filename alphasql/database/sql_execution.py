@@ -1,10 +1,14 @@
 import sqlite3
 import threading
+import os
 from enum import Enum
 from typing import Optional, List, Tuple
 from functools import lru_cache
 from prettytable import PrettyTable
 import sqlglot
+
+# 数据库类型
+DB_TYPE = os.getenv("ALPHASQL_DB_TYPE", "sqlite")
 
 class SQLExecutionResultType(Enum):
     """
@@ -76,14 +80,20 @@ class ExecuteSQLThread(threading.Thread):
 def execute_sql_with_timeout(db_path: str, query: str, timeout: int = 60) -> SQLExecutionResult:
     """
     Execute a SQL query synchronously with a timeout.
-    
+
     Args:
         db_path: The path to the database.
         query: The SQL query to execute.
         timeout: The timeout.
     Returns:
         The result of the SQL query.
-    """ 
+    """
+    if DB_TYPE == "clickhouse":
+        # 使用ClickHouse执行查询
+        from alphasql.database import clickhouse_db
+        return clickhouse_db.execute_sql_with_timeout(db_path, query, timeout)
+
+    # 使用SQLite执行查询
     thread = ExecuteSQLThread(db_path, query, timeout)
     thread.daemon = True
     thread.start()
@@ -101,13 +111,19 @@ def execute_sql_with_timeout(db_path: str, query: str, timeout: int = 60) -> SQL
 def execute_sql_without_timeout(db_path: str, query: str) -> SQLExecutionResult:
     """
     Execute a SQL query without a timeout.
-    
+
     Args:
         db_path: The path to the database.
         query: The SQL query to execute.
     Returns:
         The result of the SQL query.
     """
+    if DB_TYPE == "clickhouse":
+        # 使用ClickHouse执行查询
+        from alphasql.database import clickhouse_db
+        return clickhouse_db.execute_sql_with_timeout(db_path, query)
+
+    # 使用SQLite执行查询
     try:
         with sqlite3.connect(f'file:{db_path}?mode=ro', uri=True) as conn:
             conn.text_factory = lambda x: str(x, 'utf-8', errors='replace')  # Add error handling for UTF-8 decoding

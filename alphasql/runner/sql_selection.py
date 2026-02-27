@@ -1,4 +1,5 @@
 from typing import List
+import os
 from alphasql.database.sql_execution import cached_execute_sql_with_timeout, is_valid_execution_result
 from alphasql.algorithm.selection.utils import measure_sql_execution_time
 import pickle
@@ -11,6 +12,9 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 import sqlparse
 from alphasql.algorithm.mcts.mcts_action import *
 
+# 数据库类型
+DB_TYPE = os.getenv("ALPHASQL_DB_TYPE", "sqlite")
+
 EXECUTION_TIME_REPEAT = 20
 
 def select_final_sql_query(results_file_path: str, db_root_dir: str):
@@ -18,7 +22,12 @@ def select_final_sql_query(results_file_path: str, db_root_dir: str):
     with open(results_file_path, "rb") as f:
         results = pickle.load(f)
     db_id = results[0][0].db_id
-    db_path = f"{db_root_dir}/{db_id}/{db_id}.sqlite"
+
+    if DB_TYPE == "clickhouse":
+        # ClickHouse 使用 db_id 作为标识符，不需要本地数据库文件
+        db_path = db_id
+    else:
+        db_path = f"{db_root_dir}/{db_id}/{db_id}.sqlite"
     result_groups = defaultdict(list)
     result_groups_with_invalid_result = defaultdict(list)
     beautified_sql_file = f"{results_file_path}.beautified.sql"
@@ -27,22 +36,34 @@ def select_final_sql_query(results_file_path: str, db_root_dir: str):
         sql_query = result[-1].final_sql_query
         beautified_sql = sqlparse.format(sql_query, reindent=True, keyword_case='upper')
         beautify_list.append(beautified_sql)
-        answer = cached_execute_sql_with_timeout(db_path, sql_query)
-        if answer.result_type.value == "success":
-            if is_valid_execution_result(answer):
-                result_groups[frozenset(answer.result)].append(idx)
-            result_groups_with_invalid_result[frozenset(answer.result)].append(idx)
+        try:
+            answer = cached_execute_sql_with_timeout(db_path, sql_query)
+            if answer.result_type.value == "success":
+                if is_valid_execution_result(answer):
+                    result_groups[frozenset(answer.result)].append(idx)
+                result_groups_with_invalid_result[frozenset(answer.result)].append(idx)
+            else:
+                # 如果执行失败（语法错误等），也添加到 invalid 结果中
+                result_groups_with_invalid_result[frozenset([("ERROR", answer.error_message)])].append(idx)
+        except Exception as e:
+            # 如果发生异常，也添加到 invalid 结果中
+            result_groups_with_invalid_result[frozenset([("ERROR", str(e))])].append(idx)
     with open(beautified_sql_file, "w") as f:
         f.write("\n\n".join(beautify_list))
         
     if len(result_groups) == 0:
         final_selected_sql_query = "ERROR"
-        
+        action_paths = []
+        path_idx = 0
+
         if len(result_groups_with_invalid_result) > 0:
             path_idx_with_sc_score = []
             for answer, path_indices in result_groups_with_invalid_result.items():
                 sc_score = len(path_indices) / sum([len(v) for v in result_groups_with_invalid_result.values()])
-                execution_time = measure_sql_execution_time(db_path, results[path_indices[0]][-1].final_sql_query, repeat=EXECUTION_TIME_REPEAT)
+                try:
+                    execution_time = measure_sql_execution_time(db_path, results[path_indices[0]][-1].final_sql_query, repeat=EXECUTION_TIME_REPEAT)
+                except Exception:
+                    execution_time = 999999  # 设置一个很大的值表示执行失败
                 # for path_idx in path_indices:
                 #     consistency_score[path_idx] = (sc_score, execution_time)
                 path_idx_with_sc_score.append((path_indices[0], sc_score, execution_time))
@@ -53,7 +74,7 @@ def select_final_sql_query(results_file_path: str, db_root_dir: str):
             #     if score not in score_to_paths:
             #         score_to_paths[score] = []
             #     score_to_paths[score].append(path_idx)
-            
+
             # Sort scores in descending order
             # sorted_scores = sorted(score_to_paths.keys(), reverse=True)
             path_idx = path_idx_with_sc_score[0][0]
@@ -85,7 +106,10 @@ def select_final_sql_query(results_file_path: str, db_root_dir: str):
     path_idx_with_sc_score = []
     for answer, path_indices in result_groups.items():
         sc_score = len(path_indices) / sum([len(v) for v in result_groups.values()])
-        execution_time = measure_sql_execution_time(db_path, results[path_indices[0]][-1].final_sql_query, repeat=EXECUTION_TIME_REPEAT)
+        try:
+            execution_time = measure_sql_execution_time(db_path, results[path_indices[0]][-1].final_sql_query, repeat=EXECUTION_TIME_REPEAT)
+        except Exception:
+            execution_time = 999999  # 设置一个很大的值表示执行失败
         path_idx_with_sc_score.append((path_indices[0], sc_score, execution_time))
     path_idx_with_sc_score.sort(key=lambda x: (x[1], -x[2]), reverse=True)
     path_idx = path_idx_with_sc_score[0][0]
@@ -134,19 +158,28 @@ def main(args):
             action_paths_dict[str(selected_item["question_id"])] = selected_item["action_paths"]
             paths_node_dict[str(selected_item["question_id"])] = selected_item["paths_node"]
 
+    # 按照question_id数字顺序排序
+    sorted_question_ids = sorted(final_pred_sqls.keys(), key=lambda x: int(x))
+    sorted_pred_sqls = {qid: final_pred_sqls[qid] for qid in sorted_question_ids}
+
     with open(args.output_path, "w", encoding='utf-8') as f:
-        json.dump(final_pred_sqls, f, indent=4, ensure_ascii=False)
+        json.dump(sorted_pred_sqls, f, indent=4, ensure_ascii=False)
 
     # 在args.output_path的同级目录下生成action_paths.json文件记录所有sql的action路径
-    output_dir = "/".join(args.output_path.split("/")[:-1])
+    path_parts = args.output_path.split("/")[:-1]
+    output_dir = "/".join(path_parts) if path_parts else "."
     action_paths_file_path = f"{output_dir}/action_paths.json"
+
+    # 按照question_id数字顺序排序
+    sorted_action_paths = {qid: action_paths_dict[qid] for qid in sorted_question_ids}
     with open(action_paths_file_path, "w", encoding='utf-8') as f:
-        json.dump(action_paths_dict, f, indent=4, ensure_ascii=False)
+        json.dump(sorted_action_paths, f, indent=4, ensure_ascii=False)
     
     # 在args.output_path的同级目录下生成paths_node.json文件记录所有sql的路径节点
-    paths_node_file_path = f"{output_dir}/paths_node.pkl"
+    paths_node_file_path = f"{output_dir}/paths_node.pkl" if output_dir != "." else "paths_node.pkl"
+    sorted_paths_node = {qid: paths_node_dict[qid] for qid in sorted_question_ids}
     with open(paths_node_file_path, "wb") as f:
-        pickle.dump(paths_node_dict, f)
+        pickle.dump(sorted_paths_node, f)
 
     # 统计每个路径的选择次数
     action_path_count = defaultdict(int)

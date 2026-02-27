@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv(override=True)
+
 from alphasql.algorithm.mcts.mcts import MCTSSolver
 from alphasql.algorithm.mcts.reward import MajorityVoteRewardModel
 from alphasql.runner.task import Task
@@ -11,13 +14,10 @@ import yaml
 from alphasql.llm_call.cost_recoder import CostRecorder
 import json
 import random
-from dotenv import load_dotenv
 import os
 import traceback
 import numpy as np
 import fcntl
-
-load_dotenv(override=True)
 
 try:
     import weave
@@ -62,7 +62,8 @@ class MCTSRunner:
             save_root_dir=self.config.save_root_dir,
             llm_kwargs={**self.config.mcts_model_kwargs, "cost_recorder": task_recorder},
             reward_model=MajorityVoteRewardModel(self.config.reward_model_kwargs),
-            show_total_time_statistics=self.config.show_total_time_statistics
+            show_total_time_statistics=self.config.show_total_time_statistics,
+            show_process_view=self.config.show_process_view
         )
         try:
             mcts_solver.solve()

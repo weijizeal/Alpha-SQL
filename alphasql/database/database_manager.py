@@ -1,43 +1,66 @@
 from typing import Dict, List, Tuple
 from threading import Lock
 from collections import defaultdict
+import os
 
 from alphasql.database.schema import DatabaseSchema
 from alphasql.database.utils import load_database_schema_dict, build_table_ddl_statement
+from alphasql.database import clickhouse_db
+
 
 class DatabaseManager:
     """
     A class for managing databases.
-    
+
     Attributes:
         CACHED_DATABASE_SCHEMA (Dict[str, DatabaseSchema]): A dictionary mapping database ids to database schemas.
     """
     CACHED_DATABASE_SCHEMA: Dict[str, DatabaseSchema] = {}
     CACHED_DATABASE_SCHEMA_REPRESENTATION: Dict[str, str] = {}
     _lock = Lock()  # Add class-level lock
-    
+
+    # 数据库类型: 'sqlite' 或 'clickhouse'
+    # 注意: 使用函数动态获取，以便在运行时可以修改
+    @staticmethod
+    def get_db_type():
+        return os.getenv("ALPHASQL_DB_TYPE", "sqlite")
+
     @classmethod
     def get_database_schema(cls, db_id: str, database_root_dir: str) -> DatabaseSchema:
         """
         Get the database schema for a given database.
-        
+
         Args:
             db_id (str): The id of the database.
             database_root_dir (str): The root directory of the database.
-        
+
         Returns:
             DatabaseSchema: The database schema.
         """
-        if db_id not in cls.CACHED_DATABASE_SCHEMA:
+        db_type = cls.get_db_type()
+        cache_key = f"{db_type}:{db_id}"
+
+        if cache_key not in cls.CACHED_DATABASE_SCHEMA:
             with cls._lock:  # Add lock protection
                 # Double-check pattern to prevent unnecessary loading
-                if db_id not in cls.CACHED_DATABASE_SCHEMA:
-                    database_schema_dict = load_database_schema_dict(
-                        db_id=db_id,
-                        database_root_dir=database_root_dir
-                    )
-                    cls.CACHED_DATABASE_SCHEMA[db_id] = DatabaseSchema.from_database_schema_dict(database_schema_dict)
-        return cls.CACHED_DATABASE_SCHEMA[db_id]
+                if cache_key not in cls.CACHED_DATABASE_SCHEMA:
+                    if db_type == "clickhouse":
+                        # 从ClickHouse加载schema
+                        # 如果 db_id 是 "stock_data" 或其他非表名，加载所有表
+                        database_schema_dict = clickhouse_db.get_schema_dict_for_table(db_id)
+                        # 如果返回的 tables 为空，尝试加载所有表
+                        if not database_schema_dict.get("tables"):
+                            database_schema_dict = clickhouse_db.get_schema_dict_for_table("all")
+                        database_schema_dict["db_id"] = db_id
+                        database_schema_dict["db_directory"] = "clickhouse"
+                    else:
+                        # 从SQLite加载schema
+                        database_schema_dict = load_database_schema_dict(
+                            db_id=db_id,
+                            database_root_dir=database_root_dir
+                        )
+                    cls.CACHED_DATABASE_SCHEMA[cache_key] = DatabaseSchema.from_database_schema_dict(database_schema_dict)
+        return cls.CACHED_DATABASE_SCHEMA[cache_key]
     
     @classmethod
     def get_primary_keys(cls, database_schema: DatabaseSchema) -> Dict[str, List[str]]:

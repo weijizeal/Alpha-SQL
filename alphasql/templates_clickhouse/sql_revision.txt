@@ -1,0 +1,86 @@
+你是经验丰富的数据库专家。
+现在你需要根据问题、提示和之前生成的 SQL 来修改和优化 SQL 查询。
+
+请使用递归分治法来审查和修改 SQL 查询。
+
+【重要】本数据库为 ClickHouse，请严格遵守以下规则：
+1. **SELECT 子句（非常重要）：**
+   - **只选择问题中明确要求返回的列**！例如：
+     - 如果问题问"有哪些股票"，只 SELECT `secucode`（股票代码）
+     - 如果问题问"股票名称"，只 SELECT `secuname`
+     - 如果问题问"股票有哪些"，只 SELECT `secucode`，**不要加 secuname**！
+   - **禁止添加问题中没有提到的列**！
+2. **处理 NULL 和空字符串：**
+   - issue_list_date 等日期列是 String 类型，可能包含空字符串 ''。
+   - 使用 `WHERE column != '' AND column IS NOT NULL` 过滤空值。
+2. **仅使用 ClickHouse 函数：**
+   - 只使用 ClickHouse 可用的函数。
+   - **禁止使用 SQLite 函数**，如 STRFTIME、DATE、JULIANDAY、FIND_IN_SET 等！
+   - **禁止使用双引号 " " 引用标识符**，必须使用反引号 ` ` ！
+3. **日期处理（关键）- 使用 get_date() 函数）：**
+   - **issue_list_date 等日期列是字符串类型**，使用前必须用 `toDate()` 转换后再与 get_date() 结果比较！
+   - **必须使用 get_date() 函数**来处理日期，不要直接写死日期字符串！
+   - **禁止使用 STRFTIME、DATE、JULIANDAY 等 SQLite 函数！**
+   - 函数格式：`get_date('日期字符串', is_start=布尔值, lookback_days=数字)`
+   - 日期字符串格式：
+     - 绝对日期：`'yyyy-mm-dd'`（如 `'2024-01-01'`）
+     - 相对日期：`'nX'` 格式（n=数值，X=单位）
+       - `d` = 日：`'-20d'` = 20天前，`'0d'` = 今天，`'+1d'` = 明天
+       - `m` = 月：`'-6m'` = 6个月前，`'0m'` = 本月1号，`'+1m'` = 下个月
+       - `y` = 年：`'-1y'` = 一年前，`'0y'` = 今年1月1日
+       - `q` = 财报季度：`'-1q'` = 上季度，`'0q'` = 本季度
+   - **在 SQL 中的写法**（注意要用 toDate() 转换字符串日期列）：
+     ```sql
+     WHERE toDate(`hq_basic_view`.`issue_list_date`) >= get_date('2024-01-01', is_start=True)
+       AND toDate(`hq_basic_view`.`issue_list_date`) <= get_date('2025-06-30')
+     ```
+4. **Schema 语法：**
+   - 使用反引号 `` ` `` 引用表名和列名。
+5. **多概念查询（重要）**：
+   - **禁止使用 LIKE '%%' + AND 组合**！
+   - 例如：查询"同时属于概念A和概念B的股票"**不能用**：
+     ```sql
+     WHERE concept LIKE '%A%' AND concept LIKE '%B%'
+     ```
+   - **原因**：`concept` 列存储的是单个字符串值，无法同时包含两个概念。
+   - **正确做法**：使用 INTERSECT 或 UNION 来实现多概念筛选！
+     - **INTERSECT 方式**：
+       ```sql
+       SELECT `secucode` FROM `hq_basic_view` WHERE `concept` = '概念A'
+       INTERSECT
+       SELECT `secucode` FROM `hq_basic_view` WHERE `concept` = '概念B'
+       ```
+     - **子查询/JOIN 方式**：
+       ```sql
+       SELECT DISTINCT a.`secucode`
+       FROM `hq_basic_view` a
+       INNER JOIN `hq_basic_view` b ON a.`secucode` = b.`secucode`
+       WHERE a.`concept` = '概念A' AND b.`concept` = '概念B'
+       ```
+
+请按以下 xml 格式回复：
+```xml
+<reasoning>
+Your detailed reasoning for the SQL query revision.
+</reasoning>
+
+<sql>
+The final SQL query that answers the question.
+</sql>
+```
+
+**************************
+【表创建语句】
+{SCHEMA_CONTEXT}
+
+**************************
+【问题】
+Question:
+{QUESTION}
+
+Hint:
+{HINT}
+
+**************************
+
+请只输出 xml 格式（以 ```xml 开头，以 ``` 结尾）作为回复。

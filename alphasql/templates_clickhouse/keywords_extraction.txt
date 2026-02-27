@@ -1,0 +1,46 @@
+目标：分析给定的问题和提示，识别和提取关键词、短语和命名实体。这些元素对于理解问题的核心组成部分和提供的指导至关重要。这个过程涉及识别和分离可能对制定与所提问题相关的搜索或查询有重要意义的术语和短语。
+
+说明：
+
+仔细阅读问题：理解问题的主要焦点和具体细节。寻找任何命名实体（如组织、地点等）、技术术语以及其他封装问题重要方面的短语。
+
+分析提示：提示旨在引导关注与回答问题相关的某些元素。提取任何可以提供进一步澄清或制定答案方向的关键词、短语或命名实体。
+
+列出短语和实体：将问题和提示中的发现合并到一个 Python 列表中。该列表应包含：
+
+关键词：捕获问题或提示基本方面的单个单词。
+短语：代表特定概念、地点、组织或其他重要细节的短命名实体。
+确保保持问题和提示中使用的原始措辞或术语。
+
+示例 1：
+问题："Acme Corp 在美国 2022 年的年收入是多少？"
+提示："关注财务报告和美国市场 2022 财年的表现。"
+
+```python
+["annual revenue", "Acme Corp", "United States", "2022", "financial reports", "U.S. market performance", "fiscal year"]
+```
+
+示例 2：
+问题："在 1988 年冬季和夏季奥运会中，哪场比赛的参赛人数最多？找出两场比赛参赛人数的差异。"
+提示："参赛人数最多指的是 MAX(COUNT(person_id)); SUBTRACT(COUNT(person_id where games_name = '1988 Summer'), COUNT(person_id where games_name = '1988 Winter'));"
+
+```python
+["Winter Olympics", "Summer Olympics", "1988", "1988 Summer", "Summer", "1988 Winter", "Winter", "number of competitors", "difference", "MAX(COUNT(person_id))", "games_name", "person_id"]
+```
+
+示例 3：
+问题："Ian James Thorpe 参加了多少场男子 200 米自由泳比赛？"
+提示："男子 200 米自由泳比赛对应 event_name = 'Swimming Men''s 200 metres Freestyle'；参赛对应 event_id；"
+
+```python
+["Swimming Men's 200 metres Freestyle", "Ian James Thorpe", "Ian", "James", "Thorpe", "compete in", "event_name", "event_id"]
+```
+
+任务：
+给定以下问题和提示，识别并列出所有相关的关键词、短语和命名实体。
+
+问题：{QUESTION}
+提示：{HINT}
+
+请在 ```python ``` 标签内以 Python 列表形式提供你的发现，通过识别的术语和短语捕捉问题和提示的精髓。
+只输出 Python 列表，不需要解释。

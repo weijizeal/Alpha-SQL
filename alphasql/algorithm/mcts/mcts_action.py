@@ -9,7 +9,8 @@ from alphasql.database.sql_execution import (
 )
 from alphasql.database.schema import TableSchema
 from alphasql.database.utils import build_table_ddl_statement
-from typing import Dict, Any, List, Optional, Tuple 
+import os
+from typing import Dict, Any, List, Optional, Tuple
 from enum import Enum
 from pathlib import Path
 from collections import defaultdict
@@ -17,6 +18,37 @@ import copy
 import json
 import re
 import random
+
+# 根据 ALPHASQL_DB_TYPE 决定是否导入 clickhouse_db 的替换函数
+DB_TYPE = os.getenv("ALPHASQL_DB_TYPE", "").lower()
+if DB_TYPE == "clickhouse":
+    from alphasql.database.clickhouse_db import replace_get_date_in_sql
+
+    def transform_sql_for_clickhouse(sql: str) -> str:
+        """将 SQLite 风格的 SQL 转换为 ClickHouse 兼容的 SQL"""
+        import re
+        # 1. 将双引号替换为反引号
+        result = re.sub(r'(?<!`)"([^"]+)"', r'`\1`', sql)
+        # 2. 将 INSTR 函数替换为 position 或 like
+        # INSTR(str, substr) -> position(substr IN str)
+        result = re.sub(r'INSTR\s*\(\s*([^,]+),\s*([^)]+)\s*\)',
+                        r'position(\2 IN \1)', result, flags=re.IGNORECASE)
+        return result
+else:
+    replace_get_date_in_sql = lambda sql: sql  # 非 clickhouse 时不做替换
+    transform_sql_for_clickhouse = lambda sql: sql
+
+
+def get_db_path(db_root_dir: str, db_id: str) -> str:
+    """
+    根据数据库类型返回正确的数据库路径
+    """
+    if DB_TYPE == "clickhouse":
+        # ClickHouse 使用 db_id 作为标识符，不需要本地数据库文件
+        return db_id
+    else:
+        # SQLite 使用本地数据库文件
+        return str(Path(db_root_dir) / db_id / f"{db_id}.sqlite")
 
 def create_children(parent_action, node, llm_kwargs, node_type, one_time: bool = False):
     child_nodes = []
@@ -340,7 +372,7 @@ class SQLGenerationAction(MCTSAction):
                 sql_query = self.extract_sql_query_answer(response)
                 
                 if sql_query:
-                    db_path = Path(node.db_root_dir) / node.db_id / f"{node.db_id}.sqlite"
+                    db_path = get_db_path(node.db_root_dir, node.db_id)
                     sql_query_execution_result = cached_execute_sql_with_timeout(db_path, sql_query)
                     if is_valid_execution_result(sql_query_execution_result) or valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES:
                         child_node.sql_query = sql_query
@@ -374,7 +406,7 @@ class SQLGenerationAction(MCTSAction):
         )
         
         sql_query = None
-        db_path = Path(node.db_root_dir) / node.db_id / f"{node.db_id}.sqlite"
+        db_path = get_db_path(node.db_root_dir, node.db_id)
         while not sql_query:
             sql_query, consistency_score, is_valid_sql_query = SQLGenerationAction.generate_most_consistent_sql_query(prompt, llm_kwargs, db_path)
         node.sql_query = sql_query
@@ -410,7 +442,13 @@ class SQLGenerationAction(MCTSAction):
                 if is_valid_execution_result(sql_query_execution_result) or valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES:
                     all_sql_queries.append(sql_query)
                     if is_valid_execution_result(sql_query_execution_result):
-                        result_groups[frozenset(sql_query_execution_result.result)].append(sql_query)
+                        # ClickHouse 返回的结果可能包含 list，需要转换为 tuple 才能 hash
+                        try:
+                            result_key = frozenset(tuple(row) for row in sql_query_execution_result.result)
+                            result_groups[result_key].append(sql_query)
+                        except TypeError:
+                            # 如果转换失败，跳过这个结果
+                            pass
                 else:
                     valid_sql_query_tries += 1
         
@@ -457,7 +495,7 @@ class SQLRevisionAction(MCTSAction):
                 previous_thoughts += f"Identify column functions: {path_node.identified_column_functions}\n"
             elif isinstance(path_node.parent_action, SQLGenerationAction):
                 sql_execution_result = cached_execute_sql_with_timeout(
-                    Path(path_node.db_root_dir) / path_node.db_id / f"{path_node.db_id}.sqlite",
+                    get_db_path(path_node.db_root_dir, path_node.db_id),
                     path_node.sql_query
                 )
                 sql_execution_result_str = format_execution_result(sql_execution_result)
@@ -488,7 +526,7 @@ class SQLRevisionAction(MCTSAction):
                 child_node.response = response
                 revised_sql_query = self.extract_sql_query_answer(response)
                 if revised_sql_query:
-                    db_path = Path(node.db_root_dir) / node.db_id / f"{node.db_id}.sqlite"
+                    db_path = get_db_path(node.db_root_dir, node.db_id)
                     sql_query_execution_result = cached_execute_sql_with_timeout(db_path, revised_sql_query)
                     if is_valid_execution_result(sql_query_execution_result) or valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES:
                         child_node.revised_sql_query = revised_sql_query
@@ -517,7 +555,7 @@ class SQLRevisionAction(MCTSAction):
                 previous_thoughts += f"Identify column functions: {path_node.identified_column_functions}\n"
             elif isinstance(path_node.parent_action, SQLGenerationAction):
                 sql_execution_result = cached_execute_sql_with_timeout(
-                    Path(path_node.db_root_dir) / path_node.db_id / f"{path_node.db_id}.sqlite",
+                    get_db_path(path_node.db_root_dir, path_node.db_id),
                     path_node.sql_query
                 )
                 sql_execution_result_str = format_execution_result(sql_execution_result)
@@ -529,7 +567,7 @@ class SQLRevisionAction(MCTSAction):
         )
     
         sql_query = None
-        db_path = Path(node.db_root_dir) / node.db_id / f"{node.db_id}.sqlite"
+        db_path = get_db_path(node.db_root_dir, node.db_id)
         while not sql_query:
             sql_query, consistency_score, is_valid_sql_query = SQLRevisionAction.generate_most_consistent_sql_query(prompt, llm_kwargs, db_path)
         node.prompt = prompt
@@ -562,7 +600,13 @@ class SQLRevisionAction(MCTSAction):
                 if is_valid_execution_result(sql_query_execution_result) or valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES:
                     all_sql_queries.append(sql_query)
                     if is_valid_execution_result(sql_query_execution_result):
-                        result_groups[frozenset(sql_query_execution_result.result)].append(sql_query)
+                        # ClickHouse 返回的结果可能包含 list，需要转换为 tuple 才能 hash
+                        try:
+                            result_key = frozenset(tuple(row) for row in sql_query_execution_result.result)
+                            result_groups[result_key].append(sql_query)
+                        except TypeError:
+                            # 如果转换失败，跳过这个结果
+                            pass
                 else:
                     valid_sql_query_tries += 1
         
@@ -594,16 +638,28 @@ class EndAction(MCTSAction):
     def create_children_nodes(self, node: "MCTSNode", llm_kwargs: Dict[str, Any]) -> List["MCTSNode"]:
         assert node.node_type == MCTSNodeType.SQL_REVISION or node.node_type == MCTSNodeType.SQL_GENERATION
         # 补丁
-        node.final_sql_query = node.sql_query if node.node_type == MCTSNodeType.SQL_GENERATION else node.revised_sql_query
+        sql_query = node.sql_query if node.node_type == MCTSNodeType.SQL_GENERATION else node.revised_sql_query
+        # ClickHouse: 替换 get_date() 函数为实际日期字符串
+        if DB_TYPE == "clickhouse":
+            # ClickHouse: 替换 get_date() 函数为实际日期字符串，并将双引号转为反引号
+            node.final_sql_query = transform_sql_for_clickhouse(replace_get_date_in_sql(sql_query))
+        else:
+            node.final_sql_query = sql_query
         return create_children(self,node, llm_kwargs, MCTSNodeType.END, one_time=True)
-    
+
     @staticmethod
     def initialize_node(node: "MCTSNode", llm_kwargs: Dict[str, Any]) -> None:
         if getattr(node, "_is_initialized", True):
             return  # 避免重复初始化
         node.extend_from_parent()
         # 使用父节点的类型来判断，因为当前节点是 END 类型
-        node.final_sql_query = node.sql_query if node.parent_node.node_type == MCTSNodeType.SQL_GENERATION else node.revised_sql_query
+        sql_query = node.sql_query if node.parent_node.node_type == MCTSNodeType.SQL_GENERATION else node.revised_sql_query
+        # ClickHouse: 替换 get_date() 函数为实际日期字符串
+        if DB_TYPE == "clickhouse":
+            # ClickHouse: 替换 get_date() 函数为实际日期字符串，并将双引号转为反引号
+            node.final_sql_query = transform_sql_for_clickhouse(replace_get_date_in_sql(sql_query))
+        else:
+            node.final_sql_query = sql_query
 
 class MCTSNodeType(Enum):
     ROOT = "root"

@@ -1,0 +1,44 @@
+你是 AI 助手，帮助我识别可能在 SQL 查询中使用的潜在列函数，这些函数对于回答问题至关重要。
+
+**************************
+示例：
+
+数据库 Schema：
+CREATE TABLE businesses
+(
+    `business_id` INTEGER NOT NULL,
+    `name` TEXT NOT NULL, -- Column Description: 餐厅名称
+    PRIMARY KEY (`business_id`),
+);
+
+CREATE TABLE inspections
+(
+    `business_id` INTEGER NOT NULL, -- Column Description: 企业唯一ID
+    `score` INTEGER DEFAULT NULL, -- Column Description: 检查分数
+    `date` TEXT NOT NULL, -- Value Examples: `2014-01-24`
+    FOREIGN KEY (`business_id`) REFERENCES `businesses` (`business_id`),
+);
+
+问题：
+2012年5月有多少企业通过了条件检查？
+
+提示：
+企业名称对应 dba_name；通过条件检查对应 results = 'Pass w/ Conditions'；2012年5月对应 inspection_date like '2012-05%'
+
+答案：
+由于企业在2012年5月通过了条件检查，我应该考虑使用日期相关函数来筛选 `inspections`.`date` 列。我发现该列是 TEXT 类型，所以我可以使用 SUBSTR(`inspections`.`date`, 1, 7) = '2012-05' 来筛选日期。
+
+**************************
+
+现在，请回答实际问题，你需要遵循上述示例的答案风格（用两句话回答）。
+
+数据库 Schema：
+{SCHEMA_CONTEXT}
+
+问题：
+{QUESTION}
+
+提示：
+{HINT}
+
+答案：

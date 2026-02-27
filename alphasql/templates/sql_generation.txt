@@ -62,7 +62,7 @@ The final SQL query that answers the question.
 
 **************************
 【Question】
-Question: 
+Question:
 {QUESTION}
 
 Hint:

@@ -10,9 +10,10 @@ from graphviz import Digraph
 from datetime import datetime
 
 class MCTSTreeVisualizer:
-    def __init__(self, task: Task, show_total_time_statistics: bool = False):
+    def __init__(self, task: Task, show_total_time_statistics: bool = False, show_process_view: bool = False):
         self.task = task
         self.show_total_time_statistics = show_total_time_statistics
+        self.show_process_view = show_process_view
         
         # 动作类型到边样式的映射
         self.action_style = {
@@ -45,7 +46,7 @@ class MCTSTreeVisualizer:
         :param phase: 阶段名称
         :return: 包含图片路径和节点ID映射的字典
         """
-        if not self.show_total_time_statistics:
+        if not self.show_total_time_statistics and not self.show_process_view:
             return
 
         self.save_root_dir = step_dir
