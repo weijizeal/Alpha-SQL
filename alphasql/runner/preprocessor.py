@@ -1,4 +1,5 @@
 import json
+import traceback
 from loguru import logger
 from typing import List, Dict, Optional, Tuple, Any
 import os, sys
@@ -399,6 +400,7 @@ class Preprocessor:
                     pickle.dump(result, f)
             except Exception as e:
                 print(f"\nError in task {i}: {str(e)}")
+                traceback.print_exc()
                 batch_progress.set_postfix_str(f"Failed: {i}", refresh=True)
 
         # 5. 最终处理
@@ -425,6 +427,7 @@ class Preprocessor:
                     results.append(pickle.load(f))
             except Exception as e:
                 print(f"Error loading temp file {temp_file}: {str(e)}")
+                traceback.print_exc()
                 continue
         
         # Write final merged result
