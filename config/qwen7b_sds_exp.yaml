@@ -14,5 +14,5 @@ mcts_model_kwargs:
     temperature: 0.8
     n_strategy: "single"
 reward_model_kwargs: null
-show_process_view: false
-show_total_time_statistics: true
+show_progress_log: true
+visualize_tree: false

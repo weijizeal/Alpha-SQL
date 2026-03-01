@@ -16,5 +16,5 @@ class MCTSConfig(BaseModel):
     mcts_model_kwargs: Dict[str, Any]
     reward_model_kwargs: Optional[Dict[str, Any]] = None
     random_seed: Optional[int] = 42
-    show_process_view: bool = False
-    show_total_time_statistics: bool = False
+    show_progress_log: bool = False
+    visualize_tree: bool = False

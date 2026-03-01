@@ -18,14 +18,15 @@ from pathlib import Path
 class MCTSSolver:
     def __init__(self,
                  db_root_dir: str,
-                 task: Task, 
+                 task: Task,
                  max_rollout_steps: int,
                  max_depth: int,
                  exploration_constant: float,
                  save_root_dir: str,
                  llm_kwargs: Dict[str, Any],
                  reward_model: RewardModel,
-                 show_total_time_statistics: bool = False):
+                 visualize_tree: bool = False,
+                 show_progress_log: bool = False):
         self.llm_kwargs = llm_kwargs
         self.reward_model = reward_model
         self.task = task
@@ -34,7 +35,8 @@ class MCTSSolver:
         self.max_depth = max_depth
         self.exploration_constant = exploration_constant
         self.save_root_dir = save_root_dir
-        self.visualizer = MCTSTreeVisualizer(task, show_total_time_statistics)
+        self.show_progress_log = show_progress_log
+        self.visualizer = MCTSTreeVisualizer(task, visualize_tree)
     
     def select(self, node: MCTSNode) -> MCTSNode:
         current = node
@@ -72,7 +74,8 @@ class MCTSSolver:
         return current
 
     def backpropagate(self, node: MCTSNode):
-        print("Backpropagate, Final SQL Query: ", node.final_sql_query)
+        if self.show_progress_log:
+            print("Backpropagate, Final SQL Query: ", node.final_sql_query)
         current = node
         if current.N == 0:
             reward = self.reward_model.get_reward(current)
@@ -147,7 +150,8 @@ class MCTSSolver:
             phase_times = {'step': rollout_step + 1,'select_time': 0,'expand_time': 0,'simulate_time': 0,'backprop_time': 0,'total_time': 0}
             rollout_start = time.time()
 
-            print(f"Question ID: {self.task.question_id}, Rollout step {rollout_step + 1}/{self.max_rollout_steps}")
+            if self.show_progress_log:
+                print(f"Question ID: {self.task.question_id}, Rollout step {rollout_step + 1}/{self.max_rollout_steps}")
 
             # 创建本轮次的专属文件夹
             step_dir = Path(self.save_root_dir) / f"{self.task.question_id}" / f"step_{rollout_step + 1}"

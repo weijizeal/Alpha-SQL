@@ -65,7 +65,8 @@ class MCTSRunner:
             save_root_dir=self.config.save_root_dir,
             llm_kwargs={**self.config.mcts_model_kwargs, "cost_recorder": task_recorder},
             reward_model=MajorityVoteRewardModel(self.config.reward_model_kwargs),
-            show_total_time_statistics=self.config.show_total_time_statistics
+            visualize_tree=self.config.visualize_tree,
+            show_progress_log=self.config.show_progress_log
         )
         try:
             mcts_solver.solve()
