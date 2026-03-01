@@ -36,6 +36,7 @@ class MCTSSolver:
         self.exploration_constant = exploration_constant
         self.save_root_dir = save_root_dir
         self.show_progress_log = show_progress_log
+        self.visualize_tree = visualize_tree
         self.visualizer = MCTSTreeVisualizer(task, visualize_tree)
     
     def select(self, node: MCTSNode) -> MCTSNode:
@@ -153,12 +154,13 @@ class MCTSSolver:
             if self.show_progress_log:
                 print(f"Question ID: {self.task.question_id}, Rollout step {rollout_step + 1}/{self.max_rollout_steps}")
 
-            # 创建本轮次的专属文件夹
-            step_dir = Path(self.save_root_dir) / f"{self.task.question_id}" / f"step_{rollout_step + 1}"
-            os.makedirs(step_dir, exist_ok=True)
-            
-            # 记录本轮初始树状态
-            self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="initial",num=1,step_dir=step_dir)
+            # 创建本轮次的专属文件夹（仅在可视化时需要）
+            if self.visualize_tree:
+                step_dir = Path(self.save_root_dir) / f"{self.task.question_id}" / f"step_{rollout_step + 1}"
+                os.makedirs(step_dir, exist_ok=True)
+
+                # 记录本轮初始树状态
+                self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="initial",num=1,step_dir=step_dir)
 
             # 选择阶段计时
             select_start = time.time()
@@ -166,7 +168,8 @@ class MCTSSolver:
             phase_times['select_time'] = time.time() - select_start
 
             # 记录选择后的树状态
-            self.visualizer.visualize_tree(root_node=root_node, rollout_step=rollout_step + 1, phase="select", num=2, step_dir=step_dir)
+            if self.visualize_tree:
+                self.visualizer.visualize_tree(root_node=root_node, rollout_step=rollout_step + 1, phase="select", num=2, step_dir=step_dir)
 
             if leaf_node.is_terminal():
                 # 回传阶段计时
@@ -175,7 +178,8 @@ class MCTSSolver:
                 phase_times['backprop_time'] = time.time() - backprop_start
 
                 # 记录回传后的树状态
-                self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="backprop",num=3,step_dir=step_dir)
+                if self.visualize_tree:
+                    self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="backprop",num=3,step_dir=step_dir)
             else:
                 # 扩展阶段计时
                 expand_start = time.time()
@@ -183,7 +187,8 @@ class MCTSSolver:
                 phase_times['expand_time'] = time.time() - expand_start
 
                 # 记录扩展后的树状态
-                self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="expand",num=3,step_dir=step_dir)
+                if self.visualize_tree:
+                    self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="expand",num=3,step_dir=step_dir)
 
                 leaf_node = random.choice(leaf_node.children)
 
@@ -193,7 +198,8 @@ class MCTSSolver:
                 phase_times['simulate_time'] = time.time() - simulate_start
 
                 # 记录模拟后的树状态
-                self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="simulate",num=4,step_dir=step_dir)
+                if self.visualize_tree:
+                    self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="simulate",num=4,step_dir=step_dir)
 
                 # 回传阶段计时
                 backprop_start = time.time()
@@ -201,7 +207,8 @@ class MCTSSolver:
                 phase_times['backprop_time'] = time.time() - backprop_start
 
                  # 记录回传后的树状态
-                self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="backprop",num=5,step_dir=step_dir)
+                if self.visualize_tree:
+                    self.visualizer.visualize_tree(root_node=root_node,rollout_step=rollout_step + 1,phase="backprop",num=5,step_dir=step_dir)
 
             # 记录当前轮次总时间
             phase_times['total_time'] = time.time() - rollout_start

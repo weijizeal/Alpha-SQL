@@ -5,7 +5,7 @@ from alphasql.config.mcts_config import MCTSConfig
 from pathlib import Path
 from typing import Union
 import pickle
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 import yaml
 from alphasql.llm_call.cost_recoder import CostRecorder
@@ -111,7 +111,7 @@ class MCTSRunner:
             json.dump(self.config.model_dump(), f, indent=4)
 
         print(f"There are {len(tasks)} tasks to solve")
-        with ProcessPoolExecutor(max_workers=self.config.n_processes) as executor:
+        with ThreadPoolExecutor(max_workers=self.config.n_processes) as executor:
             list(tqdm(executor.map(self.run_one_task, tasks), total=len(tasks), desc="Solving tasks"))
 
     def _append_task_result(self, task_stats: dict):
