@@ -190,10 +190,22 @@ def load_value_examples(table_name: str, column_name: str, max_num_examples: int
 
 # 默认的核心表列表（用于 interfaces_new_api.py）
 DEFAULT_CORE_TABLES = [
+    # 市场行情
     "hq_basic_view",      # 股票基本信息（概念、代码、名称等）
     "hq_current_view",    # 当前行情
     "hq_history_agg_view", # 历史行情
+    # 财务
+    "f10_main_indicator_view",       # 财务主要指标（ROE、净利润等）
+    "f10_shareholder_nums_view",     # 股东户数表
+    # 热点
     "hot_info_view",      # 热门股票信息
+    # 资金流向
+    "daily_zjdx_stat_level5_view",  # 资金流向
+    "fund_move_flag_level0_view",    # 资金流向标志
+    # 轮动/选股池
+    "daily_qlld_level5_view",        # 轮动策略
+    "daily_ldpools_level5_view",     # 选股池
+    "daily_qlstock_basic_level5_view", # 股票池
 ]
 
 
@@ -568,6 +580,58 @@ def replace_get_date_in_sql(sql: str) -> str:
     # 替换 TODATE(...) 为 toDate(...) - ClickHouse 内置函数
     # TODATE(column) -> toDate(column)
     result = re.sub(r'TODATE\s*\(', 'toDate(', result, flags=re.IGNORECASE)
+
+    # 替换 LAGINFRAME(...) -> lagInFrame(...)
+    result = re.sub(r'LAGINFRAME\s*\(', 'lagInFrame(', result, flags=re.IGNORECASE)
+
+    # 替换 LEADINFRAME(...) -> leadInFrame(...)
+    result = re.sub(r'LEADINFRAME\s*\(', 'leadInFrame(', result, flags=re.IGNORECASE)
+
+    # 替换 IIF(...) -> if(...)
+    result = re.sub(r'IIF\s*\(', 'if(', result, flags=re.IGNORECASE)
+
+    # 替换 LAG(...) -> lagInFrame(...)
+    result = re.sub(r'\bLAG\s*\(', 'lagInFrame(', result, flags=re.IGNORECASE)
+
+    # 替换 LEAD(...) -> leadInFrame(...)
+    result = re.sub(r'\bLEAD\s*\(', 'leadInFrame(', result, flags=re.IGNORECASE)
+
+    # 替换 PARSEDATETIMEBESTEFFORTORNULL -> toDate
+    result = re.sub(r'PARSEDATETIMEBESTEFFORTORNULL', 'toDate', result, flags=re.IGNORECASE)
+
+    # 替换 TOMONTH -> toMonth
+    result = re.sub(r'\bTOMONTH\s*\(', 'toMonth(', result, flags=re.IGNORECASE)
+
+    # 替换 TODAYOFMONTH -> toDayOfMonth
+    result = re.sub(r'\bTODAYOFMONTH\s*\(', 'toDayOfMonth(', result, flags=re.IGNORECASE)
+
+    # 替换 TOYEAR -> toYear
+    result = re.sub(r'\bTOYEAR\s*\(', 'toYear(', result, flags=re.IGNORECASE)
+
+    # 替换 ROWNUMBER -> row_number()
+    result = re.sub(r'\bROWNUMBER\s*\(', 'row_number()', result, flags=re.IGNORECASE)
+
+    # 替换 ROWNUMBERINPARTITION -> row_number()
+    result = re.sub(r'\bROWNUMBERINPARTITION\s*\(', 'row_number()', result, flags=re.IGNORECASE)
+
+    # 替换 ROWNUMBERINFRAME -> row_number()
+    result = re.sub(r'\bROWNUMBERINFRAME\s*\(', 'row_number()', result, flags=re.IGNORECASE)
+
+    # 替换 ROWNUMBERINALL -> row_number()
+    result = re.sub(r'\bROWNUMBERINALL\s*\(', 'row_number()', result, flags=re.IGNORECASE)
+
+    # 替换 TOYYYYMMDD -> toYYYYMMDD
+    result = re.sub(r'\bTOYYYYMMDD\s*\(', 'toYYYYMMDD(', result, flags=re.IGNORECASE)
+
+    # 替换 TODATETIME -> toDateTime
+    result = re.sub(r'\bTODATETIME\s*\(', 'toDateTime(', result, flags=re.IGNORECASE)
+
+    # 替换 GROUP_ARRAY -> groupArray
+    result = re.sub(r'\bGROUP_ARRAY\s*\(', 'groupArray(', result, flags=re.IGNORECASE)
+
+    # 替换 SUMIF -> 提示错误（ClickHouse不支持）
+    if re.search(r'\bSUMIF\s*\(', result, flags=re.IGNORECASE):
+        logger.warning("SUMIF is not supported in ClickHouse. Please use CASE WHEN + SUM instead.")
 
     return result
 

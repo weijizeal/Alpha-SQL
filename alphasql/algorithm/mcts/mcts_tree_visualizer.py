@@ -46,10 +46,14 @@ class MCTSTreeVisualizer:
         :param phase: 阶段名称
         :return: 包含图片路径和节点ID映射的字典
         """
+        # 始终保存JSON详情，即使不生成图片
+        self.save_root_dir = step_dir
+        self.save_json_details(root_node, rollout_step, num, phase, step_dir)
+
+        # 只有在开启可视化时才生成PNG图片
         if not self.show_total_time_statistics and not self.show_process_view:
             return
 
-        self.save_root_dir = step_dir
         dot = Digraph(
             name=f'MCTS_Tree_Step_{rollout_step}_{phase}',
             format='png',
@@ -148,6 +152,26 @@ class MCTSTreeVisualizer:
         file_path = Path(self.save_root_dir) / f"step_{num}_{phase}_details.json"
         with open(file_path, 'w') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
+
+    def save_json_details(self, root_node: MCTSNode, rollout_step: int, num: int, phase: str, step_dir: str):
+        """
+        只保存JSON详情，不生成图片（用于批量运行模式）
+        """
+        self.save_root_dir = step_dir
+        node_id_map = {}
+        node_counter = 0
+
+        # 构建节点ID映射
+        stack = [root_node]
+        while stack:
+            node = stack.pop()
+            if node not in node_id_map:
+                node_id_map[node] = f"N{node_counter}"
+                node_counter += 1
+            for child in node.children:
+                stack.append(child)
+
+        self.save_node_details(root_node, rollout_step, phase, num, node_id_map)
 
     def get_initial_state(self) -> Dict[str, Any]:
         """获取初始状态信息"""

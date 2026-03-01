@@ -1,0 +1,1192 @@
+{
+  "stats": {
+    "total": 100,
+    "has_prediction": 97,
+    "no_prediction": 3,
+    "exact_match": 0,
+    "different_columns": 97,
+    "both_have_agg": 50,
+    "only_pred_has_agg": 8,
+    "only_gt_has_agg": 5,
+    "neither_has_agg": 34
+  },
+  "column_issues": [
+    {
+      "qid": "1",
+      "question": "北斗导航+军工的股票有哪些",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "2",
+      "question": "北斗导航+军工+无人机的股票有哪些？",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "3",
+      "question": "北斗导航+军工AI+无人机的股票有哪些？",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "4",
+      "question": "24年至25年6月份上市的科创板和创业板公司",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode",
+        "secuname"
+      ]
+    },
+    {
+      "qid": "5",
+      "question": "今日热门股票有哪些？",
+      "gt_columns": [
+        "DISTINCT hot_info_view.data_code"
+      ],
+      "pred_columns": [
+        "date"
+      ]
+    },
+    {
+      "qid": "6",
+      "question": "24年至25年6月上市的创业板公司",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "7",
+      "question": "24年至25年6月上市的公司",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "8",
+      "question": "24年至25年6月，股票代码688开头和30开头的上市公司",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `secucode"
+      ]
+    },
+    {
+      "qid": "9",
+      "question": "在2024年至2025年6月期间，股票代码以688开头和30开头的上市公司",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "10",
+      "question": "创业板在24年到25年的上市公司",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "11",
+      "question": "创业板在24年到25年6月前的上市公司",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "12",
+      "question": "本月内当日收盘价等于最低价但不包括涨停和跌停的个股有哪些",
+      "gt_columns": [
+        "DISTINCT market_with_rn.secucode"
+      ],
+      "pred_columns": [
+        "secucode",
+        "close",
+        "low",
+        "zt",
+        "dt"
+      ]
+    },
+    {
+      "qid": "13",
+      "question": "站上5日线的股票",
+      "gt_columns": [
+        "hq_history_agg_view.secucode",
+        "hq_history_agg_view.close"
+      ],
+      "pred_columns": [
+        "secucode",
+        "date",
+        "close) OVER (PARTITION BY secucode ORDER BY date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW",
+        ") OVER (PARTITION BY secucode ORDER BY date DESC"
+      ]
+    },
+    {
+      "qid": "14",
+      "question": "多头向上",
+      "gt_columns": [
+        "hq_history_agg_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_history_agg_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "16",
+      "question": "半导体龙头",
+      "gt_columns": [
+        "anon_1.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "17",
+      "question": "出现涨停后五日股价涨幅度在-5%～10%之间的股票",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zdf_5"
+      ],
+      "pred_columns": [
+        "secucode",
+        "date",
+        "close",
+        "close",
+        "5",
+        "0) OVER (PARTITION BY `secucode` ORDER BY `date"
+      ]
+    },
+    {
+      "qid": "18",
+      "question": "出现涨停后的后五日股价总幅度在-5%～10%之间的股票",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zdf_5"
+      ],
+      "pred_columns": [
+        "secucode",
+        "date",
+        "close",
+        "close",
+        "5",
+        "0) OVER (PARTITION BY secucode ORDER BY date"
+      ]
+    },
+    {
+      "qid": "19",
+      "question": "存什者芯片股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `secucode"
+      ]
+    },
+    {
+      "qid": "20",
+      "question": "主板金叉的股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "21",
+      "question": "主板开始轮动股票",
+      "gt_columns": [
+        "arrayJoin(splitByChar('",
+        "'",
+        "daily_ldpools_level5_view.stock_pools"
+      ],
+      "pred_columns": [
+        "SPLITBYCHAR('",
+        "'",
+        "stock_pools"
+      ]
+    },
+    {
+      "qid": "22",
+      "question": "云南城投户数",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "total_people_num"
+      ],
+      "pred_columns": [
+        "secucode",
+        "total_people_num",
+        ") OVER (PARTITION BY secucode ORDER BY date DESC"
+      ]
+    },
+    {
+      "qid": "23",
+      "question": "与anthropic相关的股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "24",
+      "question": "高股息个股价位正处于底部",
+      "gt_columns": [
+        "filtered_multi_e7e633.secucode",
+        "filtered_multi_e7e633.period_low"
+      ],
+      "pred_columns": [
+        "c.secucode",
+        "c.period_low"
+      ]
+    },
+    {
+      "qid": "25",
+      "question": "选出上周每天收盘主力资金流入＞1亿元，6％≤换手率≤9％，5％≤涨幅≤9％，除去ST，除去*ST，除",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zhu_in_1d"
+      ],
+      "pred_columns": [
+        "secucode",
+        "date",
+        "zhu - lagInFrame(zhu",
+        "1) OVER (PARTITION BY secucode ORDER BY date"
+      ]
+    },
+    {
+      "qid": "26",
+      "question": "选出2026年1月14日，收盘时主力资金流入＞1亿元，6％≤换手率≤9％，5％≤涨幅≤9％，除去ST",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zhu_in_1d"
+      ],
+      "pred_columns": [
+        "secucode",
+        "zhu - lagInFrame(zhu",
+        "1) OVER (PARTITION BY secucode ORDER BY date"
+      ]
+    },
+    {
+      "qid": "27",
+      "question": "液冷技术的股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `secucode"
+      ]
+    },
+    {
+      "qid": "28",
+      "question": "生产液冷的股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "29",
+      "question": "特高压产业链相关的龙头股",
+      "gt_columns": [
+        "anon_1.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "30",
+      "question": "2025年度年报业绩预增的企业有哪些",
+      "gt_columns": [
+        "DISTINCT f10_main_indicator_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `f10_main_indicator_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "31",
+      "question": "帮我选一个底位刚启动的半导体股票",
+      "gt_columns": [
+        "hq_current_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "32",
+      "question": "有哪家公司生产白银？",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "detail_company_name"
+      ]
+    },
+    {
+      "qid": "33",
+      "question": "主力资金流入的股票有哪些",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zhu_in_1d"
+      ],
+      "pred_columns": [
+        "secucode",
+        "date",
+        "zhu",
+        "zhu - lagInFrame(zhu",
+        "1) OVER (PARTITION BY secucode ORDER BY date"
+      ]
+    },
+    {
+      "qid": "34",
+      "question": "今天有哪些股票走强",
+      "gt_columns": [
+        "DISTINCT ma_aligned.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "35",
+      "question": "半导体设备方面优质业绩股",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "36",
+      "question": "放量上涨的股票",
+      "gt_columns": [
+        "hq_current_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT hq_basic_view.secucode"
+      ]
+    },
+    {
+      "qid": "37",
+      "question": "放量放量上涨，资金逸动的股票",
+      "gt_columns": [
+        "hq_current_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "38",
+      "question": "放量亿万上涨的股票",
+      "gt_columns": [
+        "hq_current_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT current.secucode"
+      ]
+    },
+    {
+      "qid": "39",
+      "question": "放量亿上涨的股票",
+      "gt_columns": [
+        "hq_current_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode",
+        "date",
+        "volume",
+        "open",
+        "close",
+        "volume",
+        "1",
+        "0) OVER (PARTITION BY `secucode` ORDER BY `date"
+      ]
+    },
+    {
+      "qid": "40",
+      "question": "帮我分析一下盐山科技的筹码分布情况",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "hq_current_view.chip"
+      ],
+      "pred_columns": [
+        "chip"
+      ]
+    },
+    {
+      "qid": "41",
+      "question": "推一下成长期和低股指股票",
+      "gt_columns": [
+        "anon_1.secucode"
+      ],
+      "pred_columns": [
+        "secucode",
+        "parent_net_profit_yoy",
+        "income_total_yoy",
+        ") OVER (PARTITION BY `secucode` ORDER BY `date` DESC"
+      ]
+    },
+    {
+      "qid": "42",
+      "question": "10元以下，一日多空资金的股票",
+      "gt_columns": [
+        "hq_history_agg_view.secucode",
+        "hq_history_agg_view.date",
+        "hq_history_agg_view.close"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "43",
+      "question": "请帮我找出中国人寿0051一001沪三季度的增仓股票",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zhur_in_1d"
+      ],
+      "pred_columns": [
+        "secucode",
+        "zhur",
+        "zhur - lagInFrame(zhur",
+        "1) OVER (PARTITION BY secucode ORDER BY date",
+        ") OVER (PARTITION BY secucode ORDER BY date DESC"
+      ]
+    },
+    {
+      "qid": "45",
+      "question": "山东与供热发电有关的股票有哪些",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `secucode"
+      ]
+    },
+    {
+      "qid": "46",
+      "question": "券商板块包括那些行业",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "trade"
+      ],
+      "pred_columns": [
+        "DISTINCT `trade"
+      ]
+    },
+    {
+      "qid": "47",
+      "question": "以上科技板块是那几个",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "48",
+      "question": "非ST，5日、10日，20日均线三线金叉，创业板",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "49",
+      "question": "天燃气有哪些股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "50",
+      "question": "上海本地消费股",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "51",
+      "question": "碳纤维龙头股有哪些",
+      "gt_columns": [
+        "anon_1.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "52",
+      "question": "碳纤维股票有哪些",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "53",
+      "question": "000880的公司是做什么的",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "detail_main_business"
+      ]
+    },
+    {
+      "qid": "54",
+      "question": "主力资金进入最多的股票",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zhu_in_1d"
+      ],
+      "pred_columns": [
+        "date"
+      ]
+    },
+    {
+      "qid": "55",
+      "question": "今天有多少热点股票",
+      "gt_columns": [
+        "DISTINCT hot_info_view.data_code"
+      ],
+      "pred_columns": [
+        "hot_info_view`.`data_code"
+      ]
+    },
+    {
+      "qid": "56",
+      "question": "2025年净利润增长 ",
+      "gt_columns": [
+        "hq_history_agg_view.secucode",
+        "hq_history_agg_view.date"
+      ],
+      "pred_columns": [
+        "(SELECT date"
+      ]
+    },
+    {
+      "qid": "57",
+      "question": "2025年净利润增长大于10%的股票有哪些",
+      "gt_columns": [
+        "hq_history_agg_view.secucode",
+        "hq_history_agg_view.date"
+      ],
+      "pred_columns": [
+        "secucode",
+        "date) OVER (PARTITION BY secucode"
+      ]
+    },
+    {
+      "qid": "58",
+      "question": "商业航天加AI应用",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "59",
+      "question": "筛选一季度扣非净利润同比增长%50以上，营收同比增长%20，扣非净利润大于5000万的股票",
+      "gt_columns": [
+        "DISTINCT f10_main_indicator_view.date"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "60",
+      "question": "今天的热门股票",
+      "gt_columns": [
+        "DISTINCT hot_info_view.data_code"
+      ],
+      "pred_columns": [
+        "DISTINCT hi.data_code",
+        "hi.sortid",
+        "hb.secuname"
+      ]
+    },
+    {
+      "qid": "61",
+      "question": "今天强势股",
+      "gt_columns": [
+        "DISTINCT ma_aligned.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "62",
+      "question": "串列型高能氢离子活入机相关上市公司",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode",
+        "secuname",
+        "detail_company_name",
+        "detail_english_name",
+        "detail_industry"
+      ]
+    },
+    {
+      "qid": "64",
+      "question": "成交额排名前200，60日均线上移，两日内KDJ金叉，MACD金叉的沪深主板",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "65",
+      "question": "北京板块、山东板块、江苏板块、上海板块、浙江板块、福建板块、广东板块、深圳板块主板股票量比",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "hq_current_view.qrr"
+      ]
+    },
+    {
+      "qid": "66",
+      "question": "山东板块、江苏板块、上海板块、浙江板块、福建板块、广东板块、深圳板块主板股票量比",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "67",
+      "question": "固态变压器",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "68",
+      "question": "热门股",
+      "gt_columns": [
+        "DISTINCT hot_info_view.data_code"
+      ],
+      "pred_columns": [
+        "DISTINCT `hot_info_view`.`data_code"
+      ]
+    },
+    {
+      "qid": "69",
+      "question": "热门股前三十名",
+      "gt_columns": [
+        "DISTINCT hot_info_view.data_code"
+      ],
+      "pred_columns": [
+        "data_code",
+        "sortid",
+        ") OVER (PARTITION BY data_code ORDER BY `date` DESC"
+      ]
+    },
+    {
+      "qid": "70",
+      "question": "前三十名热门股",
+      "gt_columns": [
+        "DISTINCT hot_info_view.data_code"
+      ],
+      "pred_columns": [
+        "data_code"
+      ]
+    },
+    {
+      "qid": "71",
+      "question": "今日主板有什么热门票？",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "72",
+      "question": "潜伏龙头",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "73",
+      "question": "主力潜伏的",
+      "gt_columns": [
+        "anon_4.secucode",
+        "anon_4.date",
+        "anon_4.zdf_20"
+      ],
+      "pred_columns": [
+        "secucode",
+        "zhu - lagInFrame(zhu",
+        "1) OVER (PARTITION BY secucode ORDER BY date"
+      ]
+    },
+    {
+      "qid": "74",
+      "question": "主力资金介入的",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zhu_in_1d"
+      ],
+      "pred_columns": [
+        "*",
+        ") OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date DESC"
+      ]
+    },
+    {
+      "qid": "75",
+      "question": "那些是AI应用股?",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `secucode"
+      ]
+    },
+    {
+      "qid": "76",
+      "question": "氮化镓功率器相关的股票是什么",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "77",
+      "question": "业绩好低估值60字的股",
+      "gt_columns": [
+        "DISTINCT latest_financial.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "78",
+      "question": "业绩好低估值的股",
+      "gt_columns": [
+        "DISTINCT latest_financial.secucode"
+      ],
+      "pred_columns": [
+        "f10_main_indicator_view.secucode"
+      ]
+    },
+    {
+      "qid": "79",
+      "question": "三花智控历史最高点是多少",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "historical_max_high",
+        "historical_max_high"
+      ],
+      "pred_columns": [
+        "close"
+      ]
+    },
+    {
+      "qid": "80",
+      "question": "半导体和SK海力士合作有关系股有那些股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "81",
+      "question": "短线流入个股",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zhu_in_1d"
+      ],
+      "pred_columns": [
+        "DISTINCT `secucode"
+      ]
+    },
+    {
+      "qid": "82",
+      "question": "短线资金流人股票",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zhu_in_1d"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "83",
+      "question": "多头排列主板股票量比",
+      "gt_columns": [
+        "hq_history_agg_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "84",
+      "question": "近5日主板去ST板资金流入多涨幅小的股票",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zdf_5"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "85",
+      "question": "近3日主板去ST，主力流入多涨幅小的股票",
+      "gt_columns": [
+        "anon_1.secucode",
+        "anon_1.date",
+        "anon_1.zdf_3"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "86",
+      "question": "电力有多少强力股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "87",
+      "question": "电力上下游有多少股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "88",
+      "question": "中微子成分股",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "89",
+      "question": "根据近五日的资金流向帮我选择几只既有股。",
+      "gt_columns": [
+        "DISTINCT fund_delta.secucode"
+      ],
+      "pred_columns": [
+        "secucode",
+        "date",
+        "zhu",
+        "zhu - lagInFrame(zhu",
+        "5) OVER (PARTITION BY secucode ORDER BY date",
+        "zhu",
+        "5) OVER (PARTITION BY secucode ORDER BY date) - lagInFrame(zhu",
+        "10) OVER (PARTITION BY secucode ORDER BY date"
+      ]
+    },
+    {
+      "qid": "90",
+      "question": "国家网有多少股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "*"
+      ]
+    },
+    {
+      "qid": "91",
+      "question": "紫金矿业的机构持股数",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "organ_hold_total"
+      ],
+      "pred_columns": [
+        "DISTINCT hq_current_view.organ_hold_total"
+      ]
+    },
+    {
+      "qid": "92",
+      "question": "紫金矿业的机构持股比例",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "organ_hold_ratio_total"
+      ],
+      "pred_columns": [
+        "organ_hold_ratio_total"
+      ]
+    },
+    {
+      "qid": "93",
+      "question": "AI 上游股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "DISTINCT `hq_basic_view`.`secucode"
+      ]
+    },
+    {
+      "qid": "94",
+      "question": "山东板块主板股票涨幅",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "hq_current_view.zdf"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "95",
+      "question": "山东板块、江苏板块、上海板块、浙江板块、福建板块、广东板块、深圳板块主板股票涨幅",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "hq_current_view.zdf"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "96",
+      "question": "江苏板块主板股票涨幅",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "hq_current_view.zdf"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "97",
+      "question": "特变电工历史最高价",
+      "gt_columns": [
+        "hq_basic_view.secucode",
+        "historical_max_high",
+        "historical_max_high"
+      ],
+      "pred_columns": [
+        "secucode",
+        "high"
+      ]
+    },
+    {
+      "qid": "98",
+      "question": "有降低火箭回收难度专利的股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "'SZHQ002342'"
+      ]
+    },
+    {
+      "qid": "99",
+      "question": "有降低火箭回收难度专利和中科宇航相关的股票",
+      "gt_columns": [
+        "hq_basic_view.secucode"
+      ],
+      "pred_columns": [
+        "secucode"
+      ]
+    },
+    {
+      "qid": "100",
+      "question": "今天两到五元的股票涨停的有多少家？",
+      "gt_columns": [
+        "hq_history_agg_view.secucode",
+        "hq_history_agg_view.date",
+        "hq_history_agg_view.close"
+      ],
+      "pred_columns": [
+        "date"
+      ]
+    }
+  ],
+  "agg_issues": [
+    {
+      "qid": "4",
+      "question": "24年至25年6月份上市的科创板和创业板公司",
+      "type": "missing_agg",
+      "gt_sql": "(SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_kcb = 1 AND hq_basic_view.i",
+      "pred_sql": "(SELECT `secucode`, `secuname` FROM `hq_basic_view` WHERE `is_kcb` = 1 AND `issue_list_date` <> '' A"
+    },
+    {
+      "qid": "22",
+      "question": "云南城投户数",
+      "type": "extra_agg",
+      "gt_sql": "SELECT hq_basic_view.secucode, total_people_num FROM hq_basic_view  LEFT JOIN f10_shareholder_nums_v",
+      "pred_sql": "WITH latest_data AS (SELECT secucode, total_people_num, ROW_NUMBER() OVER (PARTITION BY secucode ORD"
+    },
+    {
+      "qid": "24",
+      "question": "高股息个股价位正处于底部",
+      "type": "missing_agg",
+      "gt_sql": "SELECT filtered_multi_e7e633.secucode, filtered_multi_e7e633.period_low FROM (SELECT anon_1.secucode",
+      "pred_sql": "SELECT c.secucode, c.period_low FROM hq_current_view AS c JOIN hq_basic_view AS b ON c.secucode = b."
+    },
+    {
+      "qid": "28",
+      "question": "生产液冷的股票",
+      "type": "extra_agg",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02524%'",
+      "pred_sql": "SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` WHERE `hq_basic_view`.`concept` LIKE"
+    },
+    {
+      "qid": "37",
+      "question": "放量放量上涨，资金逸动的股票",
+      "type": "missing_agg",
+      "gt_sql": "SELECT hq_current_view.secucode FROM (SELECT hq_current_view.secucode AS secucode, hq_current_view.d",
+      "pred_sql": "(SELECT `secucode` FROM `hq_current_view` WHERE `qrr` > 2 AND `zdf` > 0.02) INTERSECT (SELECT `secuc"
+    },
+    {
+      "qid": "64",
+      "question": "成交额排名前200，60日均线上移，两日内KDJ金叉，MACD金叉的沪深主板",
+      "type": "extra_agg",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view \nWHERE hq_basic_view.is_hszb = 1 AND hq_basic_view.",
+      "pred_sql": "WITH top_amount AS (SELECT `secucode` FROM `hq_history_agg_view` WHERE `date` = (SELECT date FROM `h"
+    },
+    {
+      "qid": "65",
+      "question": "北京板块、山东板块、江苏板块、上海板块、浙江板块、福建板块、广东板块、深圳板块主板股票量比",
+      "type": "missing_agg",
+      "gt_sql": "(SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03001' UNION SELE",
+      "pred_sql": "(SELECT hq_current_view.qrr FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.sec"
+    },
+    {
+      "qid": "66",
+      "question": "山东板块、江苏板块、上海板块、浙江板块、福建板块、广东板块、深圳板块主板股票量比",
+      "type": "missing_agg",
+      "gt_sql": "(SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03023' UNION SELE",
+      "pred_sql": "(SELECT `secucode` FROM `hq_basic_view` WHERE `area` = '山东' AND `type` = 'A股' AND `is_kcb` = 0 AND `"
+    },
+    {
+      "qid": "72",
+      "question": "潜伏龙头",
+      "type": "extra_agg",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view \nWHERE hq_basic_view.type = 'A股' AND hq_basic_view.",
+      "pred_sql": "WITH financial_screen AS (SELECT secucode FROM f10_main_indicator_view WHERE toYear(date) = toYear(("
+    },
+    {
+      "qid": "87",
+      "question": "电力上下游有多少股票",
+      "type": "extra_agg",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode IN ('SHHQ601179', 'SZH",
+      "pred_sql": "SELECT COUNT(DISTINCT `hq_basic_view`.`secucode`) AS power_up_downstream_count FROM `hq_basic_view` "
+    },
+    {
+      "qid": "90",
+      "question": "国家网有多少股票",
+      "type": "extra_agg",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode IN ('SZHQ002498', 'SZH",
+      "pred_sql": "SELECT COUNT(*) FROM `hq_basic_view` WHERE `secucode` IN ('SZHQ002498', 'SZHQ002545', 'SZHQ000066', "
+    },
+    {
+      "qid": "91",
+      "question": "紫金矿业的机构持股数",
+      "type": "extra_agg",
+      "gt_sql": "SELECT hq_basic_view.secucode, organ_hold_total FROM hq_basic_view  LEFT JOIN hq_current_view ON hq_",
+      "pred_sql": "SELECT DISTINCT hq_current_view.organ_hold_total FROM `hq_basic_view` AS basic INNER JOIN `hq_curren"
+    },
+    {
+      "qid": "93",
+      "question": "AI 上游股票",
+      "type": "extra_agg",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02520%' OR ",
+      "pred_sql": "SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` WHERE `hq_basic_view`.`concept` LIKE"
+    }
+  ]
+}

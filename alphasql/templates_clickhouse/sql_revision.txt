@@ -4,19 +4,65 @@
 请使用递归分治法来审查和修改 SQL 查询。
 
 【重要】本数据库为 ClickHouse，请严格遵守以下规则：
+0. **聚合/窗口函数规则（非常重要！）：**
+   - 如果逻辑涉及聚合或窗口函数，必须先通过 CTE（公共表表达式）或子查询生成临时结果。
+   - **禁止在 WHERE 子句中直接使用窗口函数**！错误示例：`WHERE ROW_NUMBER() OVER (...) = 1` ❌
+   - **正确做法**：先用子查询/CTE 计算窗口函数，再在外层 WHERE 中过滤。
+     ```sql
+     -- ❌ 错误：窗口函数在 WHERE 中
+     SELECT * FROM t WHERE ROW_NUMBER() OVER (ORDER BY id) = 1
+     -- ✅ 正确：先计算窗口函数，再过滤
+     SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY id) as rn FROM t) sub WHERE rn = 1
+     ```
+   - **禁止在聚合函数中嵌套窗口函数**！错误示例：`SELECT SUM(COUNT(*))` ❌
+
 1. **SELECT 子句（非常重要）：**
    - **只选择问题中明确要求返回的列**！例如：
-     - 如果问题问"有哪些股票"，只 SELECT `secucode`（股票代码）
-     - 如果问题问"股票名称"，只 SELECT `secuname`
-     - 如果问题问"股票有哪些"，只 SELECT `secucode`，**不要加 secuname**！
    - **禁止添加问题中没有提到的列**！
-2. **处理 NULL 和空字符串：**
+2. **处理 NULL 和空字符串（非常重要！）：**
    - issue_list_date 等日期列是 String 类型，可能包含空字符串 ''。
-   - 使用 `WHERE column != '' AND column IS NOT NULL` 过滤空值。
+   - **【重要】必须先过滤空字符串再转换日期！否则会报错！**
+   - 正确顺序：**先 WHERE 过滤，再 toDate() 转换**：
+     ```sql
+     -- ✅ 正确：先过滤空字符串，再转换日期
+     WHERE `issue_list_date` != ''
+       AND `issue_list_date` IS NOT NULL
+       AND toDate(`issue_list_date`) BETWEEN '2024-01-01' AND '2025-06-30'
+     ```
+   - **或者直接比较字符串**（如果格式是 yyyy-mm-dd）：
+     ```sql
+     -- ✅ 正确：直接比较字符串
+     WHERE `issue_list_date` != ''
+       AND `issue_list_date` IS NOT NULL
+       AND `issue_list_date` BETWEEN '2024-01-01' AND '2025-06-30'
+     ```
 2. **仅使用 ClickHouse 函数：**
    - 只使用 ClickHouse 可用的函数。
    - **禁止使用 SQLite 函数**，如 STRFTIME、DATE、JULIANDAY、FIND_IN_SET 等！
    - **禁止使用双引号 " " 引用标识符**，必须使用反引号 ` ` ！
+   - **【严禁大写变体】LAG, LEAD → 必须用 lagInFrame, leadInFrame（全小写！）**
+   - **SUMIF, SUMIFS → 禁止使用！ClickHouse不支持，用其他方式实现（如 CASE WHEN + SUM）**
+   - **【重要】窗口函数必须写为 lagInFrame/leadInFrame/row_number（全小写），不能用 LAG/LEAD/ROWNUMBER！**
+
+2. **【重要】默认日期范围（必须添加！）**：
+   - **除了 concept 字段筛选外**，其他所有表的 `date` 字段条件都**必须添加日期范围**！
+   - **连续表（行情类）**：用 `get_date('0d')` 获取最近交易日
+     - 包括：`hq_history_agg_view`, `hq_current_view`, `daily_zjdx_stat_level5_view`, `daily_qlld_level5_view` 等
+     - 示例：`WHERE date BETWEEN get_date('0d', is_start=True) AND get_date('0d')`
+   - **季度报表（财务类）**：用 `get_date('0q')` 获取本季度
+     - 包括：`f10_main_indicator_view`, `f10_profit_view`, `f10_cash_flow_view` 等
+     - 示例：`WHERE toYear(date) = toYear(get_date('0q'))`
+   - 示例：
+     ```sql
+     -- ❌ 错误：没有日期范围
+     SELECT secucode FROM hq_history_agg_view WHERE ma_jincha = 1
+
+     -- ✅ 正确：行情表加 get_date('0d')
+     SELECT secucode FROM hq_history_agg_view
+     WHERE date BETWEEN get_date('0d', is_start=True) AND get_date('0d')
+       AND ma_jincha = 1
+     ```
+
 3. **日期处理（关键）- 使用 get_date() 函数）：**
    - **issue_list_date 等日期列是字符串类型**，使用前必须用 `toDate()` 转换后再与 get_date() 结果比较！
    - **必须使用 get_date() 函数**来处理日期，不要直接写死日期字符串！
@@ -36,7 +82,32 @@
      ```
 4. **Schema 语法：**
    - 使用反引号 `` ` `` 引用表名和列名。
-5. **多概念查询（重要）**：
+5. **【重要】LIMIT 语法（ClickHouse 特有）**：
+   - **禁止使用** `LIMIT offset, count` 语法！❌
+   - **必须使用** `LIMIT count OFFSET offset` 语法！✅
+   - **【警告】这个语法经常被错误使用！请务必注意！**
+   - 示例：
+     ```sql
+     -- ❌ 错误：LIMIT 7, 1
+     SELECT date FROM hq_history_agg_view ORDER BY date DESC LIMIT 7, 1
+
+     -- ✅ 正确：LIMIT 1 OFFSET 7
+     SELECT date FROM hq_history_agg_view ORDER BY date DESC LIMIT 1 OFFSET 7
+     ```
+
+6. **【重要】JOIN 时必须使用表别名**：
+   - **禁止在 JOIN 中直接使用列名**，多个表可能有同名列（secucode, date, toratio 等）！
+   - **必须使用表别名限定列名**！
+   - 示例：
+     ```sql
+     -- ❌ 错误：直接使用列名导致歧义
+     SELECT secucode, toratio FROM t1 INNER JOIN t2 ON t1.secucode = t2.secucode WHERE toratio > 0.1
+
+     -- ✅ 正确：使用表别名
+     SELECT a.secucode, a.toratio FROM t1 a INNER JOIN t2 b ON a.secucode = b.secucode WHERE a.toratio > 0.1
+     ```
+
+7. **多概念查询（重要）**：
    - **禁止使用 LIKE '%%' + AND 组合**！
    - 例如：查询"同时属于概念A和概念B的股票"**不能用**：
      ```sql

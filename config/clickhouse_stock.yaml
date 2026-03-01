@@ -3,7 +3,7 @@ tasks_file_path: "data/preprocessed/stock/dev/tasks.pkl"
 subset_file_path: null
 db_root_dir: ""  # ClickHouse不需要本地数据库文件
 n_processes: 12
-max_rollout_steps: 24
+max_rollout_steps: 8
 max_depth: 16
 exploration_constant: 1.414
 save_root_dir: "results/clickhouse_stock_test"
@@ -16,4 +16,4 @@ mcts_model_kwargs:
   n_strategy: "single"
 reward_model_kwargs: null
 show_process_view: false
-show_total_time_statistics: true
+show_total_time_statistics: false #  图片

@@ -1,0 +1,2035 @@
+{
+  "1": {
+    "question": "北斗导航+军工的股票有哪些",
+    "correct": true,
+    "gt_count": 822,
+    "pred_count": 822,
+    "gt_result": [
+      "SZHQ301091",
+      "SHHQ688103",
+      "SZHQ002232",
+      "SZHQ300420",
+      "SZHQ000738"
+    ],
+    "pred_result": [
+      "SZHQ301091",
+      "SHHQ688103",
+      "SZHQ002232",
+      "SZHQ300420",
+      "SZHQ000738"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "2": {
+    "question": "北斗导航+军工+无人机的股票有哪些？",
+    "correct": true,
+    "gt_count": 911,
+    "pred_count": 911,
+    "gt_result": [
+      "SZHQ301091",
+      "SZHQ300007",
+      "SHHQ688103",
+      "SZHQ002196",
+      "SZHQ002232"
+    ],
+    "pred_result": [
+      "SZHQ301091",
+      "SZHQ300007",
+      "SHHQ688103",
+      "SZHQ002196",
+      "SZHQ002232"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "3": {
+    "question": "北斗导航+军工AI+无人机的股票有哪些？",
+    "correct": true,
+    "gt_count": 16,
+    "pred_count": 16,
+    "gt_result": [
+      "SHHQ688066",
+      "SZHQ002583",
+      "SZHQ002465",
+      "SHHQ688568",
+      "SZHQ301517"
+    ],
+    "pred_result": [
+      "SHHQ688066",
+      "SZHQ002583",
+      "SZHQ002465",
+      "SHHQ688568",
+      "SZHQ301517"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "4": {
+    "question": "24年至25年6月份上市的科创板和创业板公司",
+    "correct": true,
+    "gt_count": 80,
+    "pred_count": 80,
+    "gt_result": [
+      "SZHQ301458",
+      "SZHQ301522",
+      "SZHQ301501",
+      "SHHQ688717",
+      "SHHQ688530"
+    ],
+    "pred_result": [
+      "SZHQ301458",
+      "SZHQ301522",
+      "SZHQ301501",
+      "SHHQ688717",
+      "SHHQ688530"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "5": {
+    "question": "今日热门股票有哪些？",
+    "correct": true,
+    "gt_count": 221,
+    "pred_count": 221,
+    "gt_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "pred_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "6": {
+    "question": "24年至25年6月上市的创业板公司",
+    "correct": true,
+    "gt_count": 58,
+    "pred_count": 58,
+    "gt_result": [
+      "SZHQ301628",
+      "SZHQ301636",
+      "SZHQ301613",
+      "SZHQ301392",
+      "SZHQ301633"
+    ],
+    "pred_result": [
+      "SZHQ301628",
+      "SZHQ301636",
+      "SZHQ301613",
+      "SZHQ301392",
+      "SZHQ301633"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "7": {
+    "question": "24年至25年6月上市的公司",
+    "correct": true,
+    "gt_count": 0,
+    "pred_count": 0,
+    "gt_result": [],
+    "pred_result": [],
+    "missing": [],
+    "extra": []
+  },
+  "8": {
+    "question": "24年至25年6月，股票代码688开头和30开头的上市公司",
+    "correct": true,
+    "gt_count": 80,
+    "pred_count": 80,
+    "gt_result": [
+      "SZHQ301458",
+      "SZHQ301522",
+      "SZHQ301501",
+      "SHHQ688717",
+      "SHHQ688530"
+    ],
+    "pred_result": [
+      "SZHQ301458",
+      "SZHQ301522",
+      "SZHQ301501",
+      "SHHQ688717",
+      "SHHQ688530"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "9": {
+    "question": "在2024年至2025年6月期间，股票代码以688开头和30开头的上市公司",
+    "correct": true,
+    "gt_count": 80,
+    "pred_count": 80,
+    "gt_result": [
+      "SZHQ301458",
+      "SZHQ301522",
+      "SZHQ301501",
+      "SHHQ688717",
+      "SHHQ688530"
+    ],
+    "pred_result": [
+      "SZHQ301458",
+      "SZHQ301522",
+      "SZHQ301501",
+      "SHHQ688717",
+      "SHHQ688530"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "10": {
+    "question": "创业板在24年到25年的上市公司",
+    "correct": true,
+    "gt_count": 71,
+    "pred_count": 71,
+    "gt_result": [
+      "SZHQ301628",
+      "SZHQ301636",
+      "SZHQ301613",
+      "SZHQ301392",
+      "SZHQ301668"
+    ],
+    "pred_result": [
+      "SZHQ301628",
+      "SZHQ301636",
+      "SZHQ301613",
+      "SZHQ301392",
+      "SZHQ301668"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "11": {
+    "question": "创业板在24年到25年6月前的上市公司",
+    "correct": false,
+    "error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 38. DB::Exception: Cann"
+  },
+  "12": {
+    "question": "本月内当日收盘价等于最低价但不包括涨停和跌停的个股有哪些",
+    "correct": true,
+    "gt_count": 35,
+    "pred_count": 35,
+    "gt_result": [
+      "SHHQ603232",
+      "SHHQ600519",
+      "BJHQ920023",
+      "SHHQ601229",
+      "SZHQ300750"
+    ],
+    "pred_result": [
+      "SHHQ603232",
+      "SHHQ600519",
+      "BJHQ920023",
+      "SHHQ601229",
+      "SZHQ300750"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "14": {
+    "question": "多头向上",
+    "correct": true,
+    "gt_count": 488,
+    "pred_count": 488,
+    "gt_result": [
+      "SHHQ600982",
+      "SZHQ300819",
+      "SHHQ600452",
+      "SZHQ301203",
+      "SHHQ600299"
+    ],
+    "pred_result": [
+      "SHHQ600982",
+      "SZHQ300819",
+      "SHHQ600452",
+      "SZHQ301203",
+      "SHHQ600299"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "15": {
+    "question": "机器人概念龙头股是？",
+    "correct": true,
+    "gt_count": 0,
+    "pred_count": 0,
+    "gt_result": [],
+    "pred_result": [],
+    "missing": [],
+    "extra": []
+  },
+  "16": {
+    "question": "半导体龙头",
+    "correct": true,
+    "gt_count": 0,
+    "pred_count": 0,
+    "gt_result": [],
+    "pred_result": [],
+    "missing": [],
+    "extra": []
+  },
+  "17": {
+    "question": "出现涨停后五日股价涨幅度在-5%～10%之间的股票",
+    "correct": false,
+    "gt_count": 4,
+    "pred_count": 12,
+    "gt_result": [
+      "SHHQ603960",
+      "SHHQ603331",
+      "SZHQ000609",
+      "SZHQ002009"
+    ],
+    "pred_result": [
+      "SHHQ605255",
+      "SHHQ601606",
+      "SZHQ002940",
+      "SHHQ603257",
+      "SHHQ603822"
+    ],
+    "missing": [
+      "SHHQ603960",
+      "SHHQ603331",
+      "SZHQ000609"
+    ],
+    "extra": [
+      "SHHQ605255",
+      "SHHQ601606",
+      "SZHQ002940"
+    ]
+  },
+  "18": {
+    "question": "出现涨停后的后五日股价总幅度在-5%～10%之间的股票",
+    "correct": false,
+    "gt_count": 4,
+    "pred_count": 12,
+    "gt_result": [
+      "SHHQ603960",
+      "SHHQ603331",
+      "SZHQ000609",
+      "SZHQ002009"
+    ],
+    "pred_result": [
+      "SHHQ605255",
+      "SHHQ601606",
+      "SZHQ002940",
+      "SHHQ603257",
+      "SHHQ603822"
+    ],
+    "missing": [
+      "SHHQ603960",
+      "SHHQ603331",
+      "SZHQ000609"
+    ],
+    "extra": [
+      "SHHQ605255",
+      "SHHQ601606",
+      "SZHQ002940"
+    ]
+  },
+  "19": {
+    "question": "存什者芯片股票",
+    "correct": true,
+    "gt_count": 170,
+    "pred_count": 170,
+    "gt_result": [
+      "SHHQ688012",
+      "SHHQ688549",
+      "SHHQ688627",
+      "SHHQ688403",
+      "SZHQ300567"
+    ],
+    "pred_result": [
+      "SHHQ688012",
+      "SHHQ688549",
+      "SHHQ688627",
+      "SHHQ688403",
+      "SZHQ300567"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "21": {
+    "question": "主板开始轮动股票",
+    "correct": true,
+    "gt_count": 194,
+    "pred_count": 194,
+    "gt_result": [
+      "SHHQ600787",
+      "SZHQ003037",
+      "SHHQ603689",
+      "SHHQ601330",
+      "SZHQ002746"
+    ],
+    "pred_result": [
+      "SHHQ600787",
+      "SZHQ003037",
+      "SHHQ603689",
+      "SHHQ601330",
+      "SZHQ002746"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "22": {
+    "question": "云南城投户数",
+    "correct": true,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ600239"
+    ],
+    "pred_result": [
+      "SHHQ600239"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "23": {
+    "question": "与anthropic相关的股票",
+    "correct": true,
+    "gt_count": 2,
+    "pred_count": 2,
+    "gt_result": [
+      "SHHQ600845",
+      "SZHQ003032"
+    ],
+    "pred_result": [
+      "SHHQ600845",
+      "SZHQ003032"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "24": {
+    "question": "高股息个股价位正处于底部",
+    "correct": true,
+    "gt_count": 10,
+    "pred_count": 10,
+    "gt_result": [
+      "SHHQ600066",
+      "SHHQ600729",
+      "SHHQ601288",
+      "SHHQ601398",
+      "SHHQ601963"
+    ],
+    "pred_result": [
+      "SHHQ600066",
+      "SHHQ600729",
+      "SHHQ601288",
+      "SHHQ601398",
+      "SHHQ601963"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "25": {
+    "question": "选出上周每天收盘主力资金流入＞1亿元，6％≤换手率≤9％，5％≤涨幅≤9％，除去ST，除去*ST，除去北交所，除去科创板。",
+    "correct": false,
+    "gt_count": 0,
+    "pred_count": 5,
+    "gt_result": [],
+    "pred_result": [
+      "SHHQ600602",
+      "SHHQ600111",
+      "SZHQ002428",
+      "SHHQ600487",
+      "SHHQ600522"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ600602",
+      "SHHQ600487",
+      "SHHQ600111"
+    ]
+  },
+  "26": {
+    "question": "选出2026年1月14日，收盘时主力资金流入＞1亿元，6％≤换手率≤9％，5％≤涨幅≤9％，除去ST，除去*ST，除去北交所，除去科创板的股票。",
+    "correct": false,
+    "gt_count": 0,
+    "pred_count": 114,
+    "gt_result": [],
+    "pred_result": [
+      "SZHQ002961",
+      "SZHQ300471",
+      "SZHQ300948",
+      "SHHQ603279",
+      "SZHQ001282"
+    ],
+    "missing": [],
+    "extra": [
+      "SZHQ300113",
+      "SZHQ300674",
+      "SZHQ002961"
+    ]
+  },
+  "27": {
+    "question": "液冷技术的股票",
+    "correct": false,
+    "gt_count": 119,
+    "pred_count": 952,
+    "gt_result": [
+      "SHHQ688158",
+      "SZHQ002723",
+      "SHHQ605020",
+      "SHHQ688668",
+      "SZHQ300594"
+    ],
+    "pred_result": [
+      "SZHQ300571",
+      "SZHQ300007",
+      "SZHQ002196",
+      "SZHQ300115",
+      "SHHQ603358"
+    ],
+    "missing": [
+      "SZHQ002418",
+      "SHHQ603019",
+      "SZHQ300184"
+    ],
+    "extra": [
+      "SZHQ300571",
+      "SZHQ300007",
+      "SZHQ002196"
+    ]
+  },
+  "28": {
+    "question": "生产液冷的股票",
+    "correct": true,
+    "gt_count": 119,
+    "pred_count": 119,
+    "gt_result": [
+      "SHHQ688158",
+      "SZHQ002723",
+      "SHHQ605020",
+      "SHHQ688668",
+      "SZHQ300594"
+    ],
+    "pred_result": [
+      "SHHQ688158",
+      "SZHQ002723",
+      "SHHQ605020",
+      "SHHQ688668",
+      "SZHQ300594"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "29": {
+    "question": "特高压产业链相关的龙头股",
+    "correct": false,
+    "gt_count": 0,
+    "pred_count": 10,
+    "gt_result": [],
+    "pred_result": [
+      "SHHQ600089",
+      "SHHQ601669",
+      "SHHQ600879",
+      "SHHQ600517",
+      "SZHQ002459"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ600089",
+      "SHHQ601669",
+      "SHHQ600879"
+    ]
+  },
+  "30": {
+    "question": "2025年度年报业绩预增的企业有哪些",
+    "correct": false,
+    "gt_count": 814,
+    "pred_count": 816,
+    "gt_result": [
+      "SHHQ688012",
+      "SZHQ002624",
+      "BJHQ920476",
+      "SHHQ688103",
+      "SHHQ603822"
+    ],
+    "pred_result": [
+      "SHHQ688012",
+      "SZHQ002624",
+      "BJHQ920476",
+      "SHHQ688103",
+      "SHHQ603822"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ603005",
+      "SZHQ001309"
+    ]
+  },
+  "31": {
+    "question": "帮我选一个底位刚启动的半导体股票",
+    "correct": true,
+    "gt_count": 0,
+    "pred_count": 0,
+    "gt_result": [],
+    "pred_result": [],
+    "missing": [],
+    "extra": []
+  },
+  "32": {
+    "question": "有哪家公司生产白银？",
+    "correct": true,
+    "gt_count": 21,
+    "pred_count": 21,
+    "gt_result": [
+      "SZHQ300209",
+      "SZHQ002716",
+      "SZHQ000823",
+      "SZHQ000688",
+      "SHHQ601899"
+    ],
+    "pred_result": [
+      "SZHQ300209",
+      "SZHQ002716",
+      "SZHQ000823",
+      "SZHQ000688",
+      "SHHQ601899"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "33": {
+    "question": "主力资金流入的股票有哪些",
+    "correct": false,
+    "gt_count": 3124,
+    "pred_count": 0,
+    "gt_result": [
+      "SZHQ300819",
+      "SZHQ300643",
+      "SHHQ600366",
+      "SZHQ300245",
+      "SZHQ300429"
+    ],
+    "pred_result": [],
+    "missing": [
+      "SZHQ300819",
+      "SZHQ300643",
+      "SHHQ600366"
+    ],
+    "extra": []
+  },
+  "34": {
+    "question": "今天有哪些股票走强",
+    "correct": false,
+    "gt_count": 17,
+    "pred_count": 211,
+    "gt_result": [
+      "SZHQ301122",
+      "SZHQ301395",
+      "SZHQ002881",
+      "SZHQ301226",
+      "SZHQ301198"
+    ],
+    "pred_result": [
+      "SHHQ600452",
+      "SZHQ002961",
+      "BJHQ920089",
+      "SHHQ600601",
+      "SZHQ300643"
+    ],
+    "missing": [
+      "SZHQ000731",
+      "SHHQ603318"
+    ],
+    "extra": [
+      "SHHQ600452",
+      "SZHQ002961",
+      "BJHQ920089"
+    ]
+  },
+  "35": {
+    "question": "半导体设备方面优质业绩股",
+    "correct": true,
+    "gt_count": 33,
+    "pred_count": 33,
+    "gt_result": [
+      "SHHQ688135",
+      "SHHQ688458",
+      "SHHQ688403",
+      "SHHQ688653",
+      "SHHQ688591"
+    ],
+    "pred_result": [
+      "SHHQ688135",
+      "SHHQ688458",
+      "SHHQ688403",
+      "SHHQ688653",
+      "SHHQ688591"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "36": {
+    "question": "放量上涨的股票",
+    "correct": false,
+    "gt_count": 214,
+    "pred_count": 0,
+    "gt_result": [
+      "SHHQ601330",
+      "SHHQ600452",
+      "SZHQ002961",
+      "SZHQ000731",
+      "SZHQ002394"
+    ],
+    "pred_result": [],
+    "missing": [
+      "SHHQ601330",
+      "SHHQ600452",
+      "SZHQ002961"
+    ],
+    "extra": []
+  },
+  "37": {
+    "question": "放量放量上涨，资金逸动的股票",
+    "correct": true,
+    "gt_count": 164,
+    "pred_count": 164,
+    "gt_result": [
+      "SHHQ600452",
+      "SZHQ002961",
+      "SZHQ000731",
+      "SZHQ300643",
+      "SHHQ603279"
+    ],
+    "pred_result": [
+      "SHHQ600452",
+      "SZHQ002961",
+      "SZHQ000731",
+      "SZHQ300643",
+      "SHHQ603279"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "38": {
+    "question": "放量亿万上涨的股票",
+    "correct": false,
+    "gt_count": 214,
+    "pred_count": 215,
+    "gt_result": [
+      "SHHQ601330",
+      "SHHQ600452",
+      "SZHQ002961",
+      "SZHQ000731",
+      "SZHQ002394"
+    ],
+    "pred_result": [
+      "SHHQ601330",
+      "SHHQ600452",
+      "SZHQ002961",
+      "SZHQ000731",
+      "SZHQ002394"
+    ],
+    "missing": [],
+    "extra": [
+      "SZHQ000793"
+    ]
+  },
+  "39": {
+    "question": "放量亿上涨的股票",
+    "correct": false,
+    "gt_count": 214,
+    "pred_count": 6357,
+    "gt_result": [
+      "SHHQ601330",
+      "SHHQ600452",
+      "SZHQ002961",
+      "SZHQ000731",
+      "SZHQ002394"
+    ],
+    "pred_result": [
+      "BR01B02448",
+      "SZHQ002687",
+      "BR01B01022",
+      "BR01B02711",
+      "SHHQ603358"
+    ],
+    "missing": [
+      "SHHQ601330",
+      "SZHQ000972",
+      "SZHQ002628"
+    ],
+    "extra": [
+      "BR01B02448",
+      "SZHQ002687",
+      "SZHQ300007"
+    ]
+  },
+  "40": {
+    "question": "帮我分析一下盐山科技的筹码分布情况",
+    "correct": true,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SZHQ002195"
+    ],
+    "pred_result": [
+      "SZHQ002195"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "41": {
+    "question": "推一下成长期和低股指股票",
+    "correct": false,
+    "gt_count": 17,
+    "pred_count": 88,
+    "gt_result": [
+      "SZHQ301367",
+      "BJHQ920357",
+      "SHHQ689009",
+      "SHHQ601881",
+      "SHHQ601878"
+    ],
+    "pred_result": [
+      "BJHQ920112",
+      "SZHQ301501",
+      "SZHQ300979",
+      "SHHQ603983",
+      "SHHQ601818"
+    ],
+    "missing": [
+      "SZHQ301367",
+      "BJHQ920357",
+      "SZHQ300059"
+    ],
+    "extra": [
+      "SHHQ601607",
+      "SZHQ002252",
+      "BJHQ920112"
+    ]
+  },
+  "42": {
+    "question": "10元以下，一日多空资金的股票",
+    "correct": false,
+    "gt_count": 987,
+    "pred_count": 3743,
+    "gt_result": [
+      "SHHQ600982",
+      "SHHQ601330",
+      "SZHQ002746",
+      "SZHQ002672",
+      "SHHQ600327"
+    ],
+    "pred_result": [
+      "SHHQ688012",
+      "SZHQ002687",
+      "SZHQ300819",
+      "SZHQ300420",
+      "BR01B20462"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ688012",
+      "SZHQ002687",
+      "SZHQ300819"
+    ]
+  },
+  "44": {
+    "question": "请帮我找出中国人寿0051一001沪25年三季度的增仓股票",
+    "correct": false,
+    "gt_count": 4,
+    "pred_count": 5,
+    "gt_result": [
+      "SHHQ601233",
+      "SHHQ603338",
+      "SHHQ600320",
+      "SHHQ600760"
+    ],
+    "pred_result": [
+      "SHHQ601233",
+      "SHHQ600031",
+      "SHHQ603338",
+      "SHHQ600320",
+      "SHHQ600760"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ600031"
+    ]
+  },
+  "45": {
+    "question": "山东与供热发电有关的股票有哪些",
+    "correct": true,
+    "gt_count": 0,
+    "pred_count": 0,
+    "gt_result": [],
+    "pred_result": [],
+    "missing": [],
+    "extra": []
+  },
+  "46": {
+    "question": "券商板块包括那些行业",
+    "correct": false,
+    "gt_count": 51,
+    "pred_count": 0,
+    "gt_result": [
+      "SHHQ601995",
+      "SHHQ601788",
+      "SHHQ601990",
+      "SHHQ600864",
+      "SZHQ000750"
+    ],
+    "pred_result": [],
+    "missing": [
+      "SHHQ601995",
+      "SHHQ601788",
+      "SHHQ601990"
+    ],
+    "extra": []
+  },
+  "47": {
+    "question": "以上科技板块是那几个",
+    "correct": true,
+    "gt_count": 2992,
+    "pred_count": 2992,
+    "gt_result": [
+      "SHHQ688012",
+      "SZHQ300007",
+      "SHHQ603358",
+      "SZHQ300420",
+      "SZHQ300842"
+    ],
+    "pred_result": [
+      "SHHQ688012",
+      "SZHQ300007",
+      "SHHQ603358",
+      "SZHQ300420",
+      "SZHQ300842"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "49": {
+    "question": "天燃气有哪些股票",
+    "correct": true,
+    "gt_count": 125,
+    "pred_count": 125,
+    "gt_result": [
+      "SHHQ600691",
+      "SHHQ603689",
+      "SZHQ300164",
+      "SZHQ000731",
+      "SZHQ300471"
+    ],
+    "pred_result": [
+      "SHHQ600691",
+      "SHHQ603689",
+      "SZHQ300164",
+      "SZHQ000731",
+      "SZHQ300471"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "50": {
+    "question": "上海本地消费股",
+    "correct": false,
+    "gt_count": 11,
+    "pred_count": 125,
+    "gt_result": [
+      "SHHQ601607",
+      "SHHQ603009",
+      "SHHQ603786",
+      "SHHQ688578",
+      "SHHQ600196"
+    ],
+    "pred_result": [
+      "SHHQ600691",
+      "SHHQ603689",
+      "SZHQ300164",
+      "SZHQ000731",
+      "SZHQ300471"
+    ],
+    "missing": [
+      "SHHQ601607",
+      "SHHQ603009",
+      "SHHQ688578"
+    ],
+    "extra": [
+      "SHHQ600691",
+      "SHHQ603689",
+      "SZHQ300164"
+    ]
+  },
+  "51": {
+    "question": "碳纤维龙头股有哪些",
+    "correct": false,
+    "error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 500)\n Code: 43. DB::Exception: Ille"
+  },
+  "52": {
+    "question": "碳纤维股票有哪些",
+    "correct": true,
+    "gt_count": 77,
+    "pred_count": 77,
+    "gt_result": [
+      "BJHQ920089",
+      "SZHQ300690",
+      "SZHQ300995",
+      "SZHQ000420",
+      "SHHQ688281"
+    ],
+    "pred_result": [
+      "BJHQ920089",
+      "SZHQ300690",
+      "SZHQ300995",
+      "SZHQ000420",
+      "SHHQ688281"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "53": {
+    "question": "000880的公司是做什么的",
+    "correct": false,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SZHQ000880"
+    ],
+    "pred_result": [
+      "公司主要开发、制造和销售船舶动力和发电设备市场用30-13600马力的发动机及动力集成系统、发电机组及电力集成系统,兼顾经营柴油机零部件、船用齿轮箱配套等产品,并具有提供整套动力解决方案及电力解决方案的能力。公司业务覆盖远洋、近海、内河和发电四个领域,船用发动机在内河和近海运输船、渔船市场处于领先地位,发电机组被广泛应用于船舶、通讯、油田、医疗、数据中心等行业"
+    ],
+    "missing": [
+      "SZHQ000880"
+    ],
+    "extra": [
+      "公司主要开发、制造和销售船舶动力和发电设备市场用30-13600马力的发动机及动力集成系统、发电机组及电力集成系统,兼顾经营柴油机零部件、船用齿轮箱配套等产品,并具有提供整套动力解决方案及电力解决方案的能力。公司业务覆盖远洋、近海、内河和发电四个领域,船用发动机在内河和近海运输船、渔船市场处于领先地位,发电机组被广泛应用于船舶、通讯、油田、医疗、数据中心等行业"
+    ]
+  },
+  "54": {
+    "question": "主力资金进入最多的股票",
+    "correct": false,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ600010"
+    ],
+    "pred_result": [
+      "SHHQ600519"
+    ],
+    "missing": [
+      "SHHQ600010"
+    ],
+    "extra": [
+      "SHHQ600519"
+    ]
+  },
+  "55": {
+    "question": "今天有多少热点股票",
+    "correct": false,
+    "gt_count": 221,
+    "pred_count": 1,
+    "gt_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "pred_result": [
+      "49"
+    ],
+    "missing": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100"
+    ],
+    "extra": [
+      "49"
+    ]
+  },
+  "56": {
+    "question": "2025年净利润增长 ",
+    "correct": false,
+    "gt_count": 0,
+    "pred_count": 5392,
+    "gt_result": [],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "BJHQ920433",
+      "SZHQ300130",
+      "SZHQ000025"
+    ],
+    "missing": [],
+    "extra": [
+      "SZHQ002687",
+      "SZHQ300007",
+      "SZHQ300819"
+    ]
+  },
+  "57": {
+    "question": "2025年净利润增长大于10%的股票有哪些",
+    "correct": false,
+    "gt_count": 0,
+    "pred_count": 2380,
+    "gt_result": [],
+    "pred_result": [
+      "SHHQ688012",
+      "SHHQ603358",
+      "SZHQ300420",
+      "SZHQ300643",
+      "SHHQ600366"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ688012",
+      "SHHQ603358",
+      "SZHQ300420"
+    ]
+  },
+  "58": {
+    "question": "商业航天加AI应用",
+    "correct": false,
+    "gt_count": 471,
+    "pred_count": 464,
+    "gt_result": [
+      "SHHQ688012",
+      "SHHQ688103",
+      "SZHQ300842",
+      "SHHQ688668",
+      "SZHQ000738"
+    ],
+    "pred_result": [
+      "SHHQ688103",
+      "SZHQ300842",
+      "SHHQ688668",
+      "SZHQ000738",
+      "SZHQ002792"
+    ],
+    "missing": [
+      "SHHQ688012",
+      "SHHQ688037",
+      "SHHQ603690"
+    ],
+    "extra": []
+  },
+  "59": {
+    "question": "筛选一季度扣非净利润同比增长%50以上，营收同比增长%20，扣非净利润大于5000万的股票",
+    "correct": false,
+    "gt_count": 0,
+    "pred_count": 4844,
+    "gt_result": [],
+    "pred_result": [
+      "SHHQ688012",
+      "SZHQ300007",
+      "SZHQ300819",
+      "SZHQ002687",
+      "SHHQ603358"
+    ],
+    "missing": [],
+    "extra": [
+      "SZHQ300007",
+      "SZHQ300819",
+      "SZHQ002687"
+    ]
+  },
+  "60": {
+    "question": "今天的热门股票",
+    "correct": false,
+    "gt_count": 221,
+    "pred_count": 220,
+    "gt_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "pred_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "missing": [
+      "BJHQ821101"
+    ],
+    "extra": []
+  },
+  "61": {
+    "question": "今天强势股",
+    "correct": false,
+    "gt_count": 17,
+    "pred_count": 211,
+    "gt_result": [
+      "SZHQ301122",
+      "SZHQ301395",
+      "SZHQ002881",
+      "SZHQ301226",
+      "SZHQ000731"
+    ],
+    "pred_result": [
+      "SHHQ600452",
+      "SZHQ002961",
+      "SZHQ002394",
+      "BJHQ920089",
+      "SHHQ600601"
+    ],
+    "missing": [
+      "SZHQ000731",
+      "SHHQ603318"
+    ],
+    "extra": [
+      "SHHQ600452",
+      "SZHQ002961",
+      "SZHQ002394"
+    ]
+  },
+  "62": {
+    "question": "串列型高能氢离子活入机相关上市公司",
+    "correct": true,
+    "gt_count": 10,
+    "pred_count": 10,
+    "gt_result": [
+      "SZHQ300666",
+      "SHHQ688409",
+      "SHHQ603290",
+      "SHHQ600641",
+      "SHHQ688120"
+    ],
+    "pred_result": [
+      "SZHQ300666",
+      "SHHQ688409",
+      "SHHQ603290",
+      "SHHQ600641",
+      "SHHQ688120"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "64": {
+    "question": "成交额排名前200，60日均线上移，两日内KDJ金叉，MACD金叉的沪深主板",
+    "correct": false,
+    "gt_count": 10,
+    "pred_count": 0,
+    "gt_result": [
+      "SZHQ002747",
+      "SZHQ002340",
+      "SZHQ000537",
+      "SZHQ002339",
+      "SHHQ603091"
+    ],
+    "pred_result": [],
+    "missing": [
+      "SZHQ002747",
+      "SZHQ002340",
+      "SZHQ000537"
+    ],
+    "extra": []
+  },
+  "65": {
+    "question": "北京板块、山东板块、江苏板块、上海板块、浙江板块、福建板块、广东板块、深圳板块主板股票量比",
+    "correct": false,
+    "gt_count": 2199,
+    "pred_count": 2084,
+    "gt_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "SHHQ600366",
+      "SZHQ002792",
+      "SZHQ000025"
+    ],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "SHHQ600366",
+      "SZHQ002792",
+      "SZHQ000025"
+    ],
+    "missing": [
+      "SZHQ000416",
+      "SHHQ600978",
+      "SHHQ601558"
+    ],
+    "extra": []
+  },
+  "66": {
+    "question": "山东板块、江苏板块、上海板块、浙江板块、福建板块、广东板块、深圳板块主板股票量比",
+    "correct": false,
+    "error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 47. DB::Exception: Iden"
+  },
+  "67": {
+    "question": "固态变压器",
+    "correct": false,
+    "gt_count": 7,
+    "pred_count": 0,
+    "gt_result": [
+      "SHHQ688676",
+      "SHHQ600089",
+      "SZHQ002335",
+      "SHHQ688187",
+      "SZHQ002885"
+    ],
+    "pred_result": [],
+    "missing": [
+      "SHHQ688676",
+      "SHHQ600089",
+      "SZHQ002335"
+    ],
+    "extra": []
+  },
+  "68": {
+    "question": "热门股",
+    "correct": true,
+    "gt_count": 221,
+    "pred_count": 221,
+    "gt_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "pred_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "69": {
+    "question": "热门股前三十名",
+    "correct": true,
+    "gt_count": 30,
+    "pred_count": 30,
+    "gt_result": [
+      "SHHQ600000",
+      "SZHQ002219",
+      "SHHQ688786",
+      "SHHQ688355",
+      "SZHQ003035"
+    ],
+    "pred_result": [
+      "SHHQ600000",
+      "SZHQ002219",
+      "SHHQ688786",
+      "SHHQ688355",
+      "SZHQ003035"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "70": {
+    "question": "前三十名热门股",
+    "correct": false,
+    "gt_count": 30,
+    "pred_count": 3,
+    "gt_result": [
+      "SHHQ600000",
+      "SZHQ002219",
+      "SHHQ688786",
+      "SHHQ688355",
+      "SZHQ003035"
+    ],
+    "pred_result": [
+      "SHHQ601628",
+      "SZHQ300803",
+      "SHHQ600325"
+    ],
+    "missing": [
+      "SHHQ600000",
+      "SZHQ300850",
+      "SZHQ001337"
+    ],
+    "extra": [
+      "SHHQ601628",
+      "SHHQ600325"
+    ]
+  },
+  "71": {
+    "question": "今日主板有什么热门票？",
+    "correct": true,
+    "gt_count": 143,
+    "pred_count": 143,
+    "gt_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "pred_result": [
+      "SZHQ002497",
+      "SZHQ002716",
+      "SHHQ600100",
+      "SZHQ000563",
+      "SHHQ603279"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "72": {
+    "question": "潜伏龙头",
+    "correct": false,
+    "gt_count": 10,
+    "pred_count": 1887,
+    "gt_result": [
+      "SZHQ300126",
+      "SZHQ300315",
+      "SZHQ002747",
+      "SZHQ300205",
+      "SZHQ000537"
+    ],
+    "pred_result": [
+      "SZHQ300007",
+      "SZHQ300842",
+      "SHHQ600366",
+      "SZHQ300429",
+      "SZHQ300130"
+    ],
+    "missing": [
+      "SZHQ300126",
+      "SZHQ300315",
+      "SZHQ002747"
+    ],
+    "extra": [
+      "SZHQ301091",
+      "SZHQ300007",
+      "SHHQ688016"
+    ]
+  },
+  "74": {
+    "question": "主力资金介入的",
+    "correct": false,
+    "gt_count": 3124,
+    "pred_count": 5485,
+    "gt_result": [
+      "SZHQ300819",
+      "SZHQ300643",
+      "SHHQ600366",
+      "SZHQ300429",
+      "SZHQ300245"
+    ],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "BJHQ920433",
+      "SZHQ300130",
+      "SZHQ000025"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ688012",
+      "SZHQ002687",
+      "SZHQ300007"
+    ]
+  },
+  "75": {
+    "question": "那些是AI应用股?",
+    "correct": true,
+    "gt_count": 14,
+    "pred_count": 14,
+    "gt_result": [
+      "SZHQ002217",
+      "SZHQ300766",
+      "SZHQ300058",
+      "SZHQ301171",
+      "SHHQ600986"
+    ],
+    "pred_result": [
+      "SZHQ002217",
+      "SZHQ300766",
+      "SZHQ300058",
+      "SZHQ301171",
+      "SHHQ600986"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "76": {
+    "question": "氮化镓功率器相关的股票是什么",
+    "correct": true,
+    "gt_count": 48,
+    "pred_count": 48,
+    "gt_result": [
+      "SZHQ300464",
+      "SZHQ300123",
+      "SZHQ002885",
+      "SZHQ300046",
+      "SZHQ002782"
+    ],
+    "pred_result": [
+      "SZHQ300464",
+      "SZHQ300123",
+      "SZHQ002885",
+      "SZHQ300046",
+      "SZHQ002782"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "77": {
+    "question": "业绩好低估值60字的股",
+    "correct": false,
+    "gt_count": 56,
+    "pred_count": 200,
+    "gt_result": [
+      "SHHQ600375",
+      "SHHQ600067",
+      "SHHQ603822",
+      "SHHQ603616",
+      "SHHQ600540"
+    ],
+    "pred_result": [
+      "SHHQ603045",
+      "SHHQ600547",
+      "SHHQ601788",
+      "SHHQ603822",
+      "SHHQ603239"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ603045",
+      "SHHQ600547",
+      "SHHQ603239"
+    ]
+  },
+  "78": {
+    "question": "业绩好低估值的股",
+    "correct": false,
+    "gt_count": 244,
+    "pred_count": 671,
+    "gt_result": [
+      "SZHQ002624",
+      "SHHQ601788",
+      "SHHQ603822",
+      "SZHQ300567",
+      "SZHQ301321"
+    ],
+    "pred_result": [
+      "SHHQ688012",
+      "SZHQ002624",
+      "SHHQ603822",
+      "SHHQ688728",
+      "SZHQ300073"
+    ],
+    "missing": [
+      "SHHQ600375",
+      "BJHQ920037",
+      "BJHQ920106"
+    ],
+    "extra": [
+      "SHHQ688012",
+      "SHHQ688728",
+      "SZHQ300073"
+    ]
+  },
+  "79": {
+    "question": "三花智控历史最高点是多少",
+    "correct": false,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SZHQ002050"
+    ],
+    "pred_result": [
+      "60.77000045776367"
+    ],
+    "missing": [
+      "SZHQ002050"
+    ],
+    "extra": [
+      "60.77000045776367"
+    ]
+  },
+  "80": {
+    "question": "半导体和SK海力士合作有关系股有那些股票",
+    "correct": true,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ600584"
+    ],
+    "pred_result": [
+      "SHHQ600584"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "81": {
+    "question": "短线流入个股",
+    "correct": false,
+    "gt_count": 3124,
+    "pred_count": 5485,
+    "gt_result": [
+      "SZHQ300819",
+      "SZHQ300643",
+      "SHHQ600366",
+      "SZHQ300429",
+      "SZHQ300245"
+    ],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "BJHQ920433",
+      "SZHQ300130",
+      "SZHQ000025"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ688012",
+      "SZHQ002687",
+      "SZHQ300007"
+    ]
+  },
+  "82": {
+    "question": "短线资金流人股票",
+    "correct": false,
+    "gt_count": 3124,
+    "pred_count": 5485,
+    "gt_result": [
+      "SZHQ300819",
+      "SZHQ300643",
+      "SHHQ600366",
+      "SZHQ300245",
+      "SZHQ300429"
+    ],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "BJHQ920433",
+      "SZHQ300130",
+      "SZHQ000025"
+    ],
+    "missing": [],
+    "extra": [
+      "SHHQ688012",
+      "SZHQ002687",
+      "SZHQ300007"
+    ]
+  },
+  "83": {
+    "question": "多头排列主板股票量比",
+    "correct": false,
+    "gt_count": 320,
+    "pred_count": 3025,
+    "gt_result": [
+      "SHHQ600982",
+      "SHHQ600452",
+      "SHHQ600299",
+      "SZHQ002919",
+      "SZHQ002876"
+    ],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "SHHQ600366",
+      "SZHQ002792",
+      "SZHQ000025"
+    ],
+    "missing": [],
+    "extra": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "SHHQ600366"
+    ]
+  },
+  "84": {
+    "question": "近5日主板去ST板资金流入多涨幅小的股票",
+    "correct": false,
+    "gt_count": 410,
+    "pred_count": 1469,
+    "gt_result": [
+      "SHHQ600299",
+      "SZHQ001282",
+      "SHHQ600428",
+      "SHHQ601168",
+      "SHHQ600820"
+    ],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "SHHQ600366",
+      "SZHQ002792",
+      "SZHQ000025"
+    ],
+    "missing": [
+      "SHHQ600787",
+      "SHHQ600299",
+      "SHHQ600100"
+    ],
+    "extra": [
+      "SHHQ600982",
+      "SZHQ002624",
+      "SZHQ002687"
+    ]
+  },
+  "85": {
+    "question": "近3日主板去ST，主力流入多涨幅小的股票",
+    "correct": false,
+    "gt_count": 334,
+    "pred_count": 1444,
+    "gt_result": [
+      "SHHQ600366",
+      "SZHQ002792",
+      "SZHQ000633",
+      "SZHQ002034",
+      "SHHQ603716"
+    ],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ600366",
+      "SZHQ002792",
+      "SHHQ600428",
+      "SHHQ600362"
+    ],
+    "missing": [
+      "SHHQ601609",
+      "SHHQ600787",
+      "SHHQ600239"
+    ],
+    "extra": [
+      "SZHQ002624",
+      "SZHQ002687",
+      "SZHQ002746"
+    ]
+  },
+  "86": {
+    "question": "电力有多少强力股票",
+    "correct": false,
+    "gt_count": 2,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ600505",
+      "SHHQ600644"
+    ],
+    "pred_result": [
+      "30"
+    ],
+    "missing": [
+      "SHHQ600505",
+      "SHHQ600644"
+    ],
+    "extra": [
+      "30"
+    ]
+  },
+  "87": {
+    "question": "电力上下游有多少股票",
+    "correct": false,
+    "gt_count": 11,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ600268",
+      "SHHQ600011",
+      "SHHQ601616",
+      "SHHQ603530",
+      "SZHQ002498"
+    ],
+    "pred_result": [
+      "11"
+    ],
+    "missing": [
+      "SHHQ600268",
+      "SHHQ600011",
+      "SHHQ601616"
+    ],
+    "extra": [
+      "11"
+    ]
+  },
+  "88": {
+    "question": "中微子成分股",
+    "correct": true,
+    "gt_count": 11,
+    "pred_count": 11,
+    "gt_result": [
+      "SHHQ688012",
+      "SHHQ600089",
+      "SHHQ600111",
+      "SZHQ002465",
+      "SHHQ601618"
+    ],
+    "pred_result": [
+      "SHHQ688012",
+      "SHHQ600089",
+      "SHHQ600111",
+      "SZHQ002465",
+      "SHHQ601618"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "89": {
+    "question": "根据近五日的资金流向帮我选择几只既有股。",
+    "correct": false,
+    "gt_count": 102,
+    "pred_count": 780,
+    "gt_result": [
+      "SHHQ603822",
+      "SZHQ003002",
+      "SZHQ300471",
+      "SHHQ600118",
+      "SHHQ601112"
+    ],
+    "pred_result": [
+      "SHHQ688012",
+      "BJHQ920476",
+      "SZHQ002624",
+      "SHHQ688103",
+      "SHHQ603822"
+    ],
+    "missing": [
+      "SHHQ600478",
+      "SHHQ600165",
+      "SZHQ002237"
+    ],
+    "extra": [
+      "SHHQ688012",
+      "BJHQ920476",
+      "SZHQ002624"
+    ]
+  },
+  "90": {
+    "question": "国家网有多少股票",
+    "correct": false,
+    "gt_count": 261,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ603045",
+      "SHHQ688589",
+      "SZHQ000409",
+      "SZHQ301668",
+      "SZHQ300248"
+    ],
+    "pred_result": [
+      "261"
+    ],
+    "missing": [
+      "SHHQ603045",
+      "SZHQ000409",
+      "SZHQ301668"
+    ],
+    "extra": [
+      "261"
+    ]
+  },
+  "91": {
+    "question": "紫金矿业的机构持股数",
+    "correct": false,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ601899"
+    ],
+    "pred_result": [
+      "1817"
+    ],
+    "missing": [
+      "SHHQ601899"
+    ],
+    "extra": [
+      "1817"
+    ]
+  },
+  "92": {
+    "question": "紫金矿业的机构持股比例",
+    "correct": false,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ601899"
+    ],
+    "pred_result": [
+      "0.09059999883174896"
+    ],
+    "missing": [
+      "SHHQ601899"
+    ],
+    "extra": [
+      "0.09059999883174896"
+    ]
+  },
+  "93": {
+    "question": "AI 上游股票",
+    "correct": false,
+    "gt_count": 1378,
+    "pred_count": 1815,
+    "gt_result": [
+      "SHHQ688012",
+      "SZHQ300007",
+      "SZHQ300842",
+      "SZHQ300245",
+      "SZHQ300643"
+    ],
+    "pred_result": [
+      "SZHQ300007",
+      "SZHQ300245",
+      "SZHQ300643",
+      "SZHQ300130",
+      "SZHQ002792"
+    ],
+    "missing": [
+      "SHHQ688012",
+      "SHHQ688728",
+      "SZHQ300842"
+    ],
+    "extra": [
+      "SHHQ600982",
+      "SHHQ600201",
+      "SZHQ002672"
+    ]
+  },
+  "94": {
+    "question": "山东板块主板股票涨幅",
+    "correct": true,
+    "gt_count": 207,
+    "pred_count": 207,
+    "gt_result": [
+      "SZHQ000639",
+      "SZHQ002871",
+      "SZHQ000416",
+      "SZHQ002746",
+      "SZHQ000409"
+    ],
+    "pred_result": [
+      "SZHQ000639",
+      "SZHQ002871",
+      "SZHQ000416",
+      "SZHQ002746",
+      "SZHQ000409"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "95": {
+    "question": "山东板块、江苏板块、上海板块、浙江板块、福建板块、广东板块、深圳板块主板股票涨幅",
+    "correct": true,
+    "gt_count": 1935,
+    "pred_count": 1935,
+    "gt_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "SHHQ600366",
+      "SZHQ002792",
+      "SZHQ000025"
+    ],
+    "pred_result": [
+      "SZHQ002687",
+      "SHHQ603358",
+      "SHHQ600366",
+      "SZHQ002792",
+      "SZHQ000025"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "96": {
+    "question": "江苏板块主板股票涨幅",
+    "correct": true,
+    "gt_count": 367,
+    "pred_count": 367,
+    "gt_result": [
+      "SHHQ603125",
+      "SHHQ600327",
+      "SHHQ603358",
+      "SZHQ000738",
+      "SZHQ001205"
+    ],
+    "pred_result": [
+      "SHHQ603125",
+      "SHHQ600327",
+      "SHHQ603358",
+      "SZHQ000738",
+      "SZHQ001205"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "97": {
+    "question": "特变电工历史最高价",
+    "correct": true,
+    "gt_count": 1,
+    "pred_count": 1,
+    "gt_result": [
+      "SHHQ600089"
+    ],
+    "pred_result": [
+      "SHHQ600089"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "98": {
+    "question": "有降低火箭回收难度专利的股票",
+    "correct": true,
+    "gt_count": 9,
+    "pred_count": 9,
+    "gt_result": [
+      "SHHQ600879",
+      "SZHQ000987",
+      "SHHQ688102",
+      "SHHQ688333",
+      "SZHQ000917"
+    ],
+    "pred_result": [
+      "SHHQ600879",
+      "SZHQ000987",
+      "SHHQ688102",
+      "SHHQ688333",
+      "SZHQ000917"
+    ],
+    "missing": [],
+    "extra": []
+  },
+  "99": {
+    "question": "有降低火箭回收难度专利和中科宇航相关的股票",
+    "correct": false,
+    "gt_count": 3,
+    "pred_count": 2,
+    "gt_result": [
+      "SZHQ000987",
+      "SHHQ688102",
+      "SHHQ688333"
+    ],
+    "pred_result": [
+      "SZHQ000987",
+      "SHHQ688102"
+    ],
+    "missing": [
+      "SHHQ688333"
+    ],
+    "extra": []
+  },
+  "100": {
+    "question": "今天两到五元的股票涨停的有多少家？",
+    "correct": false,
+    "gt_count": 8,
+    "pred_count": 1,
+    "gt_result": [
+      "SZHQ000669",
+      "SHHQ600243",
+      "SZHQ000972",
+      "SHHQ600777",
+      "SZHQ002356"
+    ],
+    "pred_result": [
+      "8"
+    ],
+    "missing": [
+      "SZHQ000669",
+      "SHHQ600243",
+      "SZHQ000972"
+    ],
+    "extra": [
+      "8"
+    ]
+  }
+}

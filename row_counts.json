@@ -1,0 +1,618 @@
+{
+  "1": {
+    "gt_row_count": 822,
+    "pred_row_count": 822,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "2": {
+    "gt_row_count": 911,
+    "pred_row_count": 911,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "3": {
+    "gt_row_count": 16,
+    "pred_row_count": 0,
+    "row_diff": -16,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "4": {
+    "gt_row_count": 80,
+    "pred_row_count": 80,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "5": {
+    "gt_row_count": 221,
+    "pred_row_count": 221,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "6": {
+    "gt_row_count": 58,
+    "pred_row_count": 58,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "7": {
+    "gt_row_count": 0,
+    "pred_row_count": 151,
+    "row_diff": 151,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "8": {
+    "gt_row_count": 2058,
+    "pred_row_count": 80,
+    "row_diff": -1978,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "9": {
+    "gt_row_count": 2058,
+    "pred_row_count": 2058,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "10": {
+    "gt_row_count": 0,
+    "pred_row_count": 71,
+    "row_diff": 71,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "11": {
+    "gt_row_count": 0,
+    "pred_row_count": 58,
+    "row_diff": 58,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "12": {
+    "gt_row_count": 35,
+    "pred_row_count": 2370,
+    "row_diff": 2335,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "13": {
+    "gt_row_count": 3779,
+    "pred_row_count": 3784,
+    "row_diff": 5,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "17": {
+    "gt_row_count": 4,
+    "pred_row_count": 881,
+    "row_diff": 877,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "18": {
+    "gt_row_count": 4,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAGINFRAME' does not exist. In scope taz AS (SELECT secucode, date, close,"
+  },
+  "19": {
+    "gt_row_count": 170,
+    "pred_row_count": 170,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "22": {
+    "gt_row_count": 33,
+    "pred_row_count": 1,
+    "row_diff": -32,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "23": {
+    "gt_row_count": 2,
+    "pred_row_count": 2,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "24": {
+    "gt_row_count": 10,
+    "pred_row_count": 10,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "25": {
+    "gt_row_count": 0,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope cte_zhu_in_1d AS (SELECT daily_zjdx_stat_lev"
+  },
+  "26": {
+    "gt_row_count": 0,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope zhu_increments AS (SELECT daily_zjdx_stat_le"
+  },
+  "27": {
+    "gt_row_count": 119,
+    "pred_row_count": 952,
+    "row_diff": 833,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "28": {
+    "gt_row_count": 119,
+    "pred_row_count": 119,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "29": {
+    "gt_row_count": 0,
+    "pred_row_count": 10,
+    "row_diff": 10,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "30": {
+    "gt_row_count": 814,
+    "pred_row_count": 1515,
+    "row_diff": 701,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "31": {
+    "gt_row_count": 0,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 62. DB::Exception: Syntax error (Multi-statements are not allowed): failed at position 894 (end of query) (line 27, col 101"
+  },
+  "32": {
+    "gt_row_count": 21,
+    "pred_row_count": 21,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "33": {
+    "gt_row_count": 3124,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope zhu_flow AS (SELECT daily_zjdx_stat_level5_v"
+  },
+  "34": {
+    "gt_row_count": 17,
+    "pred_row_count": 212,
+    "row_diff": 195,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "35": {
+    "gt_row_count": 33,
+    "pred_row_count": 33,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "36": {
+    "gt_row_count": 214,
+    "pred_row_count": 215,
+    "row_diff": 1,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "37": {
+    "gt_row_count": 164,
+    "pred_row_count": 164,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "38": {
+    "gt_row_count": 214,
+    "pred_row_count": 215,
+    "row_diff": 1,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "39": {
+    "gt_row_count": 214,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 46. DB::Exception: Function with name `QUERY_VOLUME_SURGE_RISE` does not exist. In scope surge_rise AS (SELECT hq_current_v"
+  },
+  "40": {
+    "gt_row_count": 1,
+    "pred_row_count": 1,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "41": {
+    "gt_row_count": 17,
+    "pred_row_count": 6,
+    "row_diff": -11,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "42": {
+    "gt_row_count": 987,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope daily_zjdx AS (SELECT secucode, date, duo - "
+  },
+  "45": {
+    "gt_row_count": 0,
+    "pred_row_count": 0,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "46": {
+    "gt_row_count": 51,
+    "pred_row_count": 0,
+    "row_diff": -51,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "47": {
+    "gt_row_count": 2992,
+    "pred_row_count": 2992,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "48": {
+    "gt_row_count": 5,
+    "pred_row_count": 5,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "49": {
+    "gt_row_count": 125,
+    "pred_row_count": 125,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "50": {
+    "gt_row_count": 11,
+    "pred_row_count": 125,
+    "row_diff": 114,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "52": {
+    "gt_row_count": 77,
+    "pred_row_count": 77,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "53": {
+    "gt_row_count": 1,
+    "pred_row_count": 1,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "54": {
+    "gt_row_count": 1,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope net_inflow AS (SELECT secucode, date, zhu, z"
+  },
+  "55": {
+    "gt_row_count": 221,
+    "pred_row_count": 1,
+    "row_diff": -220,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "57": {
+    "gt_row_count": 0,
+    "pred_row_count": 2380,
+    "row_diff": 2380,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "58": {
+    "gt_row_count": 471,
+    "pred_row_count": 464,
+    "row_diff": -7,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "59": {
+    "gt_row_count": 0,
+    "pred_row_count": 4844,
+    "row_diff": 4844,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "60": {
+    "gt_row_count": 221,
+    "pred_row_count": 221,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "61": {
+    "gt_row_count": 17,
+    "pred_row_count": 0,
+    "row_diff": -17,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "62": {
+    "gt_row_count": 10,
+    "pred_row_count": 10,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "64": {
+    "gt_row_count": null,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 62. DB::Exception: Syntax error: failed at position 1183 (() (line 1, col 1183): (SELECT cte_latest_data_amount_9860b63d.se",
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope SELECT date, secucode, AVG(close) OVER (PART"
+  },
+  "65": {
+    "gt_row_count": 2199,
+    "pred_row_count": 2085,
+    "row_diff": -114,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "66": {
+    "gt_row_count": 1935,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 47. DB::Exception: Identifier 'hq_current_view.vol_ratio' cannot be resolved from table with name compass_ai.hq_current_vie"
+  },
+  "67": {
+    "gt_row_count": 7,
+    "pred_row_count": 0,
+    "row_diff": -7,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "69": {
+    "gt_row_count": 30,
+    "pred_row_count": 30,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "70": {
+    "gt_row_count": 30,
+    "pred_row_count": 30,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "72": {
+    "gt_row_count": null,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 62. DB::Exception: Syntax error: failed at position 5309 (() (line 1, col 5309): (SELECT DISTINCT `cte_AStockFinancial_af40",
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope price_change_screen AS (SELECT secucode, ((c"
+  },
+  "73": {
+    "gt_row_count": 58,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 47. DB::Exception: Unknown expression identifier `code` in scope fund_flow AS (SELECT code FROM daily_zjdx_stat_level5_view"
+  },
+  "74": {
+    "gt_row_count": 3124,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 62. DB::Exception: Unrecognized token: Syntax error: failed at position 5 (主) (line 1, col 5): 主力资金增减 AS (\n    SELECT \n    "
+  },
+  "75": {
+    "gt_row_count": 14,
+    "pred_row_count": 14,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "76": {
+    "gt_row_count": 48,
+    "pred_row_count": 48,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "77": {
+    "gt_row_count": 55,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 62. DB::Exception: Syntax error: failed at position 554 (() (line 1, col 554): (ORDER BY pe_static) FROM `hq_history_agg_vi"
+  },
+  "78": {
+    "gt_row_count": 244,
+    "pred_row_count": 671,
+    "row_diff": 427,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "79": {
+    "gt_row_count": 1,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 47. DB::Exception: Identifier 'hq_history_agg_view.all_time_high' cannot be resolved from table with name compass_ai.hq_his"
+  },
+  "80": {
+    "gt_row_count": 1,
+    "pred_row_count": 1,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "81": {
+    "gt_row_count": 3124,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope daily_zjdx AS (SELECT secucode, date, zhu, z"
+  },
+  "82": {
+    "gt_row_count": 3124,
+    "pred_row_count": 1121778,
+    "row_diff": 1118654,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "83": {
+    "gt_row_count": 320,
+    "pred_row_count": 26091,
+    "row_diff": 25771,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "84": {
+    "gt_row_count": 410,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope zjdx AS (SELECT hq.secucode, daily_zjdx_stat"
+  },
+  "85": {
+    "gt_row_count": 334,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope zhu_increase AS (SELECT secucode, zhu - LAG("
+  },
+  "86": {
+    "gt_row_count": 2,
+    "pred_row_count": 5,
+    "row_diff": 3,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "87": {
+    "gt_row_count": 11,
+    "pred_row_count": 1,
+    "row_diff": -10,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "88": {
+    "gt_row_count": 11,
+    "pred_row_count": 11,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "89": {
+    "gt_row_count": 102,
+    "pred_row_count": null,
+    "row_diff": null,
+    "gt_error": null,
+    "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 46. DB::Exception: Function with name `TOYYYYMMDD` does not exist. In scope recent_fund_flow AS (SELECT a.zhu, a.date_int, "
+  },
+  "90": {
+    "gt_row_count": 261,
+    "pred_row_count": 1,
+    "row_diff": -260,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "91": {
+    "gt_row_count": 1,
+    "pred_row_count": 1,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "92": {
+    "gt_row_count": 1,
+    "pred_row_count": 1,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "93": {
+    "gt_row_count": 1378,
+    "pred_row_count": 1,
+    "row_diff": -1377,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "94": {
+    "gt_row_count": null,
+    "pred_row_count": 207,
+    "row_diff": null,
+    "gt_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 500)\n Code: 596. DB::Exception: Different number of columns in INTERSECT_ALL elements: secucode, zdf_1, zdf_1 and secucode. (INTERSECT_",
+    "pred_error": null
+  },
+  "95": {
+    "gt_row_count": null,
+    "pred_row_count": 643,
+    "row_diff": null,
+    "gt_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 62. DB::Exception: Single quoted string is not closed: Syntax error: failed at position 2600 ('SHUPER_CODE_ORDER BY hq_hist",
+    "pred_error": null
+  },
+  "96": {
+    "gt_row_count": null,
+    "pred_row_count": 349,
+    "row_diff": null,
+    "gt_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 500)\n Code: 596. DB::Exception: Different number of columns in INTERSECT_ALL elements: secucode, zdf_1, zdf_1 and secucode. (INTERSECT_",
+    "pred_error": null
+  },
+  "97": {
+    "gt_row_count": 1,
+    "pred_row_count": 1,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "98": {
+    "gt_row_count": 9,
+    "pred_row_count": 9,
+    "row_diff": 0,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "99": {
+    "gt_row_count": 3,
+    "pred_row_count": 2,
+    "row_diff": -1,
+    "gt_error": null,
+    "pred_error": null
+  },
+  "100": {
+    "gt_row_count": 8,
+    "pred_row_count": 1,
+    "row_diff": -7,
+    "gt_error": null,
+    "pred_error": null
+  }
+}

@@ -67,12 +67,18 @@ class MCTSRunner:
         )
         try:
             mcts_solver.solve()
+            # 保存SQL执行错误日志
+            from alphasql.algorithm.mcts.mcts_action import save_sql_errors_to_file
+            save_sql_errors_to_file()
         except Exception as e:
             print("-" * 100)
             print(f"Error solving task {task.question_id}: {e}")
             traceback.print_exc()
             print(f"The task {task.question_id} has been given up")
             print("-" * 100)
+            # 保存SQL执行错误日志（即使出错也要保存）
+            from alphasql.algorithm.mcts.mcts_action import save_sql_errors_to_file
+            save_sql_errors_to_file()
         
         task_stats = {
             "question_id": str(task.question_id),

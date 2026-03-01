@@ -19,6 +19,37 @@ import json
 import re
 import random
 
+# SQL执行错误日志
+SQL_EXECUTION_ERRORS = []
+
+def log_sql_error(question_id: int, sql: str, error: str):
+    """记录SQL执行错误"""
+    SQL_EXECUTION_ERRORS.append({
+        "question_id": question_id,
+        "sql": sql,
+        "error": error
+    })
+
+def save_sql_errors_to_file(filepath: str = "results/sql_execution_errors.json"):
+    """将SQL执行错误保存到文件（累积追加）"""
+    os.makedirs(os.path.dirname(filepath) if os.path.dirname(filepath) else "results", exist_ok=True)
+
+    # 读取已存在的错误
+    existing_errors = []
+    if os.path.exists(filepath):
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                existing_errors = json.load(f)
+        except:
+            existing_errors = []
+
+    # 合并新旧错误
+    all_errors = existing_errors + SQL_EXECUTION_ERRORS
+
+    # 保存所有错误
+    with open(filepath, 'w', encoding='utf-8') as f:
+        json.dump(all_errors, f, ensure_ascii=False, indent=2)
+
 # 根据 ALPHASQL_DB_TYPE 决定是否导入 clickhouse_db 的替换函数
 DB_TYPE = os.getenv("ALPHASQL_DB_TYPE", "").lower()
 if DB_TYPE == "clickhouse":
@@ -33,6 +64,20 @@ if DB_TYPE == "clickhouse":
         # INSTR(str, substr) -> position(substr IN str)
         result = re.sub(r'INSTR\s*\(\s*([^,]+),\s*([^)]+)\s*\)',
                         r'position(\2 IN \1)', result, flags=re.IGNORECASE)
+        # 3. 将大写的函数名转换为小写
+        result = re.sub(r'PARSEDATETIMEBESTEFFORTORNULL', 'toDate', result, flags=re.IGNORECASE)
+
+        # 4. 替换其他大写函数名
+        result = re.sub(r'LAGINFRAME\s*\(', 'lagInFrame(', result, flags=re.IGNORECASE)
+        result = re.sub(r'LEADINFRAME\s*\(', 'leadInFrame(', result, flags=re.IGNORECASE)
+        result = re.sub(r'IIF\s*\(', 'if(', result, flags=re.IGNORECASE)
+        result = re.sub(r'\bLAG\s*\(', 'lagInFrame(', result, flags=re.IGNORECASE)
+        result = re.sub(r'\bLEAD\s*\(', 'leadInFrame(', result, flags=re.IGNORECASE)
+        result = re.sub(r'\bTOMONTH\s*\(', 'toMonth(', result, flags=re.IGNORECASE)
+        result = re.sub(r'\bTODAYOFMONTH\s*\(', 'toDayOfMonth(', result, flags=re.IGNORECASE)
+        result = re.sub(r'\bTOYEAR\s*\(', 'toYear(', result, flags=re.IGNORECASE)
+        result = re.sub(r'\bTODATE\s*\(', 'toDate(', result, flags=re.IGNORECASE)
+
         return result
 else:
     replace_get_date_in_sql = lambda sql: sql  # 非 clickhouse 时不做替换
@@ -370,10 +415,18 @@ class SQLGenerationAction(MCTSAction):
                 child_node.prompt = prompt
                 child_node.response = response
                 sql_query = self.extract_sql_query_answer(response)
-                
+
                 if sql_query:
                     db_path = get_db_path(node.db_root_dir, node.db_id)
                     sql_query_execution_result = cached_execute_sql_with_timeout(db_path, sql_query)
+                    # 记录SQL执行错误
+                    if sql_query_execution_result.result_type == SQLExecutionResultType.ERROR:
+                        node_id = getattr(node, 'question_id', 0) if node else 0
+                        log_sql_error(
+                            node_id,
+                            sql_query,
+                            sql_query_execution_result.error_message or "Unknown error"
+                        )
                     if is_valid_execution_result(sql_query_execution_result) or valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES:
                         child_node.sql_query = sql_query
                         nodes.append(child_node)
@@ -408,7 +461,7 @@ class SQLGenerationAction(MCTSAction):
         sql_query = None
         db_path = get_db_path(node.db_root_dir, node.db_id)
         while not sql_query:
-            sql_query, consistency_score, is_valid_sql_query = SQLGenerationAction.generate_most_consistent_sql_query(prompt, llm_kwargs, db_path)
+            sql_query, consistency_score, is_valid_sql_query = SQLGenerationAction.generate_most_consistent_sql_query(prompt, llm_kwargs, db_path, node)
         node.sql_query = sql_query
         node.prompt = prompt
         node.response = f"<sql>{sql_query}</sql>"
@@ -416,7 +469,7 @@ class SQLGenerationAction(MCTSAction):
         node.is_valid_sql_query = is_valid_sql_query
 
     @staticmethod
-    def generate_most_consistent_sql_query(prompt: str, llm_kwargs: Dict[str, Any], db_path: str) -> Optional[str]:
+    def generate_most_consistent_sql_query(prompt: str, llm_kwargs: Dict[str, Any], db_path: str, node=None) -> Optional[str]:
         # new_llm_kwargs = copy.deepcopy(llm_kwargs)
         # new_llm_kwargs["temperature"] = SQL_GENERATION_LLM_KWARGS_TEMPERATURE
         # new_llm_kwargs["n"] = SQL_GENERATION_LLM_KWARGS_N
@@ -439,6 +492,14 @@ class SQLGenerationAction(MCTSAction):
                 if sql_query is None:
                     continue
                 sql_query_execution_result = cached_execute_sql_with_timeout(db_path, sql_query)
+                # 记录SQL执行错误
+                if sql_query_execution_result.result_type == SQLExecutionResultType.ERROR:
+                    node_id = getattr(node, 'question_id', 0) if node else 0
+                    log_sql_error(
+                        node_id,
+                        sql_query,
+                        sql_query_execution_result.error_message or "Unknown error"
+                    )
                 if is_valid_execution_result(sql_query_execution_result) or valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES:
                     all_sql_queries.append(sql_query)
                     if is_valid_execution_result(sql_query_execution_result):
@@ -498,6 +559,13 @@ class SQLRevisionAction(MCTSAction):
                     get_db_path(path_node.db_root_dir, path_node.db_id),
                     path_node.sql_query
                 )
+                # 记录SQL执行错误
+                if sql_execution_result.result_type == SQLExecutionResultType.ERROR:
+                    log_sql_error(
+                        getattr(node, 'question_id', 0),
+                        path_node.sql_query,
+                        sql_execution_result.error_message or "Unknown error"
+                    )
                 sql_execution_result_str = format_execution_result(sql_execution_result)
                 previous_thoughts += f"SQL generation: {path_node.sql_query}\nSQL execution result:\n{sql_execution_result_str}\n"
         hint += f"\n\nHere are my previous thoughts:\n{previous_thoughts}" if previous_thoughts else ""
@@ -528,6 +596,13 @@ class SQLRevisionAction(MCTSAction):
                 if revised_sql_query:
                     db_path = get_db_path(node.db_root_dir, node.db_id)
                     sql_query_execution_result = cached_execute_sql_with_timeout(db_path, revised_sql_query)
+                    # 记录SQL执行错误
+                    if sql_query_execution_result.result_type == SQLExecutionResultType.ERROR:
+                        log_sql_error(
+                            getattr(node, 'question_id', 0),
+                            revised_sql_query,
+                            sql_query_execution_result.error_message or "Unknown error"
+                        )
                     if is_valid_execution_result(sql_query_execution_result) or valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES:
                         child_node.revised_sql_query = revised_sql_query
                         nodes.append(child_node)
@@ -558,6 +633,13 @@ class SQLRevisionAction(MCTSAction):
                     get_db_path(path_node.db_root_dir, path_node.db_id),
                     path_node.sql_query
                 )
+                # 记录SQL执行错误
+                if sql_execution_result.result_type == SQLExecutionResultType.ERROR:
+                    log_sql_error(
+                        getattr(node, 'question_id', 0),
+                        path_node.sql_query,
+                        sql_execution_result.error_message or "Unknown error"
+                    )
                 sql_execution_result_str = format_execution_result(sql_execution_result)
                 previous_thoughts += f"SQL generation: {path_node.sql_query}\nSQL execution result:\n{sql_execution_result_str}\n"
         hint += f"\n\nHere are my previous thoughts:\n{previous_thoughts}" if previous_thoughts else ""
@@ -569,7 +651,7 @@ class SQLRevisionAction(MCTSAction):
         sql_query = None
         db_path = get_db_path(node.db_root_dir, node.db_id)
         while not sql_query:
-            sql_query, consistency_score, is_valid_sql_query = SQLRevisionAction.generate_most_consistent_sql_query(prompt, llm_kwargs, db_path)
+            sql_query, consistency_score, is_valid_sql_query = SQLRevisionAction.generate_most_consistent_sql_query(prompt, llm_kwargs, db_path, node)
         node.prompt = prompt
         node.response = f"<sql>{sql_query}</sql>"
         node.revised_sql_query = sql_query
@@ -577,7 +659,7 @@ class SQLRevisionAction(MCTSAction):
         node.is_valid_sql_query = is_valid_sql_query
     
     @staticmethod
-    def generate_most_consistent_sql_query(prompt: str, llm_kwargs: Dict[str, Any], db_path: str) -> Optional[str]:
+    def generate_most_consistent_sql_query(prompt: str, llm_kwargs: Dict[str, Any], db_path: str, node=None) -> Optional[str]:
         all_sql_queries = []
         result_groups = defaultdict(list)
         valid_sql_query_tries = 0
@@ -597,6 +679,14 @@ class SQLRevisionAction(MCTSAction):
                 if sql_query is None:
                     continue
                 sql_query_execution_result = cached_execute_sql_with_timeout(db_path, sql_query)
+                # 记录SQL执行错误
+                if sql_query_execution_result.result_type == SQLExecutionResultType.ERROR:
+                    node_id = getattr(node, 'question_id', 0) if node else 0
+                    log_sql_error(
+                        node_id,
+                        sql_query,
+                        sql_query_execution_result.error_message or "Unknown error"
+                    )
                 if is_valid_execution_result(sql_query_execution_result) or valid_sql_query_tries >= SQL_VALIDATION_MAX_TRIES:
                     all_sql_queries.append(sql_query)
                     if is_valid_execution_result(sql_query_execution_result):

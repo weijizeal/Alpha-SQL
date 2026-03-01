@@ -6,13 +6,14 @@
 source ~/miniconda/etc/profile.d/conda.sh
 conda activate alphasql
 
+export ALPHASQL_DB_TYPE=clickhouse
 # 设置参数
 PYTHON_CMD="python -m alphasql.runner.preprocessor \
     --data_file_path data/stock/dev/dev1.json \
     --database_root_dir data/stock/dev/databases \
     --save_root_dir data/preprocessed/stock \
     --lsh_threshold 0.5 \
-    --lsh_signature_size 128 \
+    --lsh_signature_size 64 \
     --lsh_n_gram 3 \
     --lsh_top_k 20 \
     --edit_similarity_threshold 0.3 \

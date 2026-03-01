@@ -30,9 +30,17 @@ load_dotenv(override=True)
 from openai import OpenAI
 import numpy as np
 
-client = OpenAI(        
-    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-    api_key="sk-33c92c76842f4c4f83716a2339b7d17f"
+# 从环境变量读取API配置
+EMBEDDING_API_KEY = os.getenv("EMBEDDING_API_KEY", os.getenv("OPENAI_API_KEY", ""))
+EMBEDDING_BASE_URL = os.getenv("EMBEDDING_BASE_URL", os.getenv("OPENAI_BASE_URL", ""))
+
+# 预处理时使用的API配置
+PREPROCESS_API_KEY = os.getenv("PREPROCESS_API_KEY", os.getenv("OPENAI_API_KEY", ""))
+PREPROCESS_BASE_URL = os.getenv("PREPROCESS_BASE_URL", os.getenv("OPENAI_BASE_URL", "http://172.17.160.41:8080/v1"))
+
+client = OpenAI(
+    base_url=EMBEDDING_BASE_URL or "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    api_key=EMBEDDING_API_KEY or "sk-33c92c76842f4c4f83716a2339b7d17f"
 )
 from typing import List, Dict
 import numpy as np
@@ -80,7 +88,13 @@ def direct_embed(texts: List[str], batch_size: int = 25) -> Dict[str, np.ndarray
 
     return embeddings
 
-EMBEDDING_MODEL_CALLABLE = OpenAIEmbeddings(model="text-embedding-v2", api_key="sk-33c92c76842f4c4f83716a2339b7d17f", base_url="https://dashscope.aliyuncs.com/compatible-mode/v1", encoding_format="float")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-v2")
+EMBEDDING_MODEL_CALLABLE = OpenAIEmbeddings(
+    model=EMBEDDING_MODEL,
+    api_key=EMBEDDING_API_KEY or "sk-33c92c76842f4c4f83716a2339b7d17f",
+    base_url=EMBEDDING_BASE_URL or "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    encoding_format="float"
+)
 
 COST_RECORDER = CostRecorder(model="deepseek-chat")
 MODEL_NAME = "deepseek-chat"
@@ -186,6 +200,8 @@ class Preprocessor:
                     get_prompt("keywords_extraction", {"QUESTION": task.question, "HINT": task.evidence}),
                     MODEL_NAME,
                     TEMPERATURE,
+                    base_url=PREPROCESS_BASE_URL,
+                    api_key=PREPROCESS_API_KEY,
                     cost_recorder=COST_RECORDER
                 )[0]
                 

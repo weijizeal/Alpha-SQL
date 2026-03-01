@@ -17,3 +17,4 @@ dev.json
 pred_sqls.json
 */__pycache__/*
 *.sqlite
+*.pkl

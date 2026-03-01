@@ -176,6 +176,48 @@ def _cached_execute_sql_with_timeout(db_path: str, sql_query: str) -> SQLExecuti
 
 def cached_execute_sql_with_timeout(db_path: str, sql_query: str) -> SQLExecutionResult:
     # sql_query = normalize_sql(sql_query)
+    # ClickHouse: 转换 SQL 函数名
+    if DB_TYPE == "clickhouse":
+        import re
+        from alphasql.database.clickhouse_db import replace_get_date_in_sql
+        # 1. 替换 get_date() 函数
+        sql_query = replace_get_date_in_sql(sql_query)
+        # 2. 将双引号替换为反引号
+        sql_query = re.sub(r'(?<!`)"([^"]+)"', r'`\1`', sql_query)
+        # 3. 将 INSTR 函数替换为 position
+        sql_query = re.sub(r'INSTR\s*\(\s*([^,]+),\s*([^)]+)\)\s*',
+                          r'position(\2 IN \1)', sql_query, flags=re.IGNORECASE)
+        # 4. 将大写的函数名转换为小写
+        sql_query = re.sub(r'PARSEDATETIMEBESTEFFORTORNULL', 'toDate', sql_query, flags=re.IGNORECASE)
+
+        # 5. 替换其他大写函数名
+        sql_query = re.sub(r'LAGINFRAME\s*\(', 'lagInFrame(', sql_query, flags=re.IGNORECASE)
+        sql_query = re.sub(r'LEADINFRAME\s*\(', 'leadInFrame(', sql_query, flags=re.IGNORECASE)
+        sql_query = re.sub(r'IIF\s*\(', 'if(', sql_query, flags=re.IGNORECASE)
+        sql_query = re.sub(r'\bLAG\s*\(', 'lagInFrame(', sql_query, flags=re.IGNORECASE)
+        sql_query = re.sub(r'\bLEAD\s*\(', 'leadInFrame(', sql_query, flags=re.IGNORECASE)
+        sql_query = re.sub(r'\bTOMONTH\s*\(', 'toMonth(', sql_query, flags=re.IGNORECASE)
+        sql_query = re.sub(r'\bTODAYOFMONTH\s*\(', 'toDayOfMonth(', sql_query, flags=re.IGNORECASE)
+        sql_query = re.sub(r'\bTOYEAR\s*\(', 'toYear(', sql_query, flags=re.IGNORECASE)
+        sql_query = re.sub(r'\bTODATE\s*\(', 'toDate(', sql_query, flags=re.IGNORECASE)
+        # 6. 替换 ROWNUMBER -> row_number()
+        sql_query = re.sub(r'\bROWNUMBER\s*\(', 'row_number()', sql_query, flags=re.IGNORECASE)
+        # 7. 替换 ROWNUMBERINPARTITION -> row_number()
+        sql_query = re.sub(r'\bROWNUMBERINPARTITION\s*\(', 'row_number()', sql_query, flags=re.IGNORECASE)
+        # 8. 替换 ROWNUMBERINFRAME -> row_number()
+        sql_query = re.sub(r'\bROWNUMBERINFRAME\s*\(', 'row_number()', sql_query, flags=re.IGNORECASE)
+        # 9. 替换 ROWNUMBERINALL -> row_number()
+        sql_query = re.sub(r'\bROWNUMBERINALL\s*\(', 'row_number()', sql_query, flags=re.IGNORECASE)
+        # 10. 替换 TOYYYYMMDD -> toYYYYMMDD
+        sql_query = re.sub(r'\bTOYYYYMMDD\s*\(', 'toYYYYMMDD(', sql_query, flags=re.IGNORECASE)
+        # 11. 替换 TODATETIME -> toDateTime
+        sql_query = re.sub(r'\bTODATETIME\s*\(', 'toDateTime(', sql_query, flags=re.IGNORECASE)
+        # 12. 替换 GROUP_ARRAY -> groupArray
+        sql_query = re.sub(r'\bGROUP_ARRAY\s*\(', 'groupArray(', sql_query, flags=re.IGNORECASE)
+        # 13. SUMIF 警告（ClickHouse不支持）
+        if re.search(r'\bSUMIF\s*\(', sql_query, flags=re.IGNORECASE):
+            logger.warning("SUMIF is not supported in ClickHouse. Please use CASE WHEN + SUM instead.")
+
     result = _cached_execute_sql_with_timeout(db_path, sql_query)
     return result
 

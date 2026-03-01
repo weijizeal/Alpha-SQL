@@ -1,0 +1,604 @@
+{
+  "summary": {
+    "total": 59,
+    "valid_pred": 51,
+    "valid_gt": 59,
+    "pred_errors": 8,
+    "gt_errors": 0,
+    "exact_match": 20,
+    "count_match": 24,
+    "match_ratio": 40.67796610169492
+  },
+  "details": [
+    {
+      "question_id": "1",
+      "pred_sql": "SELECT DISTINCT `secucode` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02106%' UNION SELECT DISTINCT `secucode` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02164%'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02106%' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02164%'",
+      "pred_count": 822,
+      "gt_count": 822,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "2",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02106%' UNION SELECT `secucode` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02164%' UNION SELECT `secucode` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02160%'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02106%' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02164%' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02160%'",
+      "pred_count": 911,
+      "gt_count": 911,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "3",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE `concept` = 'BR01B02164' INTERSECT SELECT `secucode` FROM `hq_basic_view` WHERE `concept` = 'BR01B02191' INTERSECT SELECT `secucode` FROM `hq_basic_view` WHERE `concept` = 'BR01B02106' INTERSECT SELECT `secucode` FROM `hq_basic_view` WHERE `concept` = 'BR01B02160'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02106%' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02164%' AND hq_basic_view.concept LIKE '%BR01B02191%' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02160%'",
+      "pred_count": 0,
+      "gt_count": 16,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "4",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE `is_kcb` = 1 AND toDate(`issue_list_date`) >= '2024-01-01' AND toDate(`issue_list_date`) <= '2025-06-30' AND `issue_list_date` <> '' AND NOT `issue_list_date` IS NULL UNION ALL SELECT `secucode` FROM `hq_basic_view` WHERE `is_cyb` = 1 AND toDate(`issue_list_date`) >= '2024-01-01' AND toDate(`issue_list_date`) <= '2025-06-30' AND `issue_list_date` <> '' AND NOT `issue_list_date` IS NULL",
+      "gt_sql": "(SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_kcb = 1 AND hq_basic_view.issue_list_date IS NOT NULL AND toDate(hq_basic_view.issue_list_date) BETWEEN '2024-01-01' AND '2025-06-30' ORDER BY hq_basic_view.issue_list_date DESC) UNION (SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_cyb = 1 AND hq_basic_view.issue_list_date IS NOT NULL AND toDate(hq_basic_view.issue_list_date) BETWEEN '2024-01-01' AND '2025-06-30' ORDER BY hq_basic_view.issue_list_date DESC)",
+      "pred_count": 80,
+      "gt_count": 80,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "5",
+      "pred_sql": "SELECT `hot_info_view`.`data_code`, `hq_basic_view`.`secuname` FROM `hot_info_view` INNER JOIN `hq_basic_view` ON `hot_info_view`.`data_code` = `hq_basic_view`.`secucode` WHERE `hot_info_view`.`type` = 1 AND `hot_info_view`.`date` = (SELECT MAX(`date`) FROM `hq_history_agg_view`) ORDER BY `hot_info_view`.`sortid` DESC",
+      "gt_sql": "SELECT DISTINCT hot_info_view.data_code FROM hot_info_view WHERE hot_info_view.type = 1 AND hot_info_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) ORDER BY hot_info_view.sortid DESC",
+      "pred_count": 220,
+      "gt_count": 221,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "6",
+      "pred_sql": "SELECT `secucode`, `issue_list_date` FROM `hq_basic_view` WHERE `is_cyb` = 1 AND toDate(`issue_list_date`) BETWEEN '2024-01-01' AND '2025-06-30' AND `issue_list_date` <> '' AND NOT `issue_list_date` IS NULL ORDER BY `issue_list_date` DESC",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_cyb = 1 AND hq_basic_view.issue_list_date IS NOT NULL AND toDate(hq_basic_view.issue_list_date) BETWEEN '2024-01-01' AND '2025-06-30' ORDER BY hq_basic_view.issue_list_date DESC",
+      "pred_count": 58,
+      "gt_count": 58,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "7",
+      "pred_sql": "SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` WHERE `hq_basic_view`.`is_ts` = 0 AND `hq_basic_view`.`date` BETWEEN '2024-01-01' AND '2025-06-30'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_ts = 0 AND hq_basic_view.date BETWEEN '2024-01-01' AND '2025-06-30'",
+      "pred_count": 0,
+      "gt_count": 0,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "8",
+      "pred_sql": "SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` WHERE toDate(`hq_basic_view`.`issue_list_date`) >= '2024-01-01' AND toDate(`hq_basic_view`.`issue_list_date`) <= '2025-06-30' AND (`hq_basic_view`.`secucode` LIKE 'SZHQ688%' OR `hq_basic_view`.`secucode` LIKE 'SHHQ688%' OR `hq_basic_view`.`secucode` LIKE 'BJHQ688%') UNION ALL SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` WHERE toDate(`hq_basic_view`.`issue_list_date`) >= '2024-01-01' AND toDate(`hq_basic_view`.`issue_list_date`) <= '2025-06-30' AND (`hq_basic_view`.`secucode` LIKE 'SZHQ30%' OR `hq_basic_view`.`secucode` LIKE 'SHHQ30%' OR `hq_basic_view`.`secucode` LIKE 'BJHQ30%')",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode LIKE 'SZHQ688%' OR hq_basic_view.secucode LIKE 'SHHQ688%' OR hq_basic_view.secucode LIKE 'BJHQ688%' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode LIKE 'SZHQ30%' OR hq_basic_view.secucode LIKE 'SHHQ30%' OR hq_basic_view.secucode LIKE 'BJHQ30%'",
+      "pred_count": -1,
+      "gt_count": 2058,
+      "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 38. DB::Exception: Cannot parse date: value is too short: Cannot parse Date from String: while executing 'FUNCTION toDate(materialize(issue_list_date) :: 2) -> toDate(__table2.issue_list_date) Date : 0'. (CANNOT_PARSE_DATE) (version 2",
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "9",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE (`secucode` LIKE 'SHHQ688%' OR `secucode` LIKE 'SZHQ688%' OR `secucode` LIKE 'BJHQ688%') AND toDate(`issue_list_date`) >= '2024-01-01' AND toDate(`issue_list_date`) <= '2025-06-30' UNION ALL SELECT `secucode` FROM `hq_basic_view` WHERE (`secucode` LIKE 'SHHQ30%' OR `secucode` LIKE 'SZHQ30%' OR `secucode` LIKE 'BJHQ30%') AND toDate(`issue_list_date`) >= '2024-01-01' AND toDate(`issue_list_date`) <= '2025-06-30'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode LIKE 'SZHQ688%' OR hq_basic_view.secucode LIKE 'SHHQ688%' OR hq_basic_view.secucode LIKE 'BJHQ688%' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode LIKE 'SZHQ30%' OR hq_basic_view.secucode LIKE 'SHHQ30%' OR hq_basic_view.secucode LIKE 'BJHQ30%'",
+      "pred_count": -1,
+      "gt_count": 2058,
+      "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 400)\n Code: 38. DB::Exception: Cannot parse date: value is too short: Cannot parse Date from String: while executing 'FUNCTION toDate(materialize(issue_list_date) :: 2) -> toDate(__table4.issue_list_date) Date : 0'. (CANNOT_PARSE_DATE) (version 2",
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "10",
+      "pred_sql": "SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` WHERE `hq_basic_view`.`is_cyb` = 1 AND `hq_basic_view`.`is_ts` = 0 AND `hq_basic_view`.`date` >= '2024-01-01' AND `hq_basic_view`.`date` <= '2025-12-31'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_cyb = 1 AND hq_basic_view.date BETWEEN '2024-01-01' AND '2025-12-31' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_ts = 0 AND hq_basic_view.date BETWEEN '2024-01-01' AND '2025-12-31'",
+      "pred_count": 0,
+      "gt_count": 0,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "11",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE `is_cyb` = 1 AND `is_ts` = 0 AND `date` BETWEEN '2024-01-01' AND '2025-05-31'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_ts = 0 AND hq_basic_view.date BETWEEN '2024-01-01' AND '2025-05-31' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_cyb = 1 AND hq_basic_view.date BETWEEN '2024-01-01' AND '2025-05-31'",
+      "pred_count": 0,
+      "gt_count": 0,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "12",
+      "pred_sql": "WITH latest_trading_day AS (SELECT `hq_history_agg_view`.`secucode`, MAX(`hq_history_agg_view`.`date`) AS max_date FROM `hq_history_agg_view` WHERE `hq_history_agg_view`.`date` >= '2026-02-01' AND `hq_history_agg_view`.`date` <= '2026-02-28' GROUP BY `hq_history_agg_view`.`secucode`) SELECT DISTINCT `latest_trading_day`.`secucode` FROM `latest_trading_day` INNER JOIN `hq_history_agg_view` ON `latest_trading_day`.`secucode` = `hq_history_agg_view`.`secucode` AND `latest_trading_day`.`max_date` = `hq_history_agg_view`.`date` INNER JOIN `hq_basic_view` ON `latest_trading_day`.`secucode` = `hq_basic_view`.`secucode` INNER JOIN `hq_current_view` ON `latest_trading_day`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_history_agg_view`.`close` = `hq_history_agg_view`.`low` AND `hq_current_view`.`zdf` < 9.9 AND `hq_history_agg_view`.`dt` = 0 AND `hq_basic_view`.`type` = 'A股' AND `hq_basic_view`.`is_ts` = 0",
+      "gt_sql": "SELECT DISTINCT market_with_rn.secucode FROM (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.close AS close, hq_history_agg_view.low AS low, row_number() OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date DESC) AS rn FROM hq_history_agg_view JOIN hq_basic_view ON hq_history_agg_view.secucode = hq_basic_view.secucode WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0 AND hq_history_agg_view.date BETWEEN '2026-02-01' AND '2026-02-28') AS market_with_rn WHERE market_with_rn.rn = 1 AND market_with_rn.close = market_with_rn.low INTERSECT SELECT hq_history_agg_view.secucode FROM hq_history_agg_view WHERE hq_history_agg_view.zt = 0 AND hq_history_agg_view.date BETWEEN '2026-02-01' AND '2026-02-28' INTERSECT SELECT hq_history_agg_view.secucode FROM hq_history_agg_view WHERE hq_history_agg_view.dt = 0 AND hq_history_agg_view.date BETWEEN '2026-02-01' AND '2026-02-28'",
+      "pred_count": 34,
+      "gt_count": 35,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "13",
+      "pred_sql": "WITH ma_cte AS (SELECT `hq_history_agg_view`.`secucode`, AVG(`hq_history_agg_view`.`close`) OVER (PARTITION BY `hq_history_agg_view`.`secucode` ORDER BY `hq_history_agg_view`.`date` ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS ma_5, ROW_NUMBER() OVER (PARTITION BY `hq_history_agg_view`.`secucode` ORDER BY `hq_history_agg_view`.`date` DESC) AS rn FROM `hq_history_agg_view`), close_cte AS (SELECT `hq_history_agg_view`.`secucode`, `hq_history_agg_view`.`close` FROM `hq_history_agg_view` WHERE `hq_history_agg_view`.`date` = (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 0)) SELECT DISTINCT `close_cte`.`secucode` FROM `close_cte` INNER JOIN `ma_cte` ON `close_cte`.`secucode` = `ma_cte`.`secucode` WHERE `ma_cte`.`rn` = 1 AND `close_cte`.`close` > `ma_cte`.`ma_5`",
+      "gt_sql": "WITH close_cte AS (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.close AS close FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)), ma_5_cte_3fbb18 AS (SELECT anon_1.secucode AS secucode, anon_1.date AS date, anon_1.ma_5 AS ma_5 FROM (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date, CAST(avg(hq_history_agg_view.close) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS FLOAT) AS ma_5, row_number() OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date DESC) AS rn FROM hq_history_agg_view WHERE hq_history_agg_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0) AS anon_2) AND hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 4) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS anon_1 WHERE anon_1.rn = 1) SELECT DISTINCT close_cte.secucode FROM close_cte JOIN ma_5_cte_3fbb18 ON close_cte.secucode = ma_5_cte_3fbb18.secucode WHERE close_cte.close > ma_5_cte_3fbb18.ma_5",
+      "pred_count": 5646,
+      "gt_count": 3779,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "17",
+      "pred_sql": "SELECT DISTINCT a.`secucode` FROM `hq_history_agg_view` AS a INNER JOIN `hq_history_agg_view` AS b ON a.`secucode` = b.`secucode` AND a.`date` + INTERVAL '5' DAY = b.`date` WHERE a.`zt` = 1 AND ((b.`close` - a.`close`) / a.`close`) BETWEEN -0.05 AND 0.10",
+      "gt_sql": "WITH zdf_5_cte_847c95 AS (SELECT anon_1.secucode AS secucode, anon_1.date AS date, anon_1.zdf_5 AS zdf_5 FROM (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date, CASE WHEN (lagInFrame(hq_history_agg_view.close, 5, 0) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date) != 0) THEN (hq_history_agg_view.close - lagInFrame(hq_history_agg_view.close, 5, 0) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date)) / (lagInFrame(hq_history_agg_view.close, 5, 0) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date) + 0.0) END AS zdf_5 FROM hq_history_agg_view WHERE hq_history_agg_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_history_agg_view.secucode AS secucode FROM hq_history_agg_view) AS anon_2)) AS anon_1 WHERE anon_1.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) SELECT hq_history_agg_view.secucode FROM hq_history_agg_view WHERE hq_history_agg_view.zt = 1 AND hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 4) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 4) INTERSECT SELECT zdf_5_cte_847c95.secucode FROM zdf_5_cte_847c95, hq_history_agg_view WHERE zdf_5_cte_847c95.zdf_5 >= '-0.05' AND zdf_5_cte_847c95.zdf_5 <= 0.1 AND hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)",
+      "pred_count": 881,
+      "gt_count": 4,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "18",
+      "pred_sql": "WITH cte AS (SELECT `secucode`, `date`, `close`, LAG(`close`, 5) OVER (PARTITION BY `secucode` ORDER BY `date`) AS close_5_days_later FROM `hq_history_agg_view` WHERE `zt` = 1) SELECT DISTINCT `secucode` FROM cte WHERE NOT `close_5_days_later` IS NULL AND (`close` - `close_5_days_later`) / `close_5_days_later` BETWEEN -0.05 AND 0.1",
+      "gt_sql": "WITH zdf_5_cte_35ad8b AS (SELECT anon_1.secucode AS secucode, anon_1.date AS date, anon_1.zdf_5 AS zdf_5 FROM (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date, CASE WHEN (lagInFrame(hq_history_agg_view.close, 5, 0) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date) != 0) THEN (hq_history_agg_view.close - lagInFrame(hq_history_agg_view.close, 5, 0) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date)) / (lagInFrame(hq_history_agg_view.close, 5, 0) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date) + 0.0) END AS zdf_5 FROM hq_history_agg_view WHERE hq_history_agg_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_history_agg_view.secucode AS secucode FROM hq_history_agg_view) AS anon_2)) AS anon_1 WHERE anon_1.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) SELECT hq_history_agg_view.secucode FROM hq_history_agg_view WHERE hq_history_agg_view.zt = 1 AND hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 4) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 4) INTERSECT SELECT zdf_5_cte_35ad8b.secucode FROM zdf_5_cte_35ad8b, hq_history_agg_view WHERE zdf_5_cte_35ad8b.zdf_5 >= '-0.05' AND zdf_5_cte_35ad8b.zdf_5 <= 0.1 AND hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)",
+      "pred_count": -1,
+      "gt_count": 4,
+      "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope cte AS (SELECT secucode, date, close, LAG(close, 5) OVER (PARTITION BY secucode ORDER BY date ASC) AS close_5_days_later FROM hq_history_agg_view WHERE zt ",
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "19",
+      "pred_sql": "SELECT `secucode`, `secuname` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02053%'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02523%'",
+      "pred_count": 0,
+      "gt_count": 170,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "22",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE `secucode` = 'SHHQ600239'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode = 'SHHQ600239'",
+      "pred_count": 1,
+      "gt_count": 1,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "23",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE `secucode` IN ('SZHQ003032', 'SHHQ600845')",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode IN ('SZHQ003032', 'SHHQ600845')",
+      "pred_count": 2,
+      "gt_count": 2,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "24",
+      "pred_sql": "SELECT DISTINCT `hq_current_view`.`secucode` FROM `hq_current_view` INNER JOIN `hq_basic_view` ON `hq_current_view`.`secucode` = `hq_basic_view`.`secucode` WHERE `hq_current_view`.`dividend_yield` >= 0.04 AND `hq_current_view`.`period_low` >= 60 AND `hq_basic_view`.`is_ts` = 0",
+      "gt_sql": "SELECT filtered_multi_e7e633.secucode, filtered_multi_e7e633.period_low FROM (SELECT anon_1.secucode AS secucode, anon_1.period_low AS period_low FROM (SELECT hq_current_view.secucode AS secucode, hq_current_view.period_low AS period_low FROM hq_current_view WHERE hq_current_view.period_low >= 60 ORDER BY hq_current_view.period_low DESC) AS anon_1 WHERE anon_1.secucode IN (SELECT single_intersect_e7e633.secucode FROM (SELECT DISTINCT hq_current_view.secucode AS secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_2 JOIN hq_current_view ON hq_current_view.secucode = anon_2.secucode AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) WHERE hq_current_view.dividend_yield >= 0.04) AS single_intersect_e7e633)) AS filtered_multi_e7e633",
+      "pred_count": 10,
+      "gt_count": 10,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "25",
+      "pred_sql": "WITH zjdx AS (SELECT `daily_zjdx_stat_level5_view`.`secucode`, `daily_zjdx_stat_level5_view`.`date`, `daily_zjdx_stat_level5_view`.`zhu` - LAG(`daily_zjdx_stat_level5_view`.`zhu`, 1) OVER (PARTITION BY `daily_zjdx_stat_level5_view`.`secucode` ORDER BY `daily_zjdx_stat_level5_view`.`date`) AS zhu_in_1d FROM `daily_zjdx_stat_level5_view`) SELECT DISTINCT `zjdx`.`secucode` FROM `zjdx` JOIN `hq_basic_view` ON `zjdx`.`secucode` = `hq_basic_view`.`secucode` JOIN `hq_history_agg_view` ON `zjdx`.`secucode` = `hq_history_agg_view`.`secucode` JOIN `hq_current_view` ON `zjdx`.`secucode` = `hq_current_view`.`secucode` WHERE `zjdx`.`zhu_in_1d` > 100000000 AND `hq_history_agg_view`.`toratio` BETWEEN 0.06 AND 0.09 AND `hq_current_view`.`zdf` BETWEEN 0.05 AND 0.09 AND NOT `hq_basic_view`.`secuname` LIKE '%ST%' AND `hq_basic_view`.`market` <> 'BJHQ' AND `hq_basic_view`.`is_kcb` = 0 AND `hq_basic_view`.`is_ts` = 0 AND `zjdx`.`date` >= (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 7) AND `zjdx`.`date` < (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 0)",
+      "gt_sql": "WITH cte_pos_diff_zhu_1d_f925b8 AS (SELECT anon_1.secucode AS secucode, anon_1.date AS date, anon_1.zhu_in_1d AS zhu_in_1d FROM (SELECT daily_zjdx_stat_level5_view.secucode AS secucode, daily_zjdx_stat_level5_view.date AS date, daily_zjdx_stat_level5_view.zhu - lagInFrame(daily_zjdx_stat_level5_view.zhu, 1) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) AS zhu_in_1d FROM daily_zjdx_stat_level5_view WHERE daily_zjdx_stat_level5_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_2)) AS anon_1 WHERE anon_1.date BETWEEN '2026-02-16' AND '2026-02-22'), `cte_AStockMarket_ac32a8` AS (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date, hq_history_agg_view.toratio AS toratio FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN '2026-02-16' AND '2026-02-22' AND hq_history_agg_view.secucode IN (SELECT anon_3.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_3)), `cte_AStockBasic_ac32a8` AS (SELECT hq_basic_view.secucode AS secucode, hq_basic_view.date AS date, hq_basic_view.type AS type FROM hq_basic_view WHERE hq_basic_view.secucode IN (SELECT anon_3.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_3)) SELECT cte_pos_diff_zhu_1d_f925b8.secucode FROM cte_pos_diff_zhu_1d_f925b8, daily_zjdx_stat_level5_view WHERE cte_pos_diff_zhu_1d_f925b8.zhu_in_1d > 100000000 AND cte_pos_diff_zhu_1d_f925b8.zhu_in_1d <= inf AND daily_zjdx_stat_level5_view.date BETWEEN '2026-02-16' AND '2026-02-22' INTERSECT SELECT DISTINCT `cte_AStockMarket_ac32a8`.secucode FROM `cte_AStockMarket_ac32a8` JOIN hq_basic_view ON `cte_AStockMarket_ac32a8`.secucode = hq_basic_view.secucode JOIN `cte_AStockBasic_ac32a8` ON `cte_AStockMarket_ac32a8`.secucode = `cte_AStockBasic_ac32a8`.secucode WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0 AND `cte_AStockMarket_ac32a8`.toratio >= 0.059949999999999996 AND `cte_AStockMarket_ac32a8`.toratio < 0.09004999999999999 INTERSECT SELECT anon_4.secucode FROM (SELECT hq_current_view.secucode AS secucode, hq_current_view.date AS date, hq_current_view.zdf AS zdf_1 FROM hq_current_view WHERE hq_current_view.secucode IN (SELECT anon_5.secucode FROM (SELECT hq_history_agg_view.secucode AS secucode FROM hq_history_agg_view) AS anon_5) AND hq_current_view.date BETWEEN '2026-02-16' AND '2026-02-22') AS anon_4, hq_history_agg_view WHERE anon_4.zdf_1 >= 0.05 AND anon_4.zdf_1 <= 0.09 AND hq_history_agg_view.date BETWEEN '2026-02-16' AND '2026-02-22' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secuname NOT LIKE '%ST%' AND hq_basic_view.date BETWEEN '2026-02-16' AND '2026-02-22' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.market != 'BJHQ' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_kcb = 0 AND hq_basic_view.date BETWEEN '2026-02-16' AND '2026-02-22'",
+      "pred_count": -1,
+      "gt_count": 0,
+      "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope zjdx AS (SELECT daily_zjdx_stat_level5_view.secucode, daily_zjdx_stat_level5_view.date, daily_zjdx_stat_level5_view.zhu - LAG(daily_zjdx_stat_level5_view.z",
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "26",
+      "pred_sql": "WITH zhu_incre AS (SELECT `daily_zjdx_stat_level5_view`.`secucode`, `daily_zjdx_stat_level5_view`.`date`, `daily_zjdx_stat_level5_view`.`zhu` - LAG(`daily_zjdx_stat_level5_view`.`zhu`, 1) OVER (PARTITION BY `daily_zjdx_stat_level5_view`.`secucode` ORDER BY `daily_zjdx_stat_level5_view`.`date`) AS zhu_in_1d FROM `daily_zjdx_stat_level5_view`) SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` JOIN `zhu_incre` ON `hq_basic_view`.`secucode` = `zhu_incre`.`secucode` JOIN `hq_history_agg_view` ON `hq_basic_view`.`secucode` = `hq_history_agg_view`.`secucode` AND `zhu_incre`.`date` = `hq_history_agg_view`.`date` JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` AND `zhu_incre`.`date` = `hq_current_view`.`date` WHERE `zhu_incre`.`date` = TODATETIME('2026-01-14') AND `zhu_incre`.`zhu_in_1d` > 100000000 AND `hq_history_agg_view`.`toratio` BETWEEN 0.06 AND 0.09 AND `hq_current_view`.`zdf` BETWEEN 0.05 AND 0.09 AND NOT `hq_basic_view`.`secuname` LIKE '%ST%' AND NOT `hq_basic_view`.`secuname` LIKE '*ST%' AND `hq_basic_view`.`market` <> 'BJHQ' AND `hq_basic_view`.`is_kcb` = 0",
+      "gt_sql": "WITH cte_pos_diff_zhu_1d_e9a2ee AS (SELECT anon_1.secucode AS secucode, anon_1.date AS date, anon_1.zhu_in_1d AS zhu_in_1d FROM (SELECT daily_zjdx_stat_level5_view.secucode AS secucode, daily_zjdx_stat_level5_view.date AS date, daily_zjdx_stat_level5_view.zhu - lagInFrame(daily_zjdx_stat_level5_view.zhu, 1) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) AS zhu_in_1d FROM daily_zjdx_stat_level5_view WHERE daily_zjdx_stat_level5_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_2)) AS anon_1 WHERE anon_1.date BETWEEN '2026-01-14' AND '2026-01-14'), `cte_AStockMarket_927c7a` AS (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date, hq_history_agg_view.toratio AS toratio FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN '2026-01-14' AND '2026-01-14' AND hq_history_agg_view.secucode IN (SELECT anon_3.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_3)), `cte_AStockBasic_927c7a` AS (SELECT hq_basic_view.secucode AS secucode, hq_basic_view.date AS date, hq_basic_view.type AS type FROM hq_basic_view WHERE hq_basic_view.secucode IN (SELECT anon_3.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_3)) SELECT cte_pos_diff_zhu_1d_e9a2ee.secucode FROM cte_pos_diff_zhu_1d_e9a2ee, daily_zjdx_stat_level5_view WHERE cte_pos_diff_zhu_1d_e9a2ee.zhu_in_1d > 100000000 AND cte_pos_diff_zhu_1d_e9a2ee.zhu_in_1d <= inf AND daily_zjdx_stat_level5_view.date BETWEEN '2026-01-14' AND '2026-01-14' INTERSECT SELECT DISTINCT `cte_AStockMarket_927c7a`.secucode FROM `cte_AStockMarket_927c7a` JOIN hq_basic_view ON `cte_AStockMarket_927c7a`.secucode = hq_basic_view.secucode JOIN `cte_AStockBasic_927c7a` ON `cte_AStockMarket_927c7a`.secucode = `cte_AStockBasic_927c7a`.secucode WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0 AND `cte_AStockMarket_927c7a`.toratio >= 0.059949999999999996 AND `cte_AStockMarket_927c7a`.toratio < 0.09004999999999999 INTERSECT SELECT anon_4.secucode FROM (SELECT hq_current_view.secucode AS secucode, hq_current_view.date AS date, hq_current_view.zdf AS zdf_1 FROM hq_current_view WHERE hq_current_view.secucode IN (SELECT anon_5.secucode FROM (SELECT hq_history_agg_view.secucode AS secucode FROM hq_history_agg_view) AS anon_5) AND hq_current_view.date BETWEEN '2026-01-14' AND '2026-01-14') AS anon_4, hq_history_agg_view WHERE anon_4.zdf_1 >= 0.05 AND anon_4.zdf_1 <= 0.09 AND hq_history_agg_view.date BETWEEN '2026-01-14' AND '2026-01-14' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secuname NOT LIKE '%ST%' AND hq_basic_view.date BETWEEN '2026-01-14' AND '2026-01-14' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.market != 'BJHQ' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_kcb = 0 AND hq_basic_view.date BETWEEN '2026-01-14' AND '2026-01-14'",
+      "pred_count": -1,
+      "gt_count": 0,
+      "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope zhu_incre AS (SELECT daily_zjdx_stat_level5_view.secucode, daily_zjdx_stat_level5_view.date, daily_zjdx_stat_level5_view.zhu - LAG(daily_zjdx_stat_level5_v",
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "27",
+      "pred_sql": "SELECT DISTINCT `secucode` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02551%'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02524%'",
+      "pred_count": 952,
+      "gt_count": 119,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "28",
+      "pred_sql": "SELECT `secuname` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02524%' AND `issue_list_date` <> '' AND NOT `issue_list_date` IS NULL",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02524%'",
+      "pred_count": 119,
+      "gt_count": 119,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "29",
+      "pred_sql": "WITH concept_stocks AS (SELECT `secucode` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02292%'), high_roe_and_profit AS (SELECT `secucode` FROM `f10_main_indicator_view` WHERE `secucode` IN (SELECT `secucode` FROM concept_stocks) AND `roe` >= 0.15 AND `parent_net_profit_yoy` >= 0.1) SELECT DISTINCT `secucode` FROM `hq_current_view` WHERE `secucode` IN (SELECT `secucode` FROM high_roe_and_profit) ORDER BY `market_value` DESC LIMIT 10",
+      "gt_sql": "SELECT anon_1.secucode FROM (SELECT roe_ranked_9d816d.secucode AS secucode FROM (SELECT f10_main_indicator_view.secucode AS secucode, f10_main_indicator_view.roe AS roe, row_number() OVER (PARTITION BY f10_main_indicator_view.secucode ORDER BY f10_main_indicator_view.date DESC) AS rn FROM f10_main_indicator_view WHERE f10_main_indicator_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02292%') AS anon_2)) AS roe_ranked_9d816d WHERE roe_ranked_9d816d.rn = 1 AND roe_ranked_9d816d.roe >= 0.15) AS anon_1 INTERSECT SELECT profit_growth_9d816d.secucode FROM (SELECT f10_main_indicator_view.secucode AS secucode FROM f10_main_indicator_view WHERE f10_main_indicator_view.date IN (SELECT three_year_dates_9d816d.date FROM (SELECT f10_main_indicator_view.date AS date FROM f10_main_indicator_view WHERE toMonth(f10_main_indicator_view.date) = 12 AND toDayOfMonth(f10_main_indicator_view.date) = 31 AND f10_main_indicator_view.date <= (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) GROUP BY f10_main_indicator_view.date ORDER BY f10_main_indicator_view.date DESC LIMIT 3 OFFSET 0) AS three_year_dates_9d816d) AND f10_main_indicator_view.parent_net_profit_yoy >= 0.1 AND f10_main_indicator_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02292%') AS anon_2) GROUP BY f10_main_indicator_view.secucode HAVING count(f10_main_indicator_view.secucode) >= 3) AS profit_growth_9d816d INTERSECT SELECT market_cap_top10_9d816d.secucode FROM (SELECT hq_current_view.secucode AS secucode FROM hq_current_view WHERE hq_current_view.market_value IS NOT NULL AND hq_current_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02292%') AS anon_2) ORDER BY hq_current_view.market_value DESC LIMIT 10 OFFSET 0) AS market_cap_top10_9d816d",
+      "pred_count": 10,
+      "gt_count": 0,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "30",
+      "pred_sql": "SELECT DISTINCT `secucode` FROM `f10_main_indicator_view` WHERE `date` BETWEEN '2025-01-01' AND '2025-12-31' AND `parent_net_profit_yoy` >= 0.3 AND `income_total_yoy` >= 0.3",
+      "gt_sql": "SELECT DISTINCT f10_main_indicator_view.secucode FROM f10_main_indicator_view WHERE f10_main_indicator_view.date BETWEEN '2025-02-25' AND '2025-12-25' AND f10_main_indicator_view.parent_net_profit_yoy >= 0.3 AND f10_main_indicator_view.income_total_yoy >= 0.3",
+      "pred_count": 814,
+      "gt_count": 814,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "31",
+      "pred_sql": "WITH low_stock AS (SELECT `secucode` FROM `hq_current_view` WHERE `period_low` >= 60 AND `qrr` > 2), main_force AS (SELECT `secucode` FROM (SELECT `secucode`, `date`, `zhu`, SUMIF(`zhu`, `zhu` > 0) OVER (PARTITION BY `secucode` ORDER BY `date` ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS zhu_sum FROM `daily_zjdx_stat_level5_view` WHERE `date` BETWEEN (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 5) AND (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 0)) AS subquery WHERE zhu_sum = 5) SELECT DISTINCT `hq_basic_view`.`secucode`, `hq_basic_view`.`secuname` FROM `hq_basic_view` JOIN low_stock ON `hq_basic_view`.`secucode` = low_stock.`secucode` JOIN main_force ON `hq_basic_view`.`secucode` = main_force.`secucode` WHERE `hq_basic_view`.`trade` = 'BR01B01031'",
+      "gt_sql": "(SELECT hq_current_view.secucode FROM hq_current_view WHERE hq_current_view.period_low >= 60 AND hq_current_view.qrr > 2 INTERSECT SELECT DISTINCT consecutive_count.secucode FROM (SELECT delta_calc.secucode AS secucode, sum(CASE WHEN (delta_calc.delta > 0) THEN 1 ELSE 0 END) OVER (PARTITION BY delta_calc.secucode ORDER BY delta_calc.date DESC) AS consecutive_positive_days FROM (SELECT daily_zjdx_stat_level5_view.secucode AS secucode, daily_zjdx_stat_level5_view.date AS date, daily_zjdx_stat_level5_view.zhu - lagInFrame(daily_zjdx_stat_level5_view.zhu, 1, 0) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) AS delta FROM daily_zjdx_stat_level5_view WHERE daily_zjdx_stat_level5_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 5) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS delta_calc WHERE delta_calc.date = (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS consecutive_count WHERE consecutive_count.consecutive_positive_days >= 5) INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.trade = 'BR01B01031'",
+      "pred_count": -1,
+      "gt_count": 0,
+      "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'SUMIF' does not exist. In scope SELECT secucode, date, zhu, SUMIF(zhu, zhu > 0) OVER (PARTITION BY secucode ORDER BY date ASC ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS zhu_sum FROM d",
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "32",
+      "pred_sql": "SELECT `detail_company_name` FROM `hq_basic_view` WHERE `concept` LIKE '%BR01B02717%'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02717%'",
+      "pred_count": 21,
+      "gt_count": 21,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "33",
+      "pred_sql": "WITH zhu_increments AS (SELECT `daily_zjdx_stat_level5_view`.`secucode`, `daily_zjdx_stat_level5_view`.`date`, `daily_zjdx_stat_level5_view`.`zhu` - LAG(`daily_zjdx_stat_level5_view`.`zhu`, 1) OVER (PARTITION BY `daily_zjdx_stat_level5_view`.`secucode` ORDER BY `daily_zjdx_stat_level5_view`.`date`) AS zhu_in_1d FROM `daily_zjdx_stat_level5_view`) SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` JOIN zhu_increments ON `hq_basic_view`.`secucode` = zhu_increments.`secucode` WHERE zhu_increments.zhu_in_1d > 0 AND `hq_basic_view`.`type` = 'A股' AND `hq_basic_view`.`is_ts` = 0",
+      "gt_sql": "WITH cte_pos_diff_zhu_1d_925e54 AS (SELECT anon_1.secucode AS secucode, anon_1.date AS date, anon_1.zhu_in_1d AS zhu_in_1d FROM (SELECT daily_zjdx_stat_level5_view.secucode AS secucode, daily_zjdx_stat_level5_view.date AS date, daily_zjdx_stat_level5_view.zhu - lagInFrame(daily_zjdx_stat_level5_view.zhu, 1) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) AS zhu_in_1d FROM daily_zjdx_stat_level5_view WHERE daily_zjdx_stat_level5_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0) AS anon_2)) AS anon_1 WHERE anon_1.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND anon_1.zhu_in_1d > 0) SELECT cte_pos_diff_zhu_1d_925e54.secucode FROM cte_pos_diff_zhu_1d_925e54",
+      "pred_count": -1,
+      "gt_count": 3124,
+      "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAG' does not exist. In scope zhu_increments AS (SELECT daily_zjdx_stat_level5_view.secucode, daily_zjdx_stat_level5_view.date, daily_zjdx_stat_level5_view.zhu - LAG(daily_zjdx_stat_lev",
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "34",
+      "pred_sql": "WITH strong_ma AS (SELECT `secucode` FROM `hq_history_agg_view` WHERE `date` = (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 0) AND `ma_dtpl` = 1), strong_volume_ratio AS (SELECT `secucode` FROM `hq_current_view` WHERE `date` = (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 0) AND `qrr` > 2), strong_fund_flow AS (SELECT t1.`secucode` FROM `daily_zjdx_stat_level5_view` AS t1 JOIN `daily_zjdx_stat_level5_view` AS t2 ON t1.`secucode` = t2.`secucode` WHERE t1.`date` = (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 0) AND t2.`date` = (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 1) AND (t1.`zhu` / t2.`zhu`) > 2 AND t1.`zhu` > 0) SELECT DISTINCT `strong_ma`.`secucode` FROM `strong_ma` JOIN `strong_volume_ratio` ON `strong_ma`.`secucode` = `strong_volume_ratio`.`secucode` JOIN `strong_fund_flow` ON `strong_ma`.`secucode` = `strong_fund_flow`.`secucode`",
+      "gt_sql": "SELECT DISTINCT ma_aligned.secucode FROM (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date FROM hq_history_agg_view WHERE hq_history_agg_view.ma_dtpl = 1 AND hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS ma_aligned JOIN (SELECT hq_current_view.secucode AS secucode, hq_current_view.date AS date FROM hq_current_view WHERE hq_current_view.qrr > 2) AS high_volume ON ma_aligned.secucode = high_volume.secucode AND ma_aligned.date = high_volume.date JOIN (SELECT DISTINCT fund_delta.secucode AS secucode, fund_delta.date AS date FROM (SELECT daily_zjdx_stat_level5_view.secucode AS secucode, daily_zjdx_stat_level5_view.date AS date, CAST(daily_zjdx_stat_level5_view.zhu - lagInFrame(daily_zjdx_stat_level5_view.zhu, 1, 0) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) AS FLOAT) AS fund_t, CAST(lagInFrame(daily_zjdx_stat_level5_view.zhu, 1, 0) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) - lagInFrame(daily_zjdx_stat_level5_view.zhu, 2, 0) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) AS FLOAT) AS fund_t_1 FROM daily_zjdx_stat_level5_view WHERE daily_zjdx_stat_level5_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 2) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS fund_delta WHERE fund_delta.fund_t > 0 AND fund_delta.fund_t_1 != 0 AND fund_delta.fund_t / (fund_delta.fund_t_1 + 0.0) > 2.0) AS strong_fund ON ma_aligned.secucode = strong_fund.secucode AND ma_aligned.date = strong_fund.date",
+      "pred_count": 0,
+      "gt_count": 17,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "35",
+      "pred_sql": "WITH semiconductor_stocks AS (SELECT DISTINCT `secucode` FROM `hq_basic_view` WHERE `trade` = 'BR01B01031'), latest_performance AS (SELECT `secucode`, `income_total_yoy`, `parent_net_profit_yoy` FROM (SELECT `secucode`, `income_total_yoy`, `parent_net_profit_yoy`, ROW_NUMBER() OVER (PARTITION BY `secucode` ORDER BY `date` DESC) AS rn FROM `f10_main_indicator_view`) AS sub WHERE sub.rn = 1 AND sub.`income_total_yoy` >= 0.2 AND sub.`parent_net_profit_yoy` >= 0.05) SELECT s.`secucode` FROM semiconductor_stocks AS s JOIN latest_performance AS p ON s.`secucode` = p.`secucode`",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.trade = 'BR01B01031' INTERSECT SELECT DISTINCT latest_financial.secucode FROM (SELECT f10_main_indicator_view.secucode AS secucode, f10_main_indicator_view.date AS date, f10_main_indicator_view.income_total_yoy AS income_total_yoy, f10_main_indicator_view.parent_net_profit_yoy AS parent_net_profit_yoy, row_number() OVER (PARTITION BY f10_main_indicator_view.secucode ORDER BY f10_main_indicator_view.date DESC) AS rn FROM f10_main_indicator_view) AS latest_financial WHERE latest_financial.rn = 1 AND latest_financial.income_total_yoy >= 0.2 AND latest_financial.parent_net_profit_yoy >= 0.05",
+      "pred_count": 33,
+      "gt_count": 33,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "36",
+      "pred_sql": "SELECT DISTINCT `hq_current_view`.`secucode` FROM `hq_current_view` JOIN `hq_basic_view` ON `hq_current_view`.`secucode` = `hq_basic_view`.`secucode` WHERE `hq_current_view`.`qrr` > 2 AND `hq_current_view`.`zdf` > 0.02 AND `hq_basic_view`.`type` = 'A股' AND `hq_basic_view`.`is_ts` = 0",
+      "gt_sql": "SELECT hq_current_view.secucode FROM (SELECT hq_current_view.secucode AS secucode, hq_current_view.date AS date, hq_current_view.zdf AS zdf_1 FROM hq_current_view WHERE hq_current_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0) AS anon_2) AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS anon_1 JOIN hq_current_view ON hq_current_view.secucode = anon_1.secucode AND hq_current_view.date = anon_1.date WHERE hq_current_view.qrr > 2 AND anon_1.zdf_1 > 0.02 AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)",
+      "pred_count": 215,
+      "gt_count": 214,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "37",
+      "pred_sql": "SELECT DISTINCT `hq_current_view`.`secucode` FROM `hq_current_view` INNER JOIN `fund_move_flag_level0_view` ON `hq_current_view`.`secucode` = `fund_move_flag_level0_view`.`secucode` WHERE `hq_current_view`.`qrr` > 2 AND `hq_current_view`.`zdf` > 0.02 AND (`fund_move_flag_level0_view`.`zhu_flag` IN (1, 2) OR `fund_move_flag_level0_view`.`duo_flag` IN (1, 2) OR `fund_move_flag_level0_view`.`gan_flag` IN (1, 2))",
+      "gt_sql": "SELECT hq_current_view.secucode FROM (SELECT hq_current_view.secucode AS secucode, hq_current_view.date AS date, hq_current_view.zdf AS zdf_1 FROM hq_current_view WHERE hq_current_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0) AS anon_2) AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS anon_1 JOIN hq_current_view ON hq_current_view.secucode = anon_1.secucode AND hq_current_view.date = anon_1.date WHERE hq_current_view.qrr > 2 AND anon_1.zdf_1 > 0.02 AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) INTERSECT (SELECT DISTINCT fund_move_flag_level0_view.secucode FROM fund_move_flag_level0_view WHERE fund_move_flag_level0_view.zhu_flag = 1 AND fund_move_flag_level0_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) UNION SELECT DISTINCT fund_move_flag_level0_view.secucode FROM fund_move_flag_level0_view WHERE fund_move_flag_level0_view.zhu_flag = 2 AND fund_move_flag_level0_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) UNION SELECT DISTINCT fund_move_flag_level0_view.secucode FROM fund_move_flag_level0_view WHERE fund_move_flag_level0_view.duo_flag = 1 AND fund_move_flag_level0_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) UNION SELECT DISTINCT fund_move_flag_level0_view.secucode FROM fund_move_flag_level0_view WHERE fund_move_flag_level0_view.duo_flag = 2 AND fund_move_flag_level0_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) UNION SELECT DISTINCT fund_move_flag_level0_view.secucode FROM fund_move_flag_level0_view WHERE fund_move_flag_level0_view.gan_flag = 1 AND fund_move_flag_level0_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) UNION SELECT DISTINCT fund_move_flag_level0_view.secucode FROM fund_move_flag_level0_view WHERE fund_move_flag_level0_view.gan_flag = 2 AND fund_move_flag_level0_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0))",
+      "pred_count": 164,
+      "gt_count": 164,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "38",
+      "pred_sql": "SELECT `hq_current_view`.`secucode`, `hq_current_view`.`zdf`, `hq_current_view`.`qrr` FROM `hq_current_view` INNER JOIN `hq_basic_view` ON `hq_current_view`.`secucode` = `hq_basic_view`.`secucode` WHERE `hq_current_view`.`qrr` > 2 AND `hq_current_view`.`zdf` > 0.02 AND `hq_basic_view`.`is_ts` = 0 AND `hq_basic_view`.`type` = 'A股'",
+      "gt_sql": "SELECT hq_current_view.secucode FROM (SELECT hq_current_view.secucode AS secucode, hq_current_view.date AS date, hq_current_view.zdf AS zdf_1 FROM hq_current_view WHERE hq_current_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0) AS anon_2) AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS anon_1 JOIN hq_current_view ON hq_current_view.secucode = anon_1.secucode AND hq_current_view.date = anon_1.date WHERE hq_current_view.qrr > 2 AND anon_1.zdf_1 > 0.02 AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)",
+      "pred_count": 215,
+      "gt_count": 214,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "39",
+      "pred_sql": "SELECT `secucode` FROM `hq_current_view` WHERE `volume` > 100000000 AND `zdf` > 0 AND NOT `volume` IS NULL AND NOT `zdf` IS NULL",
+      "gt_sql": "SELECT hq_current_view.secucode FROM (SELECT hq_current_view.secucode AS secucode, hq_current_view.date AS date, hq_current_view.zdf AS zdf_1 FROM hq_current_view WHERE hq_current_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0) AS anon_2) AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS anon_1 JOIN hq_current_view ON hq_current_view.secucode = anon_1.secucode AND hq_current_view.date = anon_1.date WHERE hq_current_view.qrr > 2 AND anon_1.zdf_1 > 0.02 AND hq_current_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)",
+      "pred_count": 1880,
+      "gt_count": 214,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "40",
+      "pred_sql": "SELECT `hq_current_view`.`chip` FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_basic_view`.`secucode` = 'SZHQ002195'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode = 'SZHQ002195'",
+      "pred_count": 1,
+      "gt_count": 1,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "41",
+      "pred_sql": "WITH growth_stocks AS (SELECT DISTINCT `f10_main_indicator_view`.`secucode` FROM `f10_main_indicator_view` INNER JOIN `hq_current_view` ON `f10_main_indicator_view`.`secucode` = `hq_current_view`.`secucode` WHERE `f10_main_indicator_view`.`parent_net_profit_yoy` >= 0.3 AND `f10_main_indicator_view`.`income_total_yoy` >= 0.3 AND `hq_current_view`.`pe_ratio_static` BETWEEN 0 AND 50), low_pe_stocks AS (SELECT `hq_current_view`.`secucode` FROM `hq_current_view` INNER JOIN `hq_history_agg_view` ON `hq_current_view`.`secucode` = `hq_history_agg_view`.`secucode` GROUP BY `hq_current_view`.`secucode`, `hq_current_view`.`pe_ratio_static` HAVING (COUNT(CASE WHEN `hq_history_agg_view`.`pe_static` < `hq_current_view`.`pe_ratio_static` THEN 1 END) / COUNT(*)) * 100 < 30) SELECT `growth_stocks`.`secucode` FROM `growth_stocks` INNER JOIN `low_pe_stocks` ON `growth_stocks`.`secucode` = `low_pe_stocks`.`secucode`",
+      "gt_sql": "SELECT anon_1.secucode FROM (SELECT f10_main_indicator_view.secucode AS secucode, f10_main_indicator_view.parent_net_profit_yoy AS parent_net_profit_yoy, f10_main_indicator_view.income_total_yoy AS income_total_yoy, row_number() OVER (PARTITION BY f10_main_indicator_view.secucode ORDER BY f10_main_indicator_view.date DESC) AS rn FROM f10_main_indicator_view WHERE f10_main_indicator_view.parent_net_profit_yoy IS NOT NULL AND f10_main_indicator_view.income_total_yoy IS NOT NULL) AS anon_1 JOIN (SELECT hq_current_view.secucode AS secucode, hq_current_view.pe_ratio_static AS pe_ratio_static, hq_current_view.date AS date FROM hq_current_view WHERE hq_current_view.pe_ratio_static IS NOT NULL) AS anon_2 ON anon_1.secucode = anon_2.secucode AND anon_1.rn = 1 WHERE anon_2.pe_ratio_static BETWEEN 0 AND 50 AND anon_1.parent_net_profit_yoy >= 0.3 AND anon_1.income_total_yoy >= 0.3 INTERSECT SELECT DISTINCT pe_percentile_calc.secucode FROM (SELECT history_pe_limited.secucode AS secucode, count(*) FILTER (WHERE history_pe_limited.pe_static < current_pe.current_pe) AS days_below_pe, count(*) AS total_days FROM (SELECT history_with_rn.secucode AS secucode, history_with_rn.pe_static AS pe_static, history_with_rn.rn AS rn FROM (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.pe_static AS pe_static, row_number() OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date DESC) AS rn FROM hq_history_agg_view JOIN hq_basic_view ON hq_history_agg_view.secucode = hq_basic_view.secucode WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0 AND hq_history_agg_view.pe_static IS NOT NULL AND hq_history_agg_view.pe_static != 0) AS history_with_rn WHERE history_with_rn.rn <= 251) AS history_pe_limited JOIN (SELECT hq_current_view.secucode AS secucode, hq_current_view.pe_ratio_static AS current_pe FROM hq_current_view JOIN hq_basic_view ON hq_current_view.secucode = hq_basic_view.secucode WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0 AND hq_current_view.pe_ratio_static IS NOT NULL AND hq_current_view.pe_ratio_static != 0) AS current_pe ON history_pe_limited.secucode = current_pe.secucode WHERE history_pe_limited.rn > 1 GROUP BY history_pe_limited.secucode, current_pe.current_pe) AS pe_percentile_calc WHERE pe_percentile_calc.total_days > 0 AND (CAST(pe_percentile_calc.days_below_pe AS FLOAT) / (CAST(pe_percentile_calc.total_days AS FLOAT) + 0.0)) * 100 < 30",
+      "pred_count": 88,
+      "gt_count": 17,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "42",
+      "pred_sql": "WITH filtered_close AS (SELECT `secucode` FROM `hq_history_agg_view` WHERE `close` < 10.0), zjdx_increments AS (SELECT `secucode`, `date`, `duo` - LAGINFRAME(`duo`, 1) OVER (PARTITION BY `secucode` ORDER BY `date`) AS duo_in_1d FROM `daily_zjdx_stat_level5_view`) SELECT DISTINCT `filtered_close`.`secucode` FROM `filtered_close` JOIN `zjdx_increments` ON `filtered_close`.`secucode` = `zjdx_increments`.`secucode` WHERE `zjdx_increments`.`duo_in_1d` > 0",
+      "gt_sql": "WITH `cte_AStockMarket_420255` AS (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date, hq_history_agg_view.close AS close FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND hq_history_agg_view.secucode IN (SELECT anon_1.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_1)), `cte_AStockBasic_420255` AS (SELECT hq_basic_view.secucode AS secucode, hq_basic_view.date AS date, hq_basic_view.type AS type FROM hq_basic_view WHERE hq_basic_view.secucode IN (SELECT anon_1.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_1)), cte_pos_diff_duo_1d_de923f AS (SELECT anon_2.secucode AS secucode, anon_2.date AS date, anon_2.duo_in_1d AS duo_in_1d FROM (SELECT daily_zjdx_stat_level5_view.secucode AS secucode, daily_zjdx_stat_level5_view.date AS date, daily_zjdx_stat_level5_view.duo - lagInFrame(daily_zjdx_stat_level5_view.duo, 1) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) AS duo_in_1d FROM daily_zjdx_stat_level5_view WHERE daily_zjdx_stat_level5_view.secucode IN (SELECT anon_3.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_3)) AS anon_2 WHERE anon_2.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND anon_2.duo_in_1d > 0) SELECT DISTINCT `cte_AStockMarket_420255`.secucode FROM `cte_AStockMarket_420255` JOIN hq_basic_view ON `cte_AStockMarket_420255`.secucode = hq_basic_view.secucode JOIN `cte_AStockBasic_420255` ON `cte_AStockMarket_420255`.secucode = `cte_AStockBasic_420255`.secucode WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0 AND `cte_AStockMarket_420255`.close < 10.0 INTERSECT SELECT cte_pos_diff_duo_1d_de923f.secucode FROM cte_pos_diff_duo_1d_de923f",
+      "pred_count": -1,
+      "gt_count": 987,
+      "pred_error": ":HTTPDriver for http://192.168.81.84:8123 returned response code 404)\n Code: 63. DB::Exception: Aggregate function with name 'LAGINFRAME' does not exist. In scope zjdx_increments AS (SELECT secucode, date, duo - LAGINFRAME(duo, 1) OVER (PARTITION BY secucode ORDER BY date ASC) AS duo_in_1d FROM daily_zjdx_stat",
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "45",
+      "pred_sql": "SELECT DISTINCT `secucode` FROM `hq_basic_view` WHERE `area` = 'BR01B03023' AND `secucode` IN ('SZHQ001376', 'SZHQ001210', 'SHHQ600052', 'SHHQ603071', 'SHHQ605162', 'SZHQ300335', 'SZHQ002479', 'SHHQ600167', 'SHHQ600226', 'SHHQ600475', 'SHHQ600982', 'SHHQ600149', 'SZHQ000692', 'SHHQ600719', 'SZHQ002893', 'SHHQ605011', 'SHHQ605580', 'SHHQ605028')",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03023' INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode IN ('SZHQ001376', 'SZHQ001210', 'SHHQ600052', 'SHHQ603071', 'SHHQ605162', 'SZHQ300335', 'SZHQ002479', 'SHHQ600167', 'SHHQ600226', 'SHHQ600475', 'SHHQ600982', 'SHHQ600149', 'SZHQ000692', 'SHHQ600719', 'SZHQ002893', 'SHHQ605011', 'SHHQ605580', 'SHHQ605028')",
+      "pred_count": 0,
+      "gt_count": 0,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "46",
+      "pred_sql": "SELECT DISTINCT `hq_basic_view`.`trade` FROM `hq_basic_view` WHERE `hq_basic_view`.`secucode` IN ('SHHQ600030', 'SHHQ601066', 'SHHQ601688', 'SHHQ601211', 'SHHQ600837', 'SZHQ000166', 'SHHQ600999', 'SZHQ300059', 'SZHQ002736', 'SHHQ601881', 'SZHQ000776', 'SHHQ601995', 'SHHQ601788', 'SZHQ000783', 'SHHQ601901', 'SHHQ600958', 'SHHQ601136', 'SHHQ601059', 'SHHQ601198', 'SHHQ600095', 'SZHQ002670', 'SZHQ002939', 'SZHQ000686', 'SZHQ000750', 'SHHQ601099', 'SZHQ002500', 'SZHQ002673', 'SZHQ002797', 'SHHQ601236', 'SHHQ601878', 'SHHQ600909', 'SHHQ601108', 'SHHQ601990', 'SZHQ002926', 'SHHQ601456', 'SHHQ601377', 'SHHQ600061', 'SHHQ601375', 'SHHQ600621', 'SHHQ600109', 'SHHQ600918', 'SZHQ000728', 'SHHQ601696', 'SHHQ601162', 'SHHQ601555', 'SHHQ600906', 'SHHQ600864', 'SZHQ000712', 'SZHQ002945', 'SHHQ600155', 'SHHQ600369')",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode IN ('SHHQ600030', 'SHHQ601066', 'SHHQ601688', 'SHHQ601211', 'SHHQ600837', 'SZHQ000166', 'SHHQ600999', 'SZHQ300059', 'SZHQ002736', 'SHHQ601881', 'SZHQ000776', 'SHHQ601995', 'SHHQ601788', 'SZHQ000783', 'SHHQ601901', 'SHHQ600958', 'SHHQ601136', 'SHHQ601059', 'SHHQ601198', 'SHHQ600095', 'SZHQ002670', 'SZHQ002939', 'SZHQ000686', 'SZHQ000750', 'SHHQ601099', 'SZHQ002500', 'SZHQ002673', 'SZHQ002797', 'SHHQ601236', 'SHHQ601878', 'SHHQ600909', 'SHHQ601108', 'SHHQ601990', 'SZHQ002926', 'SHHQ601456', 'SHHQ601377', 'SHHQ600061', 'SHHQ601375', 'SHHQ600621', 'SHHQ600109', 'SHHQ600918', 'SZHQ000728', 'SHHQ601696', 'SHHQ601162', 'SHHQ601555', 'SHHQ600906', 'SHHQ600864', 'SZHQ000712', 'SZHQ002945', 'SHHQ600155', 'SHHQ600369')",
+      "pred_count": 2,
+      "gt_count": 51,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "47",
+      "pred_sql": "SELECT DISTINCT `secucode` FROM `hq_basic_view` WHERE (`concept` LIKE '%BR01B02191%' OR `concept` LIKE '%BR01B01031%' OR `concept` LIKE '%BR01B02512%' OR `concept` LIKE '%BR01B02567%' OR `concept` LIKE '%BR01B02579%' OR `concept` LIKE '%BR01B02024%' OR `concept` LIKE '%BR01B02551%' OR `concept` LIKE '%BR01B02182%')",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02191%' OR hq_basic_view.concept LIKE '%BR01B01031%' OR hq_basic_view.concept LIKE '%BR01B02512%' OR hq_basic_view.concept LIKE '%BR01B02567%' OR hq_basic_view.concept LIKE '%BR01B02579%' OR hq_basic_view.concept LIKE '%BR01B02024%' OR hq_basic_view.concept LIKE '%BR01B02551%' OR hq_basic_view.concept LIKE '%BR01B02182%'",
+      "pred_count": 2992,
+      "gt_count": 2992,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "48",
+      "pred_sql": "WITH ma_calculations AS (SELECT `secucode`, `date`, AVG(`close`) OVER (PARTITION BY `secucode` ORDER BY `date` ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS ma5, AVG(`close`) OVER (PARTITION BY `secucode` ORDER BY `date` ROWS BETWEEN 9 PRECEDING AND CURRENT ROW) AS ma10, AVG(`close`) OVER (PARTITION BY `secucode` ORDER BY `date` ROWS BETWEEN 19 PRECEDING AND CURRENT ROW) AS ma20 FROM `hq_history_agg_view`), recent_data AS (SELECT `secucode`, `date`, `ma5`, `ma10`, `ma20`, ROW_NUMBER() OVER (PARTITION BY `secucode` ORDER BY `date` DESC) AS rn FROM ma_calculations), golden_cross AS (SELECT r1.`secucode` FROM recent_data AS r1 JOIN recent_data AS r2 ON r1.`secucode` = r2.`secucode` AND r1.rn = 1 AND r2.rn = 2 WHERE r1.ma5 > r1.ma10 AND r1.ma10 > r1.ma20 AND r2.ma5 < r2.ma10 AND r2.ma10 < r2.ma20) SELECT DISTINCT `b`.`secucode` FROM `golden_cross` AS g JOIN `hq_basic_view` AS b ON g.`secucode` = b.`secucode` WHERE NOT b.`secuname` LIKE '%ST%' AND b.`is_cyb` = 1",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secuname NOT LIKE '%ST%' AND hq_basic_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) INTERSECT SELECT DISTINCT t1.secucode FROM (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date, CAST(avg(hq_history_agg_view.close) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS FLOAT) AS ma5, CAST(avg(hq_history_agg_view.close) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date ROWS BETWEEN 9 PRECEDING AND CURRENT ROW) AS FLOAT) AS ma10, CAST(avg(hq_history_agg_view.close) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date ROWS BETWEEN 19 PRECEDING AND CURRENT ROW) AS FLOAT) AS ma20, row_number() OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date DESC) AS rn FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 20) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS t1 JOIN (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date, CAST(avg(hq_history_agg_view.close) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date ROWS BETWEEN 4 PRECEDING AND CURRENT ROW) AS FLOAT) AS ma5, CAST(avg(hq_history_agg_view.close) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date ROWS BETWEEN 9 PRECEDING AND CURRENT ROW) AS FLOAT) AS ma10, CAST(avg(hq_history_agg_view.close) OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date ROWS BETWEEN 19 PRECEDING AND CURRENT ROW) AS FLOAT) AS ma20, row_number() OVER (PARTITION BY hq_history_agg_view.secucode ORDER BY hq_history_agg_view.date DESC) AS rn FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 20) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)) AS t2 ON t1.secucode = t2.secucode AND t1.rn = 1 AND t2.rn = 2 WHERE t2.ma5 < t2.ma10 AND t2.ma10 < t2.ma20 AND t1.ma5 > t1.ma10 AND t1.ma10 > t1.ma20 INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_cyb = 1 AND hq_basic_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)",
+      "pred_count": 5,
+      "gt_count": 5,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "49",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE `concept` = 'BR01B02467'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02467%'",
+      "pred_count": 0,
+      "gt_count": 125,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "50",
+      "pred_sql": "SELECT `secucode` FROM `hq_basic_view` WHERE `area` = '上海'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02198%' AND hq_basic_view.area = 'BR01B03002'",
+      "pred_count": 0,
+      "gt_count": 11,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "51",
+      "pred_sql": "SELECT DISTINCT `hq_basic_view`.`secucode`, `hq_basic_view`.`secuname` FROM `hq_basic_view` WHERE `hq_basic_view`.`detail_main_business` LIKE '%碳纤维%'",
+      "gt_sql": "SELECT anon_1.secucode FROM (SELECT roe_ranked_f724e6.secucode AS secucode FROM (SELECT f10_main_indicator_view.secucode AS secucode, f10_main_indicator_view.roe AS roe, row_number() OVER (PARTITION BY f10_main_indicator_view.secucode ORDER BY f10_main_indicator_view.date DESC) AS rn FROM f10_main_indicator_view WHERE f10_main_indicator_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02573%') AS anon_2)) AS roe_ranked_f724e6 WHERE roe_ranked_f724e6.rn = 1 AND roe_ranked_f724e6.roe >= 0.15) AS anon_1 INTERSECT SELECT profit_growth_f724e6.secucode FROM (SELECT f10_main_indicator_view.secucode AS secucode FROM f10_main_indicator_view WHERE f10_main_indicator_view.date IN (SELECT three_year_dates_f724e6.date FROM (SELECT f10_main_indicator_view.date AS date FROM f10_main_indicator_view WHERE toMonth(f10_main_indicator_view.date) = 12 AND toDayOfMonth(f10_main_indicator_view.date) = 31 AND f10_main_indicator_view.date <= (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) GROUP BY f10_main_indicator_view.date ORDER BY f10_main_indicator_view.date DESC LIMIT 3 OFFSET 0) AS three_year_dates_f724e6) AND f10_main_indicator_view.parent_net_profit_yoy >= 0.1 AND f10_main_indicator_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02573%') AS anon_2) GROUP BY f10_main_indicator_view.secucode HAVING count(f10_main_indicator_view.secucode) >= 3) AS profit_growth_f724e6 INTERSECT SELECT market_cap_top10_f724e6.secucode FROM (SELECT hq_current_view.secucode AS secucode FROM hq_current_view WHERE hq_current_view.market_value IS NOT NULL AND hq_current_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02573%') AS anon_2) ORDER BY hq_current_view.market_value DESC LIMIT 10 OFFSET 0) AS market_cap_top10_f724e6",
+      "pred_count": 9,
+      "gt_count": 0,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "52",
+      "pred_sql": "SELECT `secucode`, `secuname` FROM `hq_basic_view` WHERE `detail_main_business` LIKE '%碳纤维%'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02573%'",
+      "pred_count": 9,
+      "gt_count": 77,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "53",
+      "pred_sql": "SELECT `detail_main_business` FROM `hq_basic_view` WHERE `secucode` = '000880'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode = 'SZHQ000880'",
+      "pred_count": 0,
+      "gt_count": 1,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "54",
+      "pred_sql": "SELECT `secucode` FROM `daily_zjdx_stat_level5_view` WHERE `zhu` = (SELECT MAX(`zhu`) FROM `daily_zjdx_stat_level5_view`)",
+      "gt_sql": "WITH cte_pos_diff_zhu_1d_f167c0 AS (SELECT anon_1.secucode AS secucode, anon_1.date AS date, anon_1.zhu_in_1d AS zhu_in_1d FROM (SELECT daily_zjdx_stat_level5_view.secucode AS secucode, daily_zjdx_stat_level5_view.date AS date, daily_zjdx_stat_level5_view.zhu - lagInFrame(daily_zjdx_stat_level5_view.zhu, 1) OVER (PARTITION BY daily_zjdx_stat_level5_view.secucode ORDER BY daily_zjdx_stat_level5_view.date) AS zhu_in_1d FROM daily_zjdx_stat_level5_view WHERE daily_zjdx_stat_level5_view.secucode IN (SELECT anon_2.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_2)) AS anon_1 WHERE anon_1.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND anon_1.zhu_in_1d > 0), cte_latest_data_zhu_in_1d_66a45b62 AS (SELECT cte_pos_diff_zhu_1d_f167c0.secucode AS secucode, cte_pos_diff_zhu_1d_f167c0.zhu_in_1d AS sort_value, row_number() OVER (PARTITION BY cte_pos_diff_zhu_1d_f167c0.secucode ORDER BY cte_pos_diff_zhu_1d_f167c0.date DESC) AS row_num FROM cte_pos_diff_zhu_1d_f167c0 JOIN hq_basic_view ON cte_pos_diff_zhu_1d_f167c0.secucode = hq_basic_view.secucode WHERE cte_pos_diff_zhu_1d_f167c0.zhu_in_1d IS NOT NULL AND hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0) SELECT cte_latest_data_zhu_in_1d_66a45b62.secucode FROM cte_latest_data_zhu_in_1d_66a45b62 WHERE cte_latest_data_zhu_in_1d_66a45b62.row_num = 1 ORDER BY cte_latest_data_zhu_in_1d_66a45b62.sort_value DESC LIMIT 1 OFFSET 0",
+      "pred_count": 1,
+      "gt_count": 1,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "55",
+      "pred_sql": "SELECT COUNT(*) FROM `hot_info_view` WHERE `type` = 1 AND `date` = (SELECT date FROM `hq_history_agg_view` WHERE secucode = 'SHHQ000001' ORDER BY date DESC LIMIT 1 OFFSET 0)",
+      "gt_sql": "SELECT DISTINCT hot_info_view.data_code FROM hot_info_view WHERE hot_info_view.type = 1 AND hot_info_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) ORDER BY hot_info_view.sortid DESC",
+      "pred_count": 1,
+      "gt_count": 221,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "56",
+      "pred_sql": "SELECT `parent_net_profit_yoy` FROM `f10_main_indicator_view` WHERE `date` = (SELECT MAX(`date`) FROM `f10_main_indicator_view`)",
+      "gt_sql": "WITH `cte_AStockMarket_e8326c` AS (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN '4051-02-25' AND '4051-02-25' AND hq_history_agg_view.secucode IN (SELECT anon_1.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_1)), `dates_AStockFinancial_e8326c` AS (SELECT DISTINCT hq_history_agg_view.date AS date FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN '4051-02-25' AND '4051-02-25'), `dates_AStockFinancial_secucode_e8326c` AS (SELECT `dates_AStockFinancial_e8326c`.date AS date, anon_1.secucode AS secucode FROM `dates_AStockFinancial_e8326c`, (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_1), `cte_AStockFinancial_ranked_e8326c` AS (SELECT `dates_AStockFinancial_secucode_e8326c`.date AS `current_date`, `dates_AStockFinancial_secucode_e8326c`.secucode AS secucode, f10_main_indicator_view.parent_net_profit_yoy AS parent_net_profit_yoy, f10_main_indicator_view.date AS date, max(f10_main_indicator_view.date) OVER (PARTITION BY `dates_AStockFinancial_secucode_e8326c`.date, `dates_AStockFinancial_secucode_e8326c`.secucode) AS max_date FROM `dates_AStockFinancial_secucode_e8326c` JOIN f10_main_indicator_view ON f10_main_indicator_view.secucode = `dates_AStockFinancial_secucode_e8326c`.secucode AND f10_main_indicator_view.date <= `dates_AStockFinancial_secucode_e8326c`.date), `cte_AStockFinancial_e8326c` AS (SELECT `cte_AStockFinancial_ranked_e8326c`.`current_date` AS date, `cte_AStockFinancial_ranked_e8326c`.secucode AS secucode, `cte_AStockFinancial_ranked_e8326c`.parent_net_profit_yoy AS parent_net_profit_yoy FROM `cte_AStockFinancial_ranked_e8326c` WHERE `cte_AStockFinancial_ranked_e8326c`.date = `cte_AStockFinancial_ranked_e8326c`.max_date), `cte_AStockBasic_e8326c` AS (SELECT hq_basic_view.secucode AS secucode, hq_basic_view.date AS date, hq_basic_view.type AS type FROM hq_basic_view WHERE hq_basic_view.secucode IN (SELECT anon_1.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_1)) SELECT DISTINCT `cte_AStockMarket_e8326c`.secucode FROM `cte_AStockMarket_e8326c` JOIN hq_basic_view ON `cte_AStockMarket_e8326c`.secucode = hq_basic_view.secucode JOIN `cte_AStockFinancial_e8326c` ON `cte_AStockMarket_e8326c`.secucode = `cte_AStockFinancial_e8326c`.secucode JOIN `cte_AStockBasic_e8326c` ON `cte_AStockMarket_e8326c`.secucode = `cte_AStockBasic_e8326c`.secucode WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0 AND `cte_AStockFinancial_e8326c`.parent_net_profit_yoy > 0.0",
+      "pred_count": 20,
+      "gt_count": 0,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "57",
+      "pred_sql": "SELECT `secucode` FROM `f10_main_indicator_view` WHERE `date` BETWEEN '2025-01-01' AND '2025-12-31' AND `parent_net_profit_yoy` > 10",
+      "gt_sql": "WITH `cte_AStockMarket_235123` AS (SELECT hq_history_agg_view.secucode AS secucode, hq_history_agg_view.date AS date FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN '4051-02-25' AND '4051-02-25' AND hq_history_agg_view.secucode IN (SELECT anon_1.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_1)), `dates_AStockFinancial_235123` AS (SELECT DISTINCT hq_history_agg_view.date AS date FROM hq_history_agg_view WHERE hq_history_agg_view.date BETWEEN '4051-02-25' AND '4051-02-25'), `dates_AStockFinancial_secucode_235123` AS (SELECT `dates_AStockFinancial_235123`.date AS date, anon_1.secucode AS secucode FROM `dates_AStockFinancial_235123`, (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_1), `cte_AStockFinancial_ranked_235123` AS (SELECT `dates_AStockFinancial_secucode_235123`.date AS `current_date`, `dates_AStockFinancial_secucode_235123`.secucode AS secucode, f10_main_indicator_view.parent_net_profit_yoy AS parent_net_profit_yoy, f10_main_indicator_view.date AS date, max(f10_main_indicator_view.date) OVER (PARTITION BY `dates_AStockFinancial_secucode_235123`.date, `dates_AStockFinancial_secucode_235123`.secucode) AS max_date FROM `dates_AStockFinancial_secucode_235123` JOIN f10_main_indicator_view ON f10_main_indicator_view.secucode = `dates_AStockFinancial_secucode_235123`.secucode AND f10_main_indicator_view.date <= `dates_AStockFinancial_secucode_235123`.date), `cte_AStockFinancial_235123` AS (SELECT `cte_AStockFinancial_ranked_235123`.`current_date` AS date, `cte_AStockFinancial_ranked_235123`.secucode AS secucode, `cte_AStockFinancial_ranked_235123`.parent_net_profit_yoy AS parent_net_profit_yoy FROM `cte_AStockFinancial_ranked_235123` WHERE `cte_AStockFinancial_ranked_235123`.date = `cte_AStockFinancial_ranked_235123`.max_date), `cte_AStockBasic_235123` AS (SELECT hq_basic_view.secucode AS secucode, hq_basic_view.date AS date, hq_basic_view.type AS type FROM hq_basic_view WHERE hq_basic_view.secucode IN (SELECT anon_1.secucode FROM (SELECT hq_basic_view.secucode AS secucode FROM hq_basic_view) AS anon_1)) SELECT DISTINCT `cte_AStockMarket_235123`.secucode FROM `cte_AStockMarket_235123` JOIN hq_basic_view ON `cte_AStockMarket_235123`.secucode = hq_basic_view.secucode JOIN `cte_AStockFinancial_235123` ON `cte_AStockMarket_235123`.secucode = `cte_AStockFinancial_235123`.secucode JOIN `cte_AStockBasic_235123` ON `cte_AStockMarket_235123`.secucode = `cte_AStockBasic_235123`.secucode WHERE hq_basic_view.type = 'A股' AND hq_basic_view.is_ts = 0 AND `cte_AStockFinancial_235123`.parent_net_profit_yoy > 0.1",
+      "pred_count": 200,
+      "gt_count": 0,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "58",
+      "pred_sql": "SELECT DISTINCT `t1`.`secuname` FROM `hq_basic_view` AS `t1` INNER JOIN `hq_basic_view` AS `t2` ON `t1`.`secuname` = `t2`.`secuname` WHERE `t1`.`concept` = 'BR01B02386' AND `t2`.`concept` = 'BR01B02191'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.concept LIKE '%BR01B02579%' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode IN ('SHHQ601985', 'SHHQ600111', 'SHHQ600641', 'SHHQ688012', 'SHHQ688037', 'SZHQ300722', 'SHHQ688126', 'SHHQ688521', 'SHHQ603690', 'SZHQ300327', 'SZHQ002049', 'SHHQ600501')",
+      "pred_count": 0,
+      "gt_count": 471,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "60",
+      "pred_sql": "WITH latest_date AS (SELECT MAX(`date`) AS max_date FROM `hq_history_agg_view`) SELECT `hq_basic_view`.`secucode`, `hq_basic_view`.`secuname`, `hot_info_view`.`sortid` FROM `hot_info_view` JOIN `latest_date` ON `hot_info_view`.`date` = `latest_date`.`max_date` JOIN `hq_basic_view` ON `hot_info_view`.`data_code` = `hq_basic_view`.`secucode` WHERE `hot_info_view`.`type` = 1 ORDER BY `hot_info_view`.`sortid` DESC",
+      "gt_sql": "SELECT DISTINCT hot_info_view.data_code FROM hot_info_view WHERE hot_info_view.type = 1 AND hot_info_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) ORDER BY hot_info_view.sortid DESC",
+      "pred_count": 220,
+      "gt_count": 221,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "62",
+      "pred_sql": "SELECT `secucode`, `secuname` FROM `hq_basic_view` WHERE `secucode` IN ('SHHQ600641', 'SZHQ002371', 'SHHQ688120', 'BJHQ920402', 'SZHQ300260', 'SZHQ300666', 'SHHQ688409', 'SHHQ688396', 'SHHQ600460', 'SHHQ603290')",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode IN ('SHHQ600641', 'SZHQ002371', 'SHHQ688120', 'BJHQ920402', 'SZHQ300260', 'SZHQ300666', 'SHHQ688409', 'SHHQ688396', 'SHHQ600460', 'SHHQ603290')",
+      "pred_count": 10,
+      "gt_count": 10,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "65",
+      "pred_sql": "SELECT `a`.`secucode`, `b`.`qrr` FROM `hq_basic_view` AS `a` INNER JOIN `hq_current_view` AS `b` ON `a`.`secucode` = `b`.`secucode` WHERE `a`.`area` = 'BR01B03001' AND `a`.`is_hszb` = 1 UNION ALL SELECT `a`.`secucode`, `b`.`qrr` FROM `hq_basic_view` AS `a` INNER JOIN `hq_current_view` AS `b` ON `a`.`secucode` = `b`.`secucode` WHERE `a`.`area` = 'BR01B03023' AND `a`.`is_hszb` = 1 UNION ALL SELECT `a`.`secucode`, `b`.`qrr` FROM `hq_basic_view` AS `a` INNER JOIN `hq_current_view` AS `b` ON `a`.`secucode` = `b`.`secucode` WHERE `a`.`area` = 'BR01B03018' AND `a`.`is_hszb` = 1 UNION ALL SELECT `a`.`secucode`, `b`.`qrr` FROM `hq_basic_view` AS `a` INNER JOIN `hq_current_view` AS `b` ON `a`.`secucode` = `b`.`secucode` WHERE `a`.`area` = 'BR01B03002' AND `a`.`is_hszb` = 1 UNION ALL SELECT `a`.`secucode`, `b`.`qrr` FROM `hq_basic_view` AS `a` INNER JOIN `hq_current_view` AS `b` ON `a`.`secucode` = `b`.`secucode` WHERE `a`.`area` = 'BR01B03030' AND `a`.`is_hszb` = 1 UNION ALL SELECT `a`.`secucode`, `b`.`qrr` FROM `hq_basic_view` AS `a` INNER JOIN `hq_current_view` AS `b` ON `a`.`secucode` = `b`.`secucode` WHERE `a`.`area` = 'BR01B03007' AND `a`.`is_hszb` = 1 UNION ALL SELECT `a`.`secucode`, `b`.`qrr` FROM `hq_basic_view` AS `a` INNER JOIN `hq_current_view` AS `b` ON `a`.`secucode` = `b`.`secucode` WHERE `a`.`area` = 'BR01B03009' AND `a`.`is_hszb` = 1 UNION ALL SELECT `a`.`secucode`, `b`.`qrr` FROM `hq_basic_view` AS `a` INNER JOIN `hq_current_view` AS `b` ON `a`.`secucode` = `b`.`secucode` WHERE `a`.`area` = 'BR01B03004' AND `a`.`is_hszb` = 1",
+      "gt_sql": "(SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03001' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03023' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03018' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03002' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03030' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03007' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03009' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03004') INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_hszb = 1 AND hq_basic_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)",
+      "pred_count": 2085,
+      "gt_count": 2199,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "66",
+      "pred_sql": "(SELECT `hq_current_view`.`qrr` FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_basic_view`.`area` = 'BR01B03023' AND `hq_basic_view`.`is_hszb` = 1) UNION ALL (SELECT `hq_current_view`.`qrr` FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_basic_view`.`area` = 'BR01B03018' AND `hq_basic_view`.`is_hszb` = 1) UNION ALL (SELECT `hq_current_view`.`qrr` FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_basic_view`.`area` = 'BR01B03002' AND `hq_basic_view`.`is_hszb` = 1) UNION ALL (SELECT `hq_current_view`.`qrr` FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_basic_view`.`area` = 'BR01B03030' AND `hq_basic_view`.`is_hszb` = 1) UNION ALL (SELECT `hq_current_view`.`qrr` FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_basic_view`.`area` = 'BR01B03007' AND `hq_basic_view`.`is_hszb` = 1) UNION ALL (SELECT `hq_current_view`.`qrr` FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_basic_view`.`area` = 'BR01B03009' AND `hq_basic_view`.`is_hszb` = 1) UNION ALL (SELECT `hq_current_view`.`qrr` FROM `hq_basic_view` INNER JOIN `hq_current_view` ON `hq_basic_view`.`secucode` = `hq_current_view`.`secucode` WHERE `hq_basic_view`.`area` = 'BR01B03004' AND `hq_basic_view`.`is_hszb` = 1)",
+      "gt_sql": "(SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03023' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03018' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03002' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03030' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03007' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03009' UNION SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.area = 'BR01B03004') INTERSECT SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.is_hszb = 1 AND hq_basic_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0)",
+      "pred_count": 1836,
+      "gt_count": 1935,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "67",
+      "pred_sql": "SELECT DISTINCT `hq_basic_view`.`secucode` FROM `hq_basic_view` WHERE `hq_basic_view`.`secucode` IN ('SHHQ601179', 'SZHQ002885', 'SZHQ600550', 'SHHQ002335', 'SZHQ002335', 'SZHQ603097', 'SHHQ688187', 'SHHQ600406', 'SHHQ688676', 'SHHQ600089') AND `hq_basic_view`.`concept` = '固态变压器（特高压）'",
+      "gt_sql": "SELECT hq_basic_view.secucode FROM hq_basic_view WHERE hq_basic_view.secucode IN ('SHHQ601179', 'SZHQ002885', 'SZHQ600550', 'SHHQ002335', 'SZHQ002335', 'SZHQ603097', 'SHHQ688187', 'SHHQ600406', 'SHHQ688676', 'SHHQ600089')",
+      "pred_count": 0,
+      "gt_count": 7,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": false
+    },
+    {
+      "question_id": "68",
+      "pred_sql": "WITH latest_date AS (SELECT MAX(`date`) AS max_date FROM `hot_info_view`) SELECT DISTINCT `data_code` FROM `hot_info_view` WHERE `type` = 1 AND `date` = (SELECT max_date FROM latest_date) ORDER BY `sortid` DESC",
+      "gt_sql": "SELECT DISTINCT hot_info_view.data_code FROM hot_info_view WHERE hot_info_view.type = 1 AND hot_info_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) ORDER BY hot_info_view.sortid DESC",
+      "pred_count": 221,
+      "gt_count": 221,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "69",
+      "pred_sql": "SELECT `data_code` FROM `hot_info_view` WHERE `type` = 1 AND `date` = (SELECT MAX(`date`) FROM `hot_info_view`) ORDER BY `sortid` DESC LIMIT 30",
+      "gt_sql": "SELECT DISTINCT hot_info_view.data_code FROM hot_info_view WHERE hot_info_view.type = 1 AND hot_info_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) ORDER BY hot_info_view.sortid DESC LIMIT 30 OFFSET 0",
+      "pred_count": 30,
+      "gt_count": 30,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    },
+    {
+      "question_id": "70",
+      "pred_sql": "SELECT `hot_info_view`.`data_code` FROM `hot_info_view` WHERE `hot_info_view`.`type` = 1 AND `hot_info_view`.`date_int` = (SELECT MAX(`date_int`) FROM `hot_info_view`) ORDER BY `hot_info_view`.`sortid` DESC LIMIT 30",
+      "gt_sql": "SELECT DISTINCT hot_info_view.data_code FROM hot_info_view WHERE hot_info_view.type = 1 AND hot_info_view.date BETWEEN (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) AND (SELECT hq_history_agg_view.date FROM hq_history_agg_view WHERE hq_history_agg_view.secucode = 'SHHQ000001' ORDER BY hq_history_agg_view.date DESC LIMIT 1 OFFSET 0) ORDER BY hot_info_view.sortid DESC LIMIT 30 OFFSET 0",
+      "pred_count": 30,
+      "gt_count": 30,
+      "pred_error": null,
+      "gt_error": null,
+      "is_equal": true
+    }
+  ]
+}
